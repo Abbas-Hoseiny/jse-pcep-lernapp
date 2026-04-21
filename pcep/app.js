@@ -37,28 +37,29 @@
     "enumerate","zip","map","filter","open","round","divmod","pow","ord","chr","hex",
     "oct","bin","format","repr","hash","iter","next","any","all","help","dir","vars"
   ];
-  const PY_KW_RE = new RegExp("\\b(" + PY_KEYWORDS.join("|") + ")\\b", "g");
-  const PY_BI_RE = new RegExp("\\b(" + PY_BUILTINS.join("|") + ")\\b", "g");
+  // Single-pass tokenizer — prevents re-matching inside already-inserted spans
+  const PY_HL_RE = new RegExp(
+    "(#[^\\n]*)" +                                                            // 1: comment
+    "|(\"\"\"[\\s\\S]*?\"\"\"|'''[\\s\\S]*?''')" +                             // 2: triple-quoted string
+    "|(\"(?:[^\"\\\\\\n]|\\\\.)*\"|'(?:[^'\\\\\\n]|\\\\.)*')" +                 // 3: normal string
+    "|(\\b\\d+(?:\\.\\d+)?\\b)" +                                              // 4: number
+    "|(\\b(?:" + PY_KEYWORDS.join("|") + ")\\b)" +                             // 5: keyword
+    "|(\\b(?:" + PY_BUILTINS.join("|") + ")\\b)",                              // 6: builtin
+    "g"
+  );
   function escapeHTML(s) {
     return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   }
   function highlight(src) {
-    let s = escapeHTML(src);
-    // comments first
-    s = s.replace(/(#[^\n]*)/g, '<span class="hl-com">$1</span>');
-    // triple-quoted strings
-    s = s.replace(/("""[\s\S]*?"""|'''[\s\S]*?''')/g, '<span class="hl-str">$1</span>');
-    // single/double-quoted strings
-    s = s.replace(/("(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*')/g, '<span class="hl-str">$1</span>');
-    // f-strings (basic)
-    s = s.replace(/\b(f|F|r|R|b|B)(["'])/g, '<span class="hl-kw">$1</span>$2');
-    // numbers
-    s = s.replace(/\b(\d+(?:\.\d+)?)\b/g, '<span class="hl-num">$1</span>');
-    // keywords
-    s = s.replace(PY_KW_RE, '<span class="hl-kw">$1</span>');
-    // builtins
-    s = s.replace(PY_BI_RE, '<span class="hl-fn">$1</span>');
-    return s;
+    return escapeHTML(src).replace(PY_HL_RE, (_, com, trip, str, num, kw, bi) => {
+      if (com) return '<span class="hl-com">' + com + '</span>';
+      if (trip) return '<span class="hl-str">' + trip + '</span>';
+      if (str) return '<span class="hl-str">' + str + '</span>';
+      if (num) return '<span class="hl-num">' + num + '</span>';
+      if (kw) return '<span class="hl-kw">' + kw + '</span>';
+      if (bi) return '<span class="hl-fn">' + bi + '</span>';
+      return "";
+    });
   }
   function highlightAll() {
     document.querySelectorAll("pre code.py, pre code.python, pre code.language-python").forEach(el => {

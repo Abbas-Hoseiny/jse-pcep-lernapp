@@ -37,27 +37,27 @@
     "in","of","delete","void","try","catch","finally","throw","class","extends",
     "super","import","export","from","as","null","undefined","true","false","NaN","Infinity"
   ];
-  const KW_RE = new RegExp("\\b(" + KEYWORDS.join("|") + ")\\b", "g");
+  // Single-pass tokenizer — prevents re-matching inside already-inserted spans
+  const HL_RE = new RegExp(
+    "(\\/\\*[\\s\\S]*?\\*\\/)" +                                         // 1: block comment
+    "|(\\/\\/[^\\n]*)" +                                                   // 2: line comment
+    "|(\"(?:[^\"\\\\\\n]|\\\\.)*\"|'(?:[^'\\\\\\n]|\\\\.)*'|`(?:[^`\\\\]|\\\\.)*`)" + // 3: strings
+    "|(\\b\\d+(?:\\.\\d+)?\\b)" +                                          // 4: numbers
+    "|(\\b(?:" + KEYWORDS.join("|") + ")\\b)",                             // 5: keywords
+    "g"
+  );
   function escapeHTML(s) {
     return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   }
   function highlight(src) {
-    let s = escapeHTML(src);
-    // line/block comments (rough, ok for short snippets)
-    s = s.replace(/(\/\/[^\n]*)/g, '<span class="hl-com">$1</span>');
-    s = s.replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="hl-com">$1</span>');
-    // strings
-    s = s.replace(/("(?:[^"\\\n]|\\.)*")/g, '<span class="hl-str">$1</span>');
-    s = s.replace(/('(?:[^'\\\n]|\\.)*')/g, '<span class="hl-str">$1</span>');
-    s = s.replace(/(`(?:[^`\\]|\\.)*`)/g, '<span class="hl-str">$1</span>');
-    // numbers
-    s = s.replace(/\b(\d+(?:\.\d+)?)\b/g, '<span class="hl-num">$1</span>');
-    // keywords (avoid touching spans)
-    s = s.replace(KW_RE, function (m) {
-      // skip if inside an existing span
-      return '<span class="hl-kw">' + m + '</span>';
+    return escapeHTML(src).replace(HL_RE, (_, bc, lc, st, num, kw) => {
+      if (bc) return '<span class="hl-com">' + bc + '</span>';
+      if (lc) return '<span class="hl-com">' + lc + '</span>';
+      if (st) return '<span class="hl-str">' + st + '</span>';
+      if (num) return '<span class="hl-num">' + num + '</span>';
+      if (kw) return '<span class="hl-kw">' + kw + '</span>';
+      return "";
     });
-    return s;
   }
   function highlightAll() {
     document.querySelectorAll("pre code.js, pre code.language-js").forEach(el => {
