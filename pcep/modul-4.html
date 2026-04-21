@@ -36,7 +36,7 @@ elif alter >= 13:
     print("teenager")
 else:
     print("kind")</code></pre>
-          <p><code>elif</code> = „else if". Beliebig viele erlaubt. <code>else</code> ist optional, kann nur einmal am Ende stehen.</p>
+          <p><code>elif</code> = „else if”. Beliebig viele erlaubt. <code>else</code> ist optional, kann nur einmal am Ende stehen.</p>
         </div>
 
         <div class="theory-section">
@@ -132,11 +132,11 @@ for i in range(5):
 else:
     print("nicht erreicht")
 # 0 1 2</code></pre>
-          <div class="callout"><strong>PCEP-Klassiker:</strong> nützlich für „Suche"-Schleifen. <code>for</code>-Schleife sucht etwas — wenn nicht gefunden (kein <code>break</code>), wird der <code>else</code>-Block ausgeführt.</div>
+          <div class="callout"><strong>PCEP-Klassiker:</strong> nützlich für „Suche”-Schleifen. <code>for</code>-Schleife sucht etwas — wenn nicht gefunden (kein <code>break</code>), wird der <code>else</code>-Block ausgeführt.</div>
         </div>
 
         <div class="theory-section">
-          <h2>4.8 <code>pass</code> — die „leere" Anweisung</h2>
+          <h2>4.8 <code>pass</code> — die „leere” Anweisung</h2>
           <p>Python braucht bei leeren Blöcken einen Platzhalter — Einrückung allein reicht nicht.</p>
 <pre><code class="py">if x > 0:
     pass           # TODO: später implementieren
@@ -200,7 +200,7 @@ print(buchstabe)  # 'B'</code></pre>
       moduleId: "4",
       cards: [
         { front: "Syntax einer <code>if</code>-Anweisung in Python?", back: "<code>if bedingung:</code> + eingerückter Block. Doppelpunkt nicht vergessen!" },
-        { front: "Was bedeutet <code>elif</code>?", back: "„else if" — folgt nach <code>if</code>, kann mehrfach vorkommen." },
+        { front: "Was bedeutet <code>elif</code>?", back: "„else if” — folgt nach <code>if</code>, kann mehrfach vorkommen." },
         { front: "Wie viele <code>else</code>-Blöcke darf ein <code>if</code> haben?", back: "<strong>Höchstens einen</strong>, immer am Ende. Optional." },
         { front: "Was iteriert <code>for x in \"abc\"</code>?", back: "Die Zeichen: <code>a</code>, <code>b</code>, <code>c</code> — Strings sind iterierbar." },
         { front: "Was iteriert <code>for k in {\"a\": 1, \"b\": 2}</code>?", back: "Die <strong>Keys</strong>: <code>a</code>, <code>b</code>." },
@@ -210,7 +210,7 @@ print(buchstabe)  # 'B'</code></pre>
         { front: "Wie zählt man rückwärts mit range?", back: "Negativer Step: <code>range(10, 0, -1)</code> → 10, 9, ..., 1." },
         { front: "Was macht <code>break</code>?", back: "Verlässt die innerste Schleife komplett." },
         { front: "Was macht <code>continue</code>?", back: "Überspringt den Rest der aktuellen Iteration, geht zur nächsten." },
-        { front: "Was macht <code>pass</code>?", back: "„Nichts tun" — Platzhalter für einen Block, der Syntax erfordert. z. B. in leeren Funktionen oder if-Branches." },
+        { front: "Was macht <code>pass</code>?", back: "„Nichts tun” — Platzhalter für einen Block, der Syntax erfordert. z. B. in leeren Funktionen oder if-Branches." },
         { front: "Was bewirkt <code>for-else</code>?", back: "<code>else</code> läuft, wenn die Schleife <strong>ohne break</strong> zu Ende lief. Nützlich für Suchschleifen." },
         { front: "Läuft <code>else</code> nach <code>break</code>?", back: "<strong>Nein.</strong> <code>else</code> wird übersprungen." },
         { front: "Wie oft läuft <code>while False: ...</code>?", back: "Nullmal — Bedingung ist gleich false." },
@@ -233,13 +233,13 @@ print(buchstabe)  # 'B'</code></pre>
     const pgRoot = document.getElementById("playgrounds");
     PCEP.initPlaygrounds([
       { container: pgRoot,
-        task: "FizzBuzz: Zahlen 1–20. Vielfache von 3 → „Fizz", von 5 → „Buzz", von beiden → „FizzBuzz".",
+        task: "FizzBuzz: Zahlen 1–20. Vielfache von 3 → „Fizz”, von 5 → „Buzz”, von beiden → „FizzBuzz”.",
         initialCode: 'for i in range(1, 21):\n    # TODO\n    pass\n' },
       { container: pgRoot,
         task: "Summe aller Zahlen von 1 bis 100 berechnen und ausgeben.",
         initialCode: 'summe = 0\nfor i in range(1, 101):\n    summe += i\nprint(summe)\n' },
       { container: pgRoot,
-        task: "Demonstration <code>for-else</code>: suche in einer Liste nach der Zahl 99. Wenn nicht gefunden, gib „nicht da" aus.",
+        task: "Demonstration <code>for-else</code>: suche in einer Liste nach der Zahl 99. Wenn nicht gefunden, gib „nicht da” aus.",
         initialCode: 'liste = [1, 5, 10, 20]\nfor x in liste:\n    if x == 99:\n        print("gefunden")\n        break\nelse:\n    print("nicht da")\n' },
       { container: pgRoot,
         task: "Multiplikationstabelle 1–5 (verschachtelte for-Schleifen).",

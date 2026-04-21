@@ -246,7 +246,7 @@ print(lo, hi)   # 1 5</code></pre>
         { front: "Kann man mehrere Werte zurückgeben?", back: "Ja, als Tupel: <code>return a, b</code>. Unpacking: <code>x, y = f()</code>." },
         { front: "Was ist ein Docstring?", back: "Der erste String-Literal in einer Funktion — dient als Dokumentation, zugreifbar via <code>f.__doc__</code>." },
         { front: "Was sind <em>first-class functions</em>?", back: "Funktionen können wie Werte behandelt werden: zuweisen, übergeben, zurückgeben." },
-        { front: "Kann eine Funktion eine andere Funktion zurückgeben?", back: "Ja — führt zu Closures: die innere Funktion „merkt sich" ihre enclosing scope." },
+        { front: "Kann eine Funktion eine andere Funktion zurückgeben?", back: "Ja — führt zu Closures: die innere Funktion „merkt sich” ihre enclosing scope." },
         { front: "Unterschied <code>def f(a, b=2)</code> und <code>def f(a=1, b)</code>?", back: "Die zweite ist <strong>SyntaxError</strong> — Default-Parameter müssen nach positionalen stehen." },
         { front: "Was gibt dieser Aufruf? <code>def f(a, b, c): ...; f(1, c=3, b=2)</code>", back: "Gültig — a=1 (positional), b und c als Keyword. Ausgabe hängt vom Körper ab." },
         { front: "Wie viele Argumente nimmt <code>*args</code> maximal?", back: "Beliebig viele — auch 0." },

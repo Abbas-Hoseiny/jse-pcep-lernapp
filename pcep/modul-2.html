@@ -33,7 +33,7 @@ groesse = 1.75</code></pre>
           </ul>
 <pre><code class="py">x = 5        # int
 x = "hi"     # jetzt str — völlig ok</code></pre>
-          <div class="callout warn"><strong>Python kennt keine echten Konstanten.</strong> Konvention: <code>UPPER_CASE</code> zeigt „nicht verändern" an, wird aber nicht erzwungen.</div>
+          <div class="callout warn"><strong>Python kennt keine echten Konstanten.</strong> Konvention: <code>UPPER_CASE</code> zeigt „nicht verändern” an, wird aber nicht erzwungen.</div>
         </div>
 
         <div class="theory-section">
@@ -147,7 +147,7 @@ type(x)           # &lt;class 'NoneType'&gt;
 # Prüfung IMMER mit 'is', nicht '==':
 if x is None:
     print("leer")</code></pre>
-          <p><code>None</code> repräsentiert „kein Wert". Funktionen ohne <code>return</code> geben implizit <code>None</code> zurück.</p>
+          <p><code>None</code> repräsentiert „kein Wert”. Funktionen ohne <code>return</code> geben implizit <code>None</code> zurück.</p>
         </div>
 
         <div class="theory-section">
@@ -232,7 +232,7 @@ alter = int(input("Alter: "))</code></pre>
       moduleId: "2",
       cards: [
         { front: "Wie deklariert man eine Variable in Python?", back: "Einfach zuweisen: <code>name = wert</code>. Kein <code>var</code>/<code>let</code>." },
-        { front: "Nenne die wichtigsten 5 primitive Typen in Python.", back: "<code>int</code>, <code>float</code>, <code>bool</code>, <code>str</code>, <code>NoneType</code> (wobei str als Sequenz auch „container"-artig ist)." },
+        { front: "Nenne die wichtigsten 5 primitive Typen in Python.", back: "<code>int</code>, <code>float</code>, <code>bool</code>, <code>str</code>, <code>NoneType</code> (wobei str als Sequenz auch „container”-artig ist)." },
         { front: "Was ist der Wertebereich von Python-<code>int</code>?", back: "<strong>Unbegrenzt!</strong> Python hat keine 32/64-bit-Grenze — nur durch RAM limitiert." },
         { front: "Sind <code>True</code> und <code>1</code> in Python gleich?", back: "Ja: <code>True == 1</code>. <code>bool</code> ist ein <strong>Subtyp von int</strong>." },
         { front: "Wie erzeugt man einen f-String?", back: "Mit <code>f</code> vor dem String: <code>f\"Hallo, {name}!\"</code> — Ausdrücke in <code>{...}</code>." },

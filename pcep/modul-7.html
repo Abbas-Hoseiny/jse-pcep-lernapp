@@ -181,7 +181,7 @@ except ValidierungsFehler as e:
             <li><strong>Nicht schlucken:</strong> ein leerer <code>except: pass</code> versteckt Fehler.</li>
             <li><strong><code>finally</code> für Cleanup</strong>: Dateien schließen, Verbindungen beenden.</li>
             <li><strong>Fehler propagieren</strong> lassen, wenn du sie nicht sinnvoll behandeln kannst.</li>
-            <li><strong>EAFP</strong> („Easier to Ask Forgiveness than Permission") ist idiomatisch: erst versuchen, dann fangen — statt vorher zu prüfen.</li>
+            <li><strong>EAFP</strong> („Easier to Ask Forgiveness than Permission”) ist idiomatisch: erst versuchen, dann fangen — statt vorher zu prüfen.</li>
           </ul>
         </div>
 
@@ -233,7 +233,7 @@ except ValidierungsFehler as e:
         { front: "Wie erstellt man eine eigene Exception-Klasse?", back: "<code>class MyError(Exception): pass</code>" },
         { front: "Welche Reihenfolge: spezifisch oder generisch zuerst im except?", back: "<strong>Spezifisch zuerst!</strong> Sonst ist die spezifische Klausel unerreichbar." },
         { front: "Was passiert bei unbehandelter Exception?", back: "Das Programm stoppt und gibt einen <strong>Traceback</strong> aus." },
-        { front: "Was ist EAFP?", back: "„Easier to Ask Forgiveness than Permission" — erst versuchen (try), dann Fehler behandeln — statt vorher zu prüfen." }
+        { front: "Was ist EAFP?", back: "„Easier to Ask Forgiveness than Permission” — erst versuchen (try), dann Fehler behandeln — statt vorher zu prüfen." }
       ]
     });
 

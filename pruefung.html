@@ -47,7 +47,7 @@
       { q: "Was ergibt <code>\"5\" - 3</code>?", options: ["2","\"2\"","\"53\"","NaN"], correct: 0, explain: "<code>-</code> erzwingt Number → <code>2</code>." },
       { q: "Was ergibt <code>Number(\"\")</code>?", options: ["0","NaN","undefined","null"], correct: 0, explain: "Leerer String wird zu 0." },
       { q: "Was ergibt <code>Number(\"hallo\")</code>?", options: ["0","NaN","undefined","\"hallo\""], correct: 1, explain: "Nicht konvertierbar → NaN." },
-      { q: "Was ergibt <code>null == undefined</code>?", options: ["true","false","TypeError","NaN"], correct: 0, explain: "Lose Gleichheit sieht beide als „leer"." },
+      { q: "Was ergibt <code>null == undefined</code>?", options: ["true","false","TypeError","NaN"], correct: 0, explain: "Lose Gleichheit sieht beide als „leer”." },
       { q: "Was ergibt <code>null === undefined</code>?", options: ["true","false","TypeError","NaN"], correct: 1, explain: "Strikt vergleicht auch Typen — unterschiedlich." },
       { q: "Ergibt <code>0.1 + 0.2 === 0.3</code> true?", options: ["Ja","Nein"], correct: 1, explain: "Wegen Gleitkomma-Arithmetik: <code>0.30000000000000004</code>." },
       { q: "Was ergibt <code>typeof NaN</code>?", options: ["\"nan\"","\"number\"","\"undefined\"","\"error\""], correct: 1, explain: "NaN ist (kurios) vom Typ Number." },
