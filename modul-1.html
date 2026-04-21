@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Modul 1 · Einführung · JSE Lern-App</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><div class="brand-logo">JS</div> JSE Lern-App</div>
+    <nav>
+      <a href="index.html">← Dashboard</a>
+      <a href="modul-2.html">Modul 2 →</a>
+      <a href="pruefung.html">Prüfung</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div class="module-num">MODUL 1 · 8% der Prüfung</div>
+    <h1>Einführung & Programmiergrundlagen</h1>
+    <p class="subtitle">Was ist JavaScript? Wo läuft es? Syntax, Kommentare, Literale, erste Ausgaben.</p>
+
+    <div class="tabs" data-tabs>
+      <button class="tab-btn active" data-target="panel-theorie">📖 Theorie</button>
+      <button class="tab-btn" data-target="panel-karten">🃏 Lernkarteien</button>
+      <button class="tab-btn" data-target="panel-playground">💻 Playground</button>
+      <button class="tab-btn" data-target="panel-quiz">✅ Quiz</button>
+    </div>
+    <div>
+      <!-- THEORIE -->
+      <section class="tab-panel active" id="panel-theorie">
+        <div class="theory-section">
+          <h2>1.1 Was ist JavaScript?</h2>
+          <p>JavaScript (JS) ist eine <strong>high-level</strong>, <strong>interpretierte</strong>, <strong>dynamisch typisierte</strong> Programmiersprache. Sie wurde 1995 von Brendan Eich bei Netscape entwickelt und ist heute die Sprache des Webs.</p>
+          <ul>
+            <li><strong>High-level</strong>: Du musst dich nicht um Speicherverwaltung kümmern.</li>
+            <li><strong>Interpretiert</strong>: Der Code wird zur Laufzeit ausgeführt, kein separates Kompilieren.</li>
+            <li><strong>Dynamisch typisiert</strong>: Variablen können ihren Typ wechseln.</li>
+            <li><strong>Multi-Paradigma</strong>: imperativ, objektorientiert, funktional.</li>
+          </ul>
+          <div class="callout"><strong>Merke:</strong> JavaScript hat nichts mit Java zu tun. Der Name war Marketing.</div>
+        </div>
+
+        <div class="theory-section">
+          <h2>1.2 Wo läuft JavaScript?</h2>
+          <p>JS läuft überall dort, wo eine <strong>JavaScript-Engine</strong> vorhanden ist:</p>
+          <ul>
+            <li><strong>Browser</strong> (V8 in Chrome/Edge, SpiderMonkey in Firefox, JavaScriptCore in Safari)</li>
+            <li><strong>Node.js</strong> — JS auf dem Server (nutzt V8)</li>
+            <li><strong>Deno / Bun</strong> — moderne Alternativen zu Node</li>
+            <li>Eingebettet in Anwendungen, IoT-Geräten, Datenbanken (z. B. MongoDB)</li>
+          </ul>
+          <p>Für die JSE-Prüfung wichtig: JS läuft typischerweise <strong>im Browser</strong> oder in <strong>Node.js</strong>.</p>
+        </div>
+
+        <div class="theory-section">
+          <h2>1.3 Erstes Programm</h2>
+          <p>Das klassische „Hello World":</p>
+<pre><code class="js">console.log("Hello, World!");</code></pre>
+          <p><code>console.log()</code> gibt Text in der Konsole aus (im Browser: F12 → Console, in Node: Terminal).</p>
+          <h3>Ausführen im Browser</h3>
+          <p>JS kann man in HTML einbetten:</p>
+<pre><code class="js">&lt;script&gt;
+  console.log("Hallo aus der Konsole");
+&lt;/script&gt;</code></pre>
+          <p>Oder als externe Datei:</p>
+<pre><code class="js">&lt;script src="main.js"&gt;&lt;/script&gt;</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>1.4 Anweisungen (Statements)</h2>
+          <p>Ein JS-Programm besteht aus <strong>Anweisungen</strong>. Jede Anweisung kann mit einem Semikolon <code>;</code> enden.</p>
+<pre><code class="js">let name = "Ali";
+console.log(name);
+let alter = 25;</code></pre>
+          <div class="callout warn">
+            <strong>ASI (Automatic Semicolon Insertion):</strong> JS fügt in vielen Fällen automatisch Semikolons ein. Trotzdem <strong>solltest du sie setzen</strong>, weil es Mehrdeutigkeiten geben kann.
+          </div>
+        </div>
+
+        <div class="theory-section">
+          <h2>1.5 Kommentare</h2>
+          <p>Kommentare werden von der Engine ignoriert. Zwei Arten:</p>
+<pre><code class="js">// Einzeiliger Kommentar
+
+/*
+  Mehrzeiliger
+  Kommentar
+*/
+
+let x = 10; // auch am Zeilenende möglich</code></pre>
+          <p>Nutze Kommentare, um das <em>Warum</em> zu erklären — nicht das <em>Was</em> (das zeigt der Code).</p>
+        </div>
+
+        <div class="theory-section">
+          <h2>1.6 Literale</h2>
+          <p>Ein <strong>Literal</strong> ist ein fester Wert, der direkt im Quellcode steht:</p>
+<pre><code class="js">42              // Number-Literal
+3.14            // Number-Literal (Gleitkomma)
+"Hallo"         // String-Literal
+'Welt'          // String-Literal (einfache Anführungszeichen)
+`Template`      // Template-Literal (Backticks)
+true            // Boolean-Literal
+false           // Boolean-Literal
+null            // null-Literal
+[1, 2, 3]       // Array-Literal
+{ a: 1 }        // Object-Literal</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>1.7 Groß-/Kleinschreibung & Bezeichner</h2>
+          <ul>
+            <li>JavaScript unterscheidet Groß-/Kleinschreibung: <code>name</code> ≠ <code>Name</code>.</li>
+            <li>Bezeichner dürfen enthalten: Buchstaben, Ziffern, <code>_</code>, <code>$</code>.</li>
+            <li>Dürfen <strong>nicht</strong> mit einer Ziffer beginnen.</li>
+            <li>Keine reservierten Schlüsselwörter (<code>let</code>, <code>return</code>, <code>class</code>…) als Namen.</li>
+            <li>Konvention: <strong>camelCase</strong> für Variablen/Funktionen, <strong>PascalCase</strong> für Klassen.</li>
+          </ul>
+        </div>
+
+        <div class="theory-section">
+          <h2>1.8 Ausgaben: <code>console.log</code>, <code>alert</code>, <code>document.write</code></h2>
+<pre><code class="js">console.log("In der Konsole");    // Entwicklerkonsole
+alert("Popup-Fenster");           // Nur Browser — modaler Dialog
+document.write("In die Seite");   // Nur Browser — fügt Text in das HTML ein</code></pre>
+          <p>Fürs Lernen und Debuggen ist <code>console.log</code> die beste Wahl.</p>
+        </div>
+
+        <div class="btn-row mt-lg">
+          <button class="btn primary" data-mark-theory="1">✓ Theorie als gelesen markieren</button>
+          <a class="btn" href="modul-2.html">Weiter zu Modul 2 →</a>
+        </div>
+      </section>
+
+      <!-- LERNKARTEIEN -->
+      <section class="tab-panel" id="panel-karten">
+        <h2>Lernkarteien</h2>
+        <p class="subtitle">Klicke auf die Karte zum Umdrehen. Markiere „Wusste ich" um zu lernen.</p>
+        <div id="flashcards"></div>
+      </section>
+
+      <!-- PLAYGROUND -->
+      <section class="tab-panel" id="panel-playground">
+        <h2>Code-Playground</h2>
+        <p class="subtitle">Probier die Aufgaben aus. <kbd>Cmd/Ctrl+Enter</kbd> führt aus.</p>
+        <div id="playgrounds"></div>
+      </section>
+
+      <!-- QUIZ -->
+      <section class="tab-panel" id="panel-quiz">
+        <h2>Quiz — Modul 1</h2>
+        <p class="subtitle">10 Fragen. 70% zum Bestehen.</p>
+        <div id="quiz"></div>
+      </section>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    // ---- FLASHCARDS ----
+    const cards = [
+      { front: "Wer hat JavaScript erfunden und wann?", back: "Brendan Eich, 1995 bei Netscape." },
+      { front: "Ist JavaScript kompiliert oder interpretiert?", back: "<strong>Interpretiert</strong> (bzw. Just-in-Time kompiliert durch die Engine zur Laufzeit)." },
+      { front: "Ist JavaScript statisch oder dynamisch typisiert?", back: "<strong>Dynamisch</strong> typisiert — Variablen können ihren Typ wechseln." },
+      { front: "Wo kann JavaScript ausgeführt werden? (mindestens 2 Umgebungen)", back: "Im <strong>Browser</strong> (V8, SpiderMonkey, JavaScriptCore) und in <strong>Node.js</strong> auf dem Server." },
+      { front: "Wie gibst du Text in der Browser-Konsole aus?", back: "<code>console.log(\"Text\")</code>" },
+      { front: "Welche Kommentar-Syntax gibt es in JS?", back: "Einzeilig: <code>// Kommentar</code><br>Mehrzeilig: <code>/* Kommentar */</code>" },
+      { front: "Was ist ein <em>Literal</em>?", back: "Ein fester Wert im Quellcode, z. B. <code>42</code>, <code>\"Hallo\"</code>, <code>true</code>, <code>[1,2]</code>." },
+      { front: "Unterscheidet JS Groß-/Kleinschreibung?", back: "Ja. <code>name</code> und <code>Name</code> sind verschiedene Variablen." },
+      { front: "Womit darf ein Bezeichner in JS <strong>nicht</strong> beginnen?", back: "Mit einer Ziffer. Erlaubt: Buchstabe, <code>_</code>, <code>$</code>." },
+      { front: "Was ist der Unterschied zwischen <code>alert()</code> und <code>console.log()</code>?", back: "<code>alert</code> zeigt ein modales Popup im Browser.<br><code>console.log</code> schreibt in die Entwicklerkonsole (läuft auch in Node)." },
+      { front: "Welches Zeichen beendet eine Anweisung in JS?", back: "Das Semikolon <code>;</code> (optional dank ASI, aber empfohlen)." },
+      { front: "Was bedeutet ASI?", back: "<strong>Automatic Semicolon Insertion</strong> — JS fügt fehlende Semikolons oft automatisch ein. Kann aber Fehler verursachen." },
+      { front: "Welche 3 Arten von String-Literalen gibt es?", back: "Einfache Anführungszeichen <code>'...'</code>, doppelte <code>\"...\"</code>, Template Literals <code>`...`</code>." },
+      { front: "Was macht <code>document.write()</code>?", back: "Schreibt Text direkt in das HTML-Dokument. <strong>Nicht im modernen Code verwenden.</strong>" },
+      { front: "Welche Namenskonvention nutzt JS für Variablen und Funktionen?", back: "<strong>camelCase</strong>, z. B. <code>userName</code>, <code>getAge()</code>." },
+      { front: "Wie bindest du eine externe JS-Datei in HTML ein?", back: "<code>&lt;script src=\"datei.js\"&gt;&lt;/script&gt;</code>" },
+      { front: "Zu welcher Sprachfamilie gehört JavaScript?", back: "C-Syntax-Familie (ähnlich C, Java, C#) — aber semantisch anders." },
+      { front: "Was ist eine JavaScript-Engine?", back: "Ein Programm, das JS-Code ausführt — z. B. V8 (Chrome/Node), SpiderMonkey (Firefox), JavaScriptCore (Safari)." },
+      { front: "Ist <code>let myvar</code> erlaubt?", back: "Ja — <code>let</code> ist Schlüsselwort, <code>myvar</code> ein gültiger Bezeichner." },
+      { front: "Ist <code>let 2name</code> erlaubt?", back: "Nein. Bezeichner dürfen nicht mit einer Ziffer beginnen." }
+    ];
+    JSE.initFlashcards({
+      container: document.getElementById("flashcards"),
+      cards, moduleId: "1"
+    });
+
+    // ---- PLAYGROUND ----
+    const pgRoot = document.getElementById("playgrounds");
+    JSE.initPlaygrounds([
+      { container: pgRoot,
+        task: "Schreibe <code>console.log</code> so, dass <strong>Hello JSE!</strong> ausgegeben wird.",
+        initialCode: '// Dein Code hier:\nconsole.log("...");\n' },
+      { container: pgRoot,
+        task: "Gib <strong>zwei Zahlen und ihre Summe</strong> aus. Nutze einen Kommentar.",
+        initialCode: '// Zwei Zahlen addieren\nlet a = 5;\nlet b = 7;\n// TODO: Summe ausgeben\n' },
+      { container: pgRoot,
+        task: "Probiere <strong>einen Fehler</strong>: gib eine nicht existierende Variable <code>x</code> aus. Was passiert?",
+        initialCode: 'console.log(x);\n' }
+    ]);
+
+    // ---- QUIZ ----
+    JSE.initQuiz({
+      container: document.getElementById("quiz"),
+      moduleId: "1",
+      questions: [
+        { q: "Wer hat JavaScript entwickelt?",
+          options: ["James Gosling", "Brendan Eich", "Guido van Rossum", "Bjarne Stroustrup"],
+          correct: 1,
+          explain: "Brendan Eich entwickelte JavaScript 1995 bei Netscape in nur 10 Tagen." },
+        { q: "Welche Aussage über JavaScript ist richtig?",
+          options: ["JS ist statisch typisiert", "JS ist nur im Browser lauffähig", "JS ist dynamisch typisiert", "JS muss vor der Ausführung kompiliert werden"],
+          correct: 2,
+          explain: "JS ist dynamisch typisiert, läuft in Browser UND Node.js, und wird zur Laufzeit ausgeführt (JIT)." },
+        { q: "Welcher Befehl gibt Text in der Entwicklerkonsole aus?",
+          options: ["print(\"Text\")", "echo \"Text\"", "console.log(\"Text\")", "System.out.println(\"Text\")"],
+          correct: 2,
+          explain: "<code>console.log()</code> ist das Standardwerkzeug zur Konsolen-Ausgabe in JavaScript." },
+        { q: "Welcher Bezeichner ist <strong>ungültig</strong>?",
+          options: ["_name", "$value", "2fast", "user_age"],
+          correct: 2,
+          explain: "Bezeichner dürfen nicht mit einer Ziffer beginnen. <code>_name</code>, <code>$value</code>, <code>user_age</code> sind erlaubt." },
+        { q: "Welche Ausgabe erzeugt dieser Code?",
+          code: 'console.log("Hallo");\n// console.log("Welt");\nconsole.log("!");',
+          options: ["Hallo Welt !", "Hallo\\n!\\n", "Hallo\\n!", "Fehler"],
+          correct: 2,
+          explain: "Die zweite Zeile ist ein Kommentar und wird ignoriert. Ausgabe: <code>Hallo</code> und <code>!</code> auf zwei Zeilen." },
+        { q: "Was ist ein Literal in JavaScript?",
+          options: ["Eine Variable, die nicht geändert werden kann", "Ein fester Wert, der direkt im Code steht", "Ein spezieller Datentyp", "Eine Funktion ohne Namen"],
+          correct: 1,
+          explain: "Ein Literal ist ein Wert, der wörtlich im Quellcode geschrieben ist — wie <code>42</code>, <code>\"hi\"</code> oder <code>true</code>." },
+        { q: "Welche Zeile ist <strong>syntaktisch korrekt</strong>?",
+          options: ["let Name = 'Ali';", "LET name = 'Ali';", "let = 'Ali' name;", "let 'Ali' = name;"],
+          correct: 0,
+          explain: "JS ist case-sensitive: <code>LET</code> ist kein Schlüsselwort. Syntax: <code>let &lt;name&gt; = &lt;wert&gt;;</code>" },
+        { q: "Wie schreibst du einen <strong>mehrzeiligen</strong> Kommentar?",
+          options: ["// Zeile 1 // Zeile 2", "# Kommentar", "/* Zeile 1\\nZeile 2 */", "<!-- Kommentar -->"],
+          correct: 2,
+          explain: "Mehrzeilige Kommentare: <code>/* ... */</code>. <code>//</code> ist nur für eine Zeile. <code>&lt;!-- --&gt;</code> ist HTML." },
+        { q: "Welche Umgebung <strong>kann</strong> JavaScript <strong>nicht</strong> ausführen?",
+          options: ["Chrome-Browser", "Node.js", "HTML ohne &lt;script&gt;-Tag", "Firefox"],
+          correct: 2,
+          explain: "Ohne <code>&lt;script&gt;</code>-Tag oder externe JS-Datei ist reines HTML nur Markup und führt kein JS aus." },
+        { q: "Sind <code>myVar</code> und <code>myvar</code> die gleiche Variable?",
+          options: ["Ja, JS ignoriert Groß-/Kleinschreibung", "Nein, JS unterscheidet Groß-/Kleinschreibung", "Nur in Funktionen", "Nur in strict mode"],
+          correct: 1,
+          explain: "JavaScript ist <strong>case-sensitive</strong>. <code>myVar</code> und <code>myvar</code> sind verschiedene Variablen." }
+      ]
+    });
+  </script>
+</body>
+</html>

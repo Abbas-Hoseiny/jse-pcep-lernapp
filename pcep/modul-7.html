@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Modul 7 · Exceptions · PCEP Lern-App</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="container">
+    <div class="module-num">MODUL 7 · Teil von 28%</div>
+    <h1>Exceptions (Fehlerbehandlung)</h1>
+    <p class="subtitle"><code>try</code>/<code>except</code>/<code>else</code>/<code>finally</code>, <code>raise</code>, <code>assert</code>, Exception-Hierarchie, eigene Exception-Klassen.</p>
+
+    <div class="tabs" data-tabs>
+      <button class="tab-btn active" data-target="panel-theorie">📖 Theorie</button>
+      <button class="tab-btn" data-target="panel-karten">🃏 Lernkarteien</button>
+      <button class="tab-btn" data-target="panel-playground">🐍 Playground</button>
+      <button class="tab-btn" data-target="panel-quiz">✅ Quiz</button>
+    </div>
+    <div>
+      <section class="tab-panel active" id="panel-theorie">
+        <div class="theory-section">
+          <h2>7.1 Was sind Exceptions?</h2>
+          <p>Eine <strong>Exception</strong> ist ein Ereignis, das den normalen Programmfluss unterbricht, wenn etwas Ungewöhnliches passiert — z. B. Division durch 0, Dateizugriff fehlgeschlagen.</p>
+          <p>Wird eine Exception nicht abgefangen, endet das Programm mit einem Traceback.</p>
+        </div>
+
+        <div class="theory-section">
+          <h2>7.2 Die wichtigsten Exception-Klassen</h2>
+          <table>
+            <thead><tr><th>Klasse</th><th>Wann?</th></tr></thead>
+            <tbody>
+              <tr><td><code>ZeroDivisionError</code></td><td><code>10 / 0</code></td></tr>
+              <tr><td><code>ValueError</code></td><td><code>int("abc")</code></td></tr>
+              <tr><td><code>TypeError</code></td><td><code>"5" + 3</code></td></tr>
+              <tr><td><code>NameError</code></td><td><code>print(x)</code> ohne Deklaration</td></tr>
+              <tr><td><code>IndexError</code></td><td><code>[1,2][5]</code></td></tr>
+              <tr><td><code>KeyError</code></td><td><code>{"a":1}["b"]</code></td></tr>
+              <tr><td><code>AttributeError</code></td><td><code>None.foo</code></td></tr>
+              <tr><td><code>ImportError</code> / <code>ModuleNotFoundError</code></td><td>Import eines fehlenden Moduls</td></tr>
+              <tr><td><code>FileNotFoundError</code></td><td>Datei existiert nicht</td></tr>
+              <tr><td><code>IndentationError</code></td><td>falsche Einrückung</td></tr>
+              <tr><td><code>SyntaxError</code></td><td>ungültiger Code</td></tr>
+              <tr><td><code>OverflowError</code></td><td>Zahl zu groß (bei float)</td></tr>
+              <tr><td><code>KeyboardInterrupt</code></td><td>Strg+C</td></tr>
+              <tr><td><code>StopIteration</code></td><td>Ende eines Iterators</td></tr>
+              <tr><td><code>RecursionError</code></td><td>zu tiefe Rekursion</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="theory-section">
+          <h2>7.3 Die Exception-Hierarchie</h2>
+<pre><code>BaseException
+ ├── SystemExit
+ ├── KeyboardInterrupt
+ ├── GeneratorExit
+ └── Exception                       ← fangen wir normalerweise
+      ├── ArithmeticError
+      │    ├── ZeroDivisionError
+      │    ├── OverflowError
+      │    └── FloatingPointError
+      ├── LookupError
+      │    ├── IndexError
+      │    └── KeyError
+      ├── ValueError
+      ├── TypeError
+      ├── NameError
+      ├── AttributeError
+      ├── OSError
+      │    └── FileNotFoundError
+      └── ImportError</code></pre>
+          <div class="callout"><strong>Wichtig:</strong> Wenn man <code>except Exception</code> schreibt, werden <strong>alle</strong> Unterklassen (IndexError, KeyError, …) mit abgefangen. <code>except BaseException</code> fängt sogar Strg+C — meist unerwünscht.</div>
+        </div>
+
+        <div class="theory-section">
+          <h2>7.4 <code>try</code> / <code>except</code></h2>
+<pre><code class="py">try:
+    x = int(input("Zahl: "))
+except ValueError:
+    print("Keine gültige Zahl!")</code></pre>
+          <h3>Mehrere Exception-Typen</h3>
+<pre><code class="py">try:
+    # ...
+except ValueError:
+    print("ValueError")
+except ZeroDivisionError:
+    print("Div durch 0")
+except (TypeError, NameError):    # mehrere in einem
+    print("Typ- oder Namensfehler")
+except Exception as e:              # Catch-all (aber nicht BaseException)
+    print(f"Allgemeiner Fehler: {e}")</code></pre>
+          <div class="callout warn">
+            <strong>Reihenfolge zählt!</strong> Spezifische Exceptions zuerst, generische danach. <code>except Exception</code> würde sonst alles fangen und die spezifischen Blöcke wären unerreichbar.
+          </div>
+        </div>
+
+        <div class="theory-section">
+          <h2>7.5 <code>else</code> und <code>finally</code></h2>
+<pre><code class="py">try:
+    x = int("42")
+except ValueError:
+    print("fehler")
+else:
+    print("kein Fehler, läuft NUR wenn try erfolgreich")
+finally:
+    print("Läuft IMMER (Cleanup)")</code></pre>
+          <ul>
+            <li><code>else</code>: läuft wenn <strong>kein</strong> Fehler im <code>try</code> auftrat</li>
+            <li><code>finally</code>: läuft <strong>immer</strong> (selbst bei <code>return</code>, erneutem <code>raise</code>)</li>
+          </ul>
+        </div>
+
+        <div class="theory-section">
+          <h2>7.6 Das Exception-Objekt</h2>
+<pre><code class="py">try:
+    int("abc")
+except ValueError as e:
+    print(e)          # Fehlermeldung: "invalid literal for int() ..."
+    print(type(e))    # &lt;class 'ValueError'&gt;
+    print(e.args)     # ('invalid literal ...',)</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>7.7 <code>raise</code> — Fehler werfen</h2>
+<pre><code class="py">def teile(a, b):
+    if b == 0:
+        raise ZeroDivisionError("Division durch 0!")
+    return a / b
+
+# Re-raise in einem except-Block:
+try:
+    ...
+except ValueError:
+    print("log...")
+    raise                # ohne Argument → wirft den aktuellen erneut
+
+# Neue Exception aus bestehender (Chain):
+try:
+    int("abc")
+except ValueError as e:
+    raise RuntimeError("Umwandlung fehlgeschlagen") from e</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>7.8 <code>assert</code></h2>
+<pre><code class="py">def wurzel(x):
+    assert x >= 0, "x darf nicht negativ sein"
+    return x ** 0.5
+
+wurzel(4)      # 2.0
+wurzel(-1)     # AssertionError: x darf nicht negativ sein</code></pre>
+          <div class="callout warn">
+            <strong>Nicht für Input-Validierung</strong> im produktiven Code: <code>python -O</code> (Optimize-Modus) deaktiviert alle <code>assert</code>. <code>assert</code> ist nur für <em>Invarianten</em> und Debugging.
+          </div>
+        </div>
+
+        <div class="theory-section">
+          <h2>7.9 Eigene Exception-Klassen</h2>
+<pre><code class="py">class MeinFehler(Exception):
+    pass
+
+class ValidierungsFehler(Exception):
+    def __init__(self, feld, grund):
+        super().__init__(f"{feld}: {grund}")
+        self.feld = feld
+        self.grund = grund
+
+try:
+    raise ValidierungsFehler("email", "ungültig")
+except ValidierungsFehler as e:
+    print(e.feld, e.grund)</code></pre>
+          <p>Neue Exception-Klassen sollten von <code>Exception</code> erben.</p>
+        </div>
+
+        <div class="theory-section">
+          <h2>7.10 Best Practices</h2>
+          <ul>
+            <li><strong>Spezifisch fangen:</strong> <code>except ValueError</code> besser als <code>except Exception</code>.</li>
+            <li><strong>Nicht schlucken:</strong> ein leerer <code>except: pass</code> versteckt Fehler.</li>
+            <li><strong><code>finally</code> für Cleanup</strong>: Dateien schließen, Verbindungen beenden.</li>
+            <li><strong>Fehler propagieren</strong> lassen, wenn du sie nicht sinnvoll behandeln kannst.</li>
+            <li><strong>EAFP</strong> („Easier to Ask Forgiveness than Permission") ist idiomatisch: erst versuchen, dann fangen — statt vorher zu prüfen.</li>
+          </ul>
+        </div>
+
+        <div class="btn-row mt-lg">
+          <button class="btn primary" data-mark-theory="7">✓ Theorie als gelesen markieren</button>
+          <a class="btn primary" href="pruefung.html">▶ Zur Prüfungssimulation</a>
+        </div>
+      </section>
+
+      <section class="tab-panel" id="panel-karten">
+        <h2>Lernkarteien</h2>
+        <div id="flashcards"></div>
+      </section>
+      <section class="tab-panel" id="panel-playground">
+        <h2>Python-Playground</h2>
+        <div id="playgrounds"></div>
+      </section>
+      <section class="tab-panel" id="panel-quiz">
+        <h2>Quiz — Modul 7</h2>
+        <div id="quiz"></div>
+      </section>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    PCEP.initFlashcards({
+      container: document.getElementById("flashcards"),
+      moduleId: "7",
+      cards: [
+        { front: "Was ist eine Exception?", back: "Ein Ereignis, das den normalen Programmfluss unterbricht — z. B. Fehler wie Division durch 0." },
+        { front: "Grundstruktur eines try-except-Blocks?", back: "<code>try: ... except FehlerTyp: ...</code>" },
+        { front: "Welchen Fehler wirft <code>10 / 0</code>?", back: "<code>ZeroDivisionError</code>" },
+        { front: "Welchen Fehler wirft <code>int(\"abc\")</code>?", back: "<code>ValueError</code>" },
+        { front: "Welchen Fehler wirft <code>\"5\" + 3</code>?", back: "<code>TypeError</code>" },
+        { front: "Welchen Fehler wirft <code>[1,2][5]</code>?", back: "<code>IndexError</code>" },
+        { front: "Welchen Fehler wirft <code>{\"a\":1}[\"b\"]</code>?", back: "<code>KeyError</code>" },
+        { front: "Welchen Fehler wirft <code>print(x)</code> für nicht deklariertes x?", back: "<code>NameError</code>" },
+        { front: "Wann läuft <code>else</code> in einem try-Block?", back: "Wenn im <code>try</code> <strong>kein</strong> Fehler auftrat." },
+        { front: "Wann läuft <code>finally</code>?", back: "<strong>Immer</strong> — mit oder ohne Fehler, auch bei <code>return</code>." },
+        { front: "Wie fängt man mehrere Exceptions in einem Block?", back: "<code>except (ValueError, TypeError): ...</code> mit Tuple." },
+        { front: "Wie greift man auf die Exception-Nachricht zu?", back: "<code>except FehlerTyp as e:</code> dann <code>str(e)</code> oder <code>e.args</code>." },
+        { front: "Wie wirft man einen Fehler?", back: "<code>raise Exception(\"Nachricht\")</code>" },
+        { front: "Wie wirft man den aktuellen Fehler erneut?", back: "<code>raise</code> (ohne Argument) innerhalb eines except-Blocks." },
+        { front: "Welche Klasse steht ganz oben in der Exception-Hierarchie?", back: "<code>BaseException</code>. <code>Exception</code> ist direkt darunter." },
+        { front: "Welche Exception-Klasse fängt (fast) alle Fehler ab?", back: "<code>Exception</code> — fängt aber nicht <code>KeyboardInterrupt</code> oder <code>SystemExit</code>." },
+        { front: "Was macht <code>assert</code>?", back: "Wirft <code>AssertionError</code>, wenn die Bedingung false ist." },
+        { front: "Warum soll man <code>assert</code> nicht für Input-Validierung nutzen?", back: "Mit <code>python -O</code> werden alle asserts deaktiviert." },
+        { front: "Wie erstellt man eine eigene Exception-Klasse?", back: "<code>class MyError(Exception): pass</code>" },
+        { front: "Welche Reihenfolge: spezifisch oder generisch zuerst im except?", back: "<strong>Spezifisch zuerst!</strong> Sonst ist die spezifische Klausel unerreichbar." },
+        { front: "Was passiert bei unbehandelter Exception?", back: "Das Programm stoppt und gibt einen <strong>Traceback</strong> aus." },
+        { front: "Was ist EAFP?", back: "„Easier to Ask Forgiveness than Permission" — erst versuchen (try), dann Fehler behandeln — statt vorher zu prüfen." }
+      ]
+    });
+
+    const pgRoot = document.getElementById("playgrounds");
+    PCEP.initPlaygrounds([
+      { container: pgRoot,
+        task: "Fange einen <code>ZeroDivisionError</code> ab.",
+        initialCode: 'try:\n    x = 10 / 0\nexcept ZeroDivisionError as e:\n    print("Fehler:", e)\n' },
+      { container: pgRoot,
+        task: "Fange zwei verschiedene Fehler: <code>ValueError</code> (bei <code>int(\"abc\")</code>) und <code>TypeError</code>.",
+        initialCode: 'try:\n    x = int("abc")\nexcept ValueError:\n    print("value")\nexcept TypeError:\n    print("type")\n' },
+      { container: pgRoot,
+        task: "Zeige, dass <code>finally</code> auch bei <code>return</code> läuft.",
+        initialCode: 'def test():\n    try:\n        return "try"\n    finally:\n        print("finally!")\n\nprint(test())\n' },
+      { container: pgRoot,
+        task: "Wirf einen Fehler mit <code>raise</code> wenn b=0 in <code>teile(a,b)</code>.",
+        initialCode: 'def teile(a, b):\n    if b == 0:\n        raise ZeroDivisionError("b darf nicht 0 sein")\n    return a / b\n\ntry:\n    teile(10, 0)\nexcept ZeroDivisionError as e:\n    print(e)\n' },
+      { container: pgRoot,
+        task: "Eigene Exception-Klasse <code>AgeError</code>. Wirf sie bei negativem Alter.",
+        initialCode: 'class AgeError(Exception):\n    pass\n\ndef check(a):\n    if a < 0:\n        raise AgeError(f"Alter ungültig: {a}")\n\ntry:\n    check(-5)\nexcept AgeError as e:\n    print("Gefangen:", e)\n' }
+    ]);
+
+    PCEP.initQuiz({
+      container: document.getElementById("quiz"),
+      moduleId: "7",
+      questions: [
+        { q: "Welchen Fehler wirft <code>int(\"hallo\")</code>?",
+          options: ["TypeError","ValueError","SyntaxError","NameError"],
+          correct: 1,
+          explain: "Der Typ stimmt (str), aber der Wert ist nicht umwandelbar → <code>ValueError</code>." },
+        { q: "Welchen Fehler wirft <code>\"5\" - 3</code>?",
+          options: ["TypeError","ValueError","ArithmeticError","SyntaxError"],
+          correct: 0,
+          explain: "Mischen von str und int → <code>TypeError</code>." },
+        { q: "Was gibt dieser Code aus?",
+          code: 'try:\n    print("a")\n    raise ValueError()\n    print("b")\nexcept ValueError:\n    print("c")\nfinally:\n    print("d")',
+          options: ["a b c d","a c d","a c","a d"],
+          correct: 1,
+          explain: "Nach <code>raise</code> wird 'b' übersprungen. 'c' im except, 'd' in finally." },
+        { q: "Wann läuft der <code>else</code>-Zweig in einem try-Block?",
+          options: ["Immer","Bei Fehler","Wenn kein Fehler auftrat","Wenn except-Block endete"],
+          correct: 2,
+          explain: "<code>else</code> läuft NUR wenn <code>try</code> erfolgreich war." },
+        { q: "Welches Schlüsselwort wirft eine Exception?",
+          options: ["throw","raise","error","panic"],
+          correct: 1,
+          explain: "Python: <code>raise</code>. <code>throw</code> gibt es in JS." },
+        { q: "Was ist die Basisklasse <strong>aller</strong> Exceptions in Python?",
+          options: ["Exception","Error","BaseException","object"],
+          correct: 2,
+          explain: "<code>BaseException</code>. Die meisten Fehler erben von <code>Exception</code>, die wiederum von <code>BaseException</code> erbt." },
+        { q: "Welcher Code fängt <code>IndexError</code> UND <code>KeyError</code> in einem Block?",
+          options: [
+            "except IndexError, KeyError:",
+            "except (IndexError, KeyError):",
+            "except IndexError | KeyError:",
+            "except [IndexError, KeyError]:"],
+          correct: 1,
+          explain: "Mehrere Exceptions als Tupel in Klammern." },
+        { q: "Was macht <code>assert x > 0, \"Fehler\"</code>?",
+          options: [
+            "Wirft Fehler wenn x > 0",
+            "Wirft AssertionError wenn x nicht > 0",
+            "Wirft Warning",
+            "Erzwingt x = 0"],
+          correct: 1,
+          explain: "<code>assert cond, msg</code> — wenn cond false, <code>AssertionError: msg</code>." },
+        { q: "Welcher Fehler bei <code>d = {}; d[\"key\"]</code>?",
+          options: ["IndexError","KeyError","LookupError","AttributeError"],
+          correct: 1,
+          explain: "Fehlender Dict-Key → <code>KeyError</code> (ein Subtyp von LookupError)." },
+        { q: "Was passiert bei diesem Code?",
+          code: 'try:\n    pass\nexcept Exception:\n    print("caught")\nelse:\n    print("else")',
+          options: ["caught","else","beides","nichts"],
+          correct: 1,
+          explain: "Kein Fehler im try → <code>else</code>-Block läuft." }
+      ]
+    });
+  </script>
+</body>
+</html>

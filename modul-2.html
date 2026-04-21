@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Modul 2 · Variablen & Datentypen · JSE Lern-App</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><div class="brand-logo">JS</div> JSE Lern-App</div>
+    <nav>
+      <a href="index.html">← Dashboard</a>
+      <a href="modul-1.html">← Modul 1</a>
+      <a href="modul-3.html">Modul 3 →</a>
+      <a href="pruefung.html">Prüfung</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div class="module-num">MODUL 2 · 22% der Prüfung</div>
+    <h1>Variablen, Datentypen & Type Casting</h1>
+    <p class="subtitle">Das wichtigste Kapitel. <code>var</code> vs <code>let</code> vs <code>const</code>, primitive Typen, <code>typeof</code>, Umwandlung.</p>
+
+    <div class="tabs" data-tabs>
+      <button class="tab-btn active" data-target="panel-theorie">📖 Theorie</button>
+      <button class="tab-btn" data-target="panel-karten">🃏 Lernkarteien</button>
+      <button class="tab-btn" data-target="panel-playground">💻 Playground</button>
+      <button class="tab-btn" data-target="panel-quiz">✅ Quiz</button>
+    </div>
+    <div>
+      <!-- THEORIE -->
+      <section class="tab-panel active" id="panel-theorie">
+        <div class="theory-section">
+          <h2>2.1 Variablen deklarieren</h2>
+          <p>Eine Variable ist ein <strong>benannter Speicherplatz</strong> für einen Wert. In modernem JS gibt es drei Schlüsselwörter:</p>
+<pre><code class="js">var   alterAlt = 30;     // alte Syntax (bis ES5)
+let   alter = 25;        // moderne, blockskopierte Variable
+const PI = 3.14;         // Konstante (nicht neu zuweisbar)</code></pre>
+
+          <h3>Unterschiede im Überblick</h3>
+          <table style="width:100%; border-collapse:collapse; font-size:14px">
+            <thead>
+              <tr style="border-bottom:1px solid var(--border)">
+                <th style="text-align:left; padding:8px">Eigenschaft</th>
+                <th style="text-align:left; padding:8px"><code>var</code></th>
+                <th style="text-align:left; padding:8px"><code>let</code></th>
+                <th style="text-align:left; padding:8px"><code>const</code></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td style="padding:8px">Scope</td><td>Funktion</td><td>Block</td><td>Block</td></tr>
+              <tr><td style="padding:8px">Neu zuweisbar</td><td>Ja</td><td>Ja</td><td>Nein</td></tr>
+              <tr><td style="padding:8px">Neu deklarierbar</td><td>Ja</td><td>Nein</td><td>Nein</td></tr>
+              <tr><td style="padding:8px">Hoisting (Wert)</td><td><code>undefined</code></td><td>TDZ-Fehler</td><td>TDZ-Fehler</td></tr>
+            </tbody>
+          </table>
+          <div class="callout"><strong>Faustregel:</strong> Nutze <code>const</code> standardmäßig, <code>let</code> wenn du neu zuweisen musst, <code>var</code> nie mehr.</div>
+        </div>
+
+        <div class="theory-section">
+          <h2>2.2 Primitive Datentypen</h2>
+          <p>JavaScript hat <strong>7 primitive Typen</strong>:</p>
+          <ul>
+            <li><strong>Number</strong> — Zahlen (Ganzzahl & Gleitkomma): <code>42</code>, <code>3.14</code>, <code>-7</code></li>
+            <li><strong>BigInt</strong> — sehr große Ganzzahlen: <code>9007199254740993n</code></li>
+            <li><strong>String</strong> — Text: <code>"hi"</code>, <code>'hi'</code>, <code>`hi`</code></li>
+            <li><strong>Boolean</strong> — Wahrheitswerte: <code>true</code>, <code>false</code></li>
+            <li><strong>undefined</strong> — Variable wurde deklariert aber nicht initialisiert</li>
+            <li><strong>null</strong> — bewusst „kein Wert"</li>
+            <li><strong>Symbol</strong> — einzigartiger, unveränderlicher Wert (selten)</li>
+          </ul>
+          <p>Alles andere (<code>Array</code>, <code>Object</code>, <code>Function</code>, <code>Date</code>…) ist ein <strong>Object</strong>.</p>
+        </div>
+
+        <div class="theory-section">
+          <h2>2.3 Der <code>Number</code>-Typ</h2>
+<pre><code class="js">let ganz = 42;
+let gleit = 3.14;
+let negativ = -17;
+let expo = 1.5e3;        // 1500
+let hex = 0xff;          // 255
+let bin = 0b1010;        // 10
+let oct = 0o17;          // 15
+
+// Spezielle Werte:
+Infinity                 // 1 / 0
+-Infinity                // -1 / 0
+NaN                      // "Not a Number" — z. B. 0/0, "abc" * 2</code></pre>
+          <p>Alle Zahlen sind <strong>64-bit-Gleitkomma</strong> (IEEE 754). Das führt zu:</p>
+<pre><code class="js">0.1 + 0.2 === 0.3   // false !
+0.1 + 0.2           // 0.30000000000000004</code></pre>
+          <div class="callout warn"><strong>Achtung:</strong> <code>NaN === NaN</code> ist <code>false</code>. Prüfe mit <code>Number.isNaN(x)</code> oder <code>Number.isNaN()</code>.</div>
+
+          <h3>Nützliche Number-Methoden</h3>
+<pre><code class="js">(3.14159).toFixed(2);       // "3.14"
+Number.isInteger(5);        // true
+Number.isNaN(NaN);          // true
+Number.parseFloat("3.14px"); // 3.14
+Number.parseInt("42abc", 10); // 42
+Math.max(1, 2, 3);          // 3
+Math.floor(3.9);            // 3
+Math.round(3.5);            // 4</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>2.4 Der <code>String</code>-Typ</h2>
+<pre><code class="js">let a = "doppelt";
+let b = 'einfach';
+let c = `template`;   // Backticks — erlauben Interpolation
+
+// Template Literals:
+let name = "Ali";
+let gruss = `Hallo, ${name}!`;       // "Hallo, Ali!"
+let multi = `Zeile 1
+Zeile 2`;                             // mehrzeilig erlaubt
+
+// Escape-Sequenzen:
+"Zeile1\nZeile2"    // \n = Zeilenumbruch
+"Tab\there"          // \t = Tab
+"Er sagte \"Hi\""   // \" = Anführungszeichen
+"Backslash: \\"     // \\ = Backslash</code></pre>
+
+          <h3>Nützliche String-Methoden & Properties</h3>
+<pre><code class="js">"hallo".length;              // 5
+"hallo".toUpperCase();        // "HALLO"
+"HALLO".toLowerCase();        // "hallo"
+"hallo".charAt(1);            // "a"
+"hallo"[1];                   // "a"
+"hallo welt".indexOf("welt"); // 6
+"hallo".includes("all");      // true
+"hallo".slice(1, 4);          // "all"
+"  hi  ".trim();              // "hi"
+"a,b,c".split(",");           // ["a", "b", "c"]
+"ha".repeat(3);               // "hahaha"
+"hallo".replace("h", "b");    // "ballo"</code></pre>
+          <div class="callout warn"><strong>Strings sind unveränderlich (immutable).</strong> <code>s.toUpperCase()</code> verändert <code>s</code> nicht, sondern gibt einen neuen String zurück.</div>
+        </div>
+
+        <div class="theory-section">
+          <h2>2.5 Der <code>Boolean</code>-Typ</h2>
+          <p>Nur zwei Werte: <code>true</code> oder <code>false</code>. Entsteht meist durch Vergleiche.</p>
+<pre><code class="js">let istOk = true;
+let istLeer = (name === "");  // true oder false
+
+// "Truthy" / "Falsy":
+// Falsy: false, 0, "", null, undefined, NaN, 0n
+// Alles andere ist truthy!
+Boolean(0);        // false
+Boolean("");       // false
+Boolean("hallo");  // true
+Boolean([]);       // true  (leeres Array ist truthy!)
+Boolean({});       // true  (leeres Objekt ist truthy!)</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>2.6 <code>undefined</code> und <code>null</code></h2>
+<pre><code class="js">let x;                // undefined (deklariert, kein Wert)
+let y = null;         // null (bewusst leer)
+
+typeof undefined;     // "undefined"
+typeof null;          // "object"  ← historisches Kuriosum!
+
+undefined == null;    // true  (lose Gleichheit)
+undefined === null;   // false (strikte Gleichheit)</code></pre>
+          <div class="callout warn"><strong>Merkspruch:</strong> <code>undefined</code> = „JavaScript hat ihn nicht gesetzt". <code>null</code> = „Entwickler hat ihn absichtlich auf leer gesetzt".</div>
+        </div>
+
+        <div class="theory-section">
+          <h2>2.7 <code>typeof</code> — den Typ prüfen</h2>
+<pre><code class="js">typeof 42;            // "number"
+typeof "hi";          // "string"
+typeof true;          // "boolean"
+typeof undefined;     // "undefined"
+typeof null;          // "object"       ← Stolperfalle!
+typeof {};            // "object"
+typeof [];            // "object"       (Arrays sind Objekte)
+typeof function(){};  // "function"
+typeof 42n;           // "bigint"
+typeof Symbol();      // "symbol"</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>2.8 Typumwandlung (Type Casting / Coercion)</h2>
+          <h3>Explizit — du rufst den Konverter auf</h3>
+<pre><code class="js">String(42);         // "42"
+String(true);       // "true"
+Number("42");       // 42
+Number("abc");      // NaN
+Number(true);       // 1
+Number(false);      // 0
+Number("");         // 0
+Number(null);       // 0
+Number(undefined);  // NaN
+Boolean(1);         // true
+Boolean(0);         // false
+parseInt("12px");   // 12
+parseFloat("3.14"); // 3.14</code></pre>
+
+          <h3>Implizit — JS wandelt automatisch</h3>
+<pre><code class="js">"5" + 1;       // "51"   ← String gewinnt bei +
+"5" - 1;       // 4      ← - erzwingt Number
+"5" * "2";     // 10
+true + 1;      // 2      ← true → 1
+null + 1;      // 1      ← null → 0
+undefined + 1; // NaN    ← undefined → NaN
+"" + 0;        // "0"
+[] + [];       // ""     ← Kurios!</code></pre>
+          <div class="callout danger"><strong>Faustregel:</strong> Bei <code>+</code> gewinnt der String. Bei <code>-</code>, <code>*</code>, <code>/</code> wird zu Number umgewandelt. Nutze <code>===</code> statt <code>==</code>, um Coercion zu vermeiden.</div>
+        </div>
+
+        <div class="btn-row mt-lg">
+          <button class="btn primary" data-mark-theory="2">✓ Theorie als gelesen markieren</button>
+          <a class="btn" href="modul-3.html">Weiter zu Modul 3 →</a>
+        </div>
+      </section>
+
+      <!-- LERNKARTEIEN -->
+      <section class="tab-panel" id="panel-karten">
+        <h2>Lernkarteien</h2>
+        <p class="subtitle">30 Karten zu Variablen, Typen & Umwandlung.</p>
+        <div id="flashcards"></div>
+      </section>
+
+      <!-- PLAYGROUND -->
+      <section class="tab-panel" id="panel-playground">
+        <h2>Code-Playground</h2>
+        <div id="playgrounds"></div>
+      </section>
+
+      <!-- QUIZ -->
+      <section class="tab-panel" id="panel-quiz">
+        <h2>Quiz — Modul 2</h2>
+        <div id="quiz"></div>
+      </section>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    JSE.initFlashcards({
+      container: document.getElementById("flashcards"),
+      moduleId: "2",
+      cards: [
+        { front: "Welche 3 Schlüsselwörter gibt es zum Deklarieren von Variablen?", back: "<code>var</code>, <code>let</code>, <code>const</code>" },
+        { front: "Welchen Scope hat <code>var</code>?", back: "<strong>Funktions-Scope</strong> — sichtbar in der gesamten Funktion, ignoriert Blöcke <code>{}</code>." },
+        { front: "Welchen Scope haben <code>let</code> und <code>const</code>?", back: "<strong>Block-Scope</strong> — sichtbar nur innerhalb des umgebenden <code>{}</code>-Blocks." },
+        { front: "Kann man eine <code>const</code>-Variable neu zuweisen?", back: "<strong>Nein.</strong> <code>const</code> = konstante Referenz. Aber: Bei Objekten/Arrays darf man <em>Eigenschaften</em> ändern." },
+        { front: "Welche 7 primitiven Datentypen hat JavaScript?", back: "1. Number<br>2. BigInt<br>3. String<br>4. Boolean<br>5. undefined<br>6. null<br>7. Symbol" },
+        { front: "Was gibt <code>typeof null</code> zurück?", back: "<code>\"object\"</code> — ein historischer Bug in JS, aus Kompatibilität nie gefixt." },
+        { front: "Was gibt <code>typeof undefined</code> zurück?", back: "<code>\"undefined\"</code>" },
+        { front: "Was gibt <code>typeof []</code> zurück?", back: "<code>\"object\"</code> — Arrays sind in JS Objekte. Nutze <code>Array.isArray()</code> zum Prüfen." },
+        { front: "Was gibt <code>typeof NaN</code> zurück?", back: "<code>\"number\"</code> — NaN ist (kurios) vom Typ Number." },
+        { front: "Was ist NaN?", back: "<strong>Not a Number</strong> — entsteht bei ungültigen mathematischen Operationen wie <code>0/0</code> oder <code>\"abc\" * 2</code>." },
+        { front: "Wie prüft man, ob ein Wert NaN ist?", back: "<code>Number.isNaN(x)</code> — NICHT mit <code>x === NaN</code>, das ist immer <code>false</code>." },
+        { front: "Nenne 6 falsy Werte in JS", back: "<code>false</code>, <code>0</code>, <code>\"\"</code>, <code>null</code>, <code>undefined</code>, <code>NaN</code> (auch <code>0n</code>)" },
+        { front: "Ist <code>[]</code> truthy oder falsy?", back: "<strong>truthy</strong>! Leere Arrays und Objekte sind in JS wahr." },
+        { front: "Was ist der Unterschied zwischen <code>null</code> und <code>undefined</code>?", back: "<code>undefined</code>: automatisch zugewiesen (nicht initialisiert).<br><code>null</code>: bewusst vom Entwickler gesetzt (leer)." },
+        { front: "Ergibt <code>null == undefined</code>?", back: "<strong>true</strong> (lose Gleichheit). Aber <code>null === undefined</code> ist <strong>false</strong>." },
+        { front: "Was ist ein Template Literal?", back: "Ein String mit Backticks <code>\\`...\\`</code>, der Interpolation mit <code>${...}</code> und Mehrzeiligkeit erlaubt." },
+        { front: "Wie gibt man \"Hallo, Ali!\" mit Template Literals aus, wenn <code>name = \"Ali\"</code>?", back: "<code>\\`Hallo, ${name}!\\`</code>" },
+        { front: "Was ergibt <code>\"5\" + 1</code>?", back: "<code>\"51\"</code> — der <code>+</code>-Operator konkateniert, wenn ein Operand ein String ist." },
+        { front: "Was ergibt <code>\"5\" - 1</code>?", back: "<code>4</code> — <code>-</code> erzwingt numerische Umwandlung." },
+        { front: "Was ergibt <code>true + 1</code>?", back: "<code>2</code> — <code>true</code> wird zu <code>1</code>." },
+        { front: "Was ergibt <code>Number(\"\")</code>?", back: "<code>0</code> — leerer String wird zu 0 konvertiert." },
+        { front: "Was ergibt <code>Number(\"abc\")</code>?", back: "<code>NaN</code> — nicht konvertierbar." },
+        { front: "Unterschied <code>parseInt(\"12px\")</code> vs <code>Number(\"12px\")</code>?", back: "<code>parseInt(\"12px\")</code> → <code>12</code> (liest führende Ziffern).<br><code>Number(\"12px\")</code> → <code>NaN</code> (strenger)." },
+        { front: "Wozu dient <code>toFixed(2)</code>?", back: "Rundet eine Zahl auf n Dezimalstellen und gibt einen <strong>String</strong> zurück. <code>(3.14159).toFixed(2) === \"3.14\"</code>" },
+        { front: "Sind Strings in JS veränderlich?", back: "<strong>Nein, immutable.</strong> Methoden wie <code>toUpperCase()</code> geben einen neuen String zurück, verändern den originalen nicht." },
+        { front: "Wie bekommt man die Länge eines Strings?", back: "<code>s.length</code> (ohne Klammern — es ist eine Property, keine Methode)" },
+        { front: "Was macht <code>\"a,b,c\".split(\",\")</code>?", back: "Gibt ein Array zurück: <code>[\"a\", \"b\", \"c\"]</code>" },
+        { front: "Kann <code>let</code> zweimal im selben Scope deklariert werden?", back: "<strong>Nein</strong> — <code>SyntaxError</code>. <code>var</code> schon, <code>let</code>/<code>const</code> nicht." },
+        { front: "Was passiert bei <code>const x;</code> ohne Wert?", back: "<strong>SyntaxError</strong> — <code>const</code> muss bei der Deklaration initialisiert werden." },
+        { front: "Ergibt <code>0.1 + 0.2 === 0.3</code> true?", back: "<strong>Nein</strong>. Ergebnis ist <code>0.30000000000000004</code> wegen IEEE 754 Gleitkomma-Arithmetik." }
+      ]
+    });
+
+    const pgRoot = document.getElementById("playgrounds");
+    JSE.initPlaygrounds([
+      { container: pgRoot,
+        task: "Deklariere eine Variable <code>name</code> mit deinem Namen und gib <code>\\`Hallo, ${name}!\\`</code> aus. Nutze ein Template Literal.",
+        initialCode: 'const name = "Ali";\n// TODO: Template Literal verwenden\n' },
+      { container: pgRoot,
+        task: "Teste alle <strong>falsy</strong> Werte: gib <code>Boolean(x)</code> für <code>0, \"\", null, undefined, NaN, false</code> aus.",
+        initialCode: 'console.log(Boolean(0));\n// weitere Werte ...\n' },
+      { container: pgRoot,
+        task: "Erkunde <strong>Typumwandlung</strong>. Gib die Ergebnisse und den Typ aus:",
+        initialCode: 'console.log("5" + 1, typeof ("5" + 1));\nconsole.log("5" - 1, typeof ("5" - 1));\nconsole.log(true + 1);\nconsole.log(null + 1);\nconsole.log(undefined + 1);\n' },
+      { container: pgRoot,
+        task: "Nimm den Satz <code>\"JavaScript ist toll\"</code> und gib aus:<br>1) Länge, 2) in Großbuchstaben, 3) als Array (split bei Leerzeichen).",
+        initialCode: 'const satz = "JavaScript ist toll";\n// 1) Länge\n// 2) Großbuchstaben\n// 3) split\n' }
+    ]);
+
+    JSE.initQuiz({
+      container: document.getElementById("quiz"),
+      moduleId: "2",
+      questions: [
+        { q: "Welches Schlüsselwort erzeugt eine <strong>nicht neu zuweisbare</strong> Variable?",
+          options: ["var", "let", "const", "final"],
+          correct: 2,
+          explain: "<code>const</code> verhindert Neuzuweisung. <code>final</code> gibt es in JS nicht." },
+        { q: "Was wird ausgegeben?",
+          code: 'let x = 5;\nx = "hallo";\nconsole.log(typeof x);',
+          options: ["\"number\"", "\"string\"", "TypeError", "undefined"],
+          correct: 1,
+          explain: "JS ist dynamisch typisiert — <code>x</code> wechselt von number zu string." },
+        { q: "Was gibt <code>typeof null</code> zurück?",
+          options: ["\"null\"", "\"undefined\"", "\"object\"", "\"boolean\""],
+          correct: 2,
+          explain: "Ein historischer Bug in JS: <code>typeof null</code> gibt <code>\"object\"</code> zurück." },
+        { q: "Welcher Wert ist <strong>truthy</strong>?",
+          options: ["0", "\"\"", "[]", "null"],
+          correct: 2,
+          explain: "<code>[]</code> (leeres Array) ist truthy! Nur diese 6 sind falsy: <code>false, 0, \"\", null, undefined, NaN</code>." },
+        { q: "Was ergibt <code>\"3\" + 2 + 1</code>?",
+          code: 'console.log("3" + 2 + 1);',
+          options: ["6", "\"6\"", "\"321\"", "\"33\""],
+          correct: 2,
+          explain: "Von links nach rechts: <code>\"3\" + 2</code> → <code>\"32\"</code>, dann <code>\"32\" + 1</code> → <code>\"321\"</code>." },
+        { q: "Was ergibt <code>3 + 2 + \"1\"</code>?",
+          code: 'console.log(3 + 2 + "1");',
+          options: ["6", "\"6\"", "\"51\"", "\"321\""],
+          correct: 2,
+          explain: "<code>3 + 2 = 5</code> (numerisch), dann <code>5 + \"1\" = \"51\"</code> (String-Konkatenation)." },
+        { q: "Welche Aussage stimmt?",
+          options: ["let ist funktions-skopiert", "var ist block-skopiert", "const verhindert jede Änderung an Objekten", "let ist block-skopiert"],
+          correct: 3,
+          explain: "<code>let</code>/<code>const</code> sind block-skopiert, <code>var</code> ist funktions-skopiert. <code>const</code> verhindert Neuzuweisung, aber nicht Mutation." },
+        { q: "Was gibt dieser Code aus?",
+          code: 'console.log(Number("42abc"));\nconsole.log(parseInt("42abc"));',
+          options: ["42 42", "NaN 42", "NaN NaN", "42 NaN"],
+          correct: 1,
+          explain: "<code>Number()</code> ist strikt → NaN. <code>parseInt()</code> liest führende Ziffern → 42." },
+        { q: "Welcher Wert ist <strong>nicht</strong> falsy?",
+          options: ["NaN", "0n", "\" \"", "undefined"],
+          correct: 2,
+          explain: "<code>\" \"</code> (String mit Leerzeichen) ist truthy! Nur <code>\"\"</code> (leer) ist falsy." },
+        { q: "Was passiert hier?",
+          code: 'const user = { name: "Ali" };\nuser.name = "Bob";\nconsole.log(user.name);',
+          options: ["TypeError (const)", "\"Ali\"", "\"Bob\"", "undefined"],
+          correct: 2,
+          explain: "<code>const</code> verhindert nur Neuzuweisung der Referenz, nicht Mutation der Objekt-Eigenschaften." }
+      ]
+    });
+  </script>
+</body>
+</html>

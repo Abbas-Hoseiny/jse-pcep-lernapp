@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Modul 4 · Kontrollfluss · PCEP Lern-App</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="container">
+    <div class="module-num">MODUL 4 · 20% der Prüfung</div>
+    <h1>Kontrollfluss: Bedingungen & Schleifen</h1>
+    <p class="subtitle"><code>if/elif/else</code>, <code>while</code>, <code>for</code>, <code>range()</code>, <code>break</code>, <code>continue</code>, <code>while-else</code>, <code>for-else</code>, <code>pass</code>.</p>
+
+    <div class="tabs" data-tabs>
+      <button class="tab-btn active" data-target="panel-theorie">📖 Theorie</button>
+      <button class="tab-btn" data-target="panel-karten">🃏 Lernkarteien</button>
+      <button class="tab-btn" data-target="panel-playground">🐍 Playground</button>
+      <button class="tab-btn" data-target="panel-quiz">✅ Quiz</button>
+    </div>
+    <div>
+      <section class="tab-panel active" id="panel-theorie">
+        <div class="theory-section">
+          <h2>4.1 <code>if</code> / <code>elif</code> / <code>else</code></h2>
+<pre><code class="py">if bedingung:
+    # Code
+elif andere_bedingung:
+    # Code
+else:
+    # Code</code></pre>
+          <p>Beachte: <strong>Doppelpunkt <code>:</code></strong> am Ende, dann <strong>Einrückung</strong> für den Block.</p>
+<pre><code class="py">alter = 25
+if alter >= 18:
+    print("erwachsen")
+elif alter >= 13:
+    print("teenager")
+else:
+    print("kind")</code></pre>
+          <p><code>elif</code> = „else if". Beliebig viele erlaubt. <code>else</code> ist optional, kann nur einmal am Ende stehen.</p>
+        </div>
+
+        <div class="theory-section">
+          <h2>4.2 Verschachtelte Bedingungen</h2>
+<pre><code class="py">if alter >= 18:
+    if hat_ausweis:
+        print("darf rein")
+    else:
+        print("Ausweis vergessen")
+else:
+    print("zu jung")</code></pre>
+          <p>Jede Verschachtelung = eine weitere Einrückungsebene.</p>
+        </div>
+
+        <div class="theory-section">
+          <h2>4.3 <code>while</code>-Schleife</h2>
+<pre><code class="py">i = 0
+while i < 5:
+    print(i)
+    i += 1
+# 0 1 2 3 4</code></pre>
+          <p>Prüft die Bedingung <strong>vor</strong> jedem Durchlauf. Kann 0× laufen.</p>
+          <div class="callout danger"><strong>Endlosschleife!</strong> Wenn du <code>i += 1</code> vergisst, läuft sie unendlich.</div>
+        </div>
+
+        <div class="theory-section">
+          <h2>4.4 <code>for</code>-Schleife — iteriert über Sequenzen</h2>
+<pre><code class="py">for zeichen in "Hallo":
+    print(zeichen)
+# H a l l o
+
+for zahl in [1, 2, 3]:
+    print(zahl)
+
+for key in {"a": 1, "b": 2}:    # iteriert über Keys
+    print(key)</code></pre>
+          <div class="callout"><strong>Großer Unterschied zu JS:</strong> Python hat keine C-Style-<code>for</code>-Schleife. Immer über Sequenzen!</div>
+        </div>
+
+        <div class="theory-section">
+          <h2>4.5 <code>range()</code></h2>
+          <p>Erzeugt eine Zahlenfolge — perfekt für <code>for</code>.</p>
+<pre><code class="py">range(5)         # 0, 1, 2, 3, 4          (5 Werte)
+range(1, 6)      # 1, 2, 3, 4, 5          (start, stop)
+range(0, 10, 2)  # 0, 2, 4, 6, 8          (start, stop, step)
+range(10, 0, -1) # 10, 9, 8, ..., 1
+
+for i in range(5):
+    print(i)
+# 0 1 2 3 4</code></pre>
+          <div class="callout warn">
+            <strong><code>range()</code>-Regeln:</strong>
+            <ul>
+              <li><code>stop</code> ist <strong>ausschließlich</strong> — nicht enthalten!</li>
+              <li><code>range</code> erzeugt ein iterierbares Objekt, keine Liste. Umwandeln: <code>list(range(5))</code>.</li>
+              <li>Rückwärts nur mit negativem <code>step</code>.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="theory-section">
+          <h2>4.6 <code>break</code> und <code>continue</code></h2>
+<pre><code class="py"># break — Schleife komplett verlassen
+for i in range(10):
+    if i == 5:
+        break
+    print(i)
+# 0 1 2 3 4
+
+# continue — nur aktuelle Iteration überspringen
+for i in range(5):
+    if i == 2:
+        continue
+    print(i)
+# 0 1 3 4</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>4.7 <code>while-else</code> und <code>for-else</code> — Python-Spezialität!</h2>
+          <p>Der <code>else</code>-Block wird ausgeführt, wenn die Schleife <strong>normal</strong> endete (nicht durch <code>break</code>).</p>
+<pre><code class="py">for i in range(5):
+    print(i)
+else:
+    print("Schleife komplett durchgelaufen")
+# 0 1 2 3 4
+# Schleife komplett durchgelaufen
+
+# Mit break — else läuft NICHT:
+for i in range(5):
+    if i == 3:
+        break
+    print(i)
+else:
+    print("nicht erreicht")
+# 0 1 2</code></pre>
+          <div class="callout"><strong>PCEP-Klassiker:</strong> nützlich für „Suche"-Schleifen. <code>for</code>-Schleife sucht etwas — wenn nicht gefunden (kein <code>break</code>), wird der <code>else</code>-Block ausgeführt.</div>
+        </div>
+
+        <div class="theory-section">
+          <h2>4.8 <code>pass</code> — die „leere" Anweisung</h2>
+          <p>Python braucht bei leeren Blöcken einen Platzhalter — Einrückung allein reicht nicht.</p>
+<pre><code class="py">if x > 0:
+    pass           # TODO: später implementieren
+
+def spaeter():
+    pass           # leere Funktion
+
+for i in range(10):
+    pass           # leere Schleife</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>4.9 Verschachtelte Schleifen</h2>
+<pre><code class="py">for i in range(1, 4):
+    for j in range(1, 4):
+        print(i, j)
+# 1 1, 1 2, 1 3, 2 1, 2 2, 2 3, 3 1, 3 2, 3 3
+
+# break verlässt nur die INNERSTE Schleife
+for i in range(3):
+    for j in range(3):
+        if j == 1:
+            break
+        print(i, j)
+# 0 0, 1 0, 2 0</code></pre>
+          <p>Python hat keine Labels für <code>break</code>. Um aus mehreren Schleifen auszubrechen: Flag, Funktion mit <code>return</code>, oder Exception.</p>
+        </div>
+
+        <div class="theory-section">
+          <h2>4.10 <code>if</code> als Ausdruck (ternär)</h2>
+<pre><code class="py">note = 85
+buchstabe = "A" if note >= 90 else "B" if note >= 80 else "C"
+print(buchstabe)  # 'B'</code></pre>
+        </div>
+
+        <div class="btn-row mt-lg">
+          <button class="btn primary" data-mark-theory="4">✓ Theorie als gelesen markieren</button>
+          <a class="btn" href="modul-5.html">Weiter zu Modul 5 →</a>
+        </div>
+      </section>
+
+      <section class="tab-panel" id="panel-karten">
+        <h2>Lernkarteien</h2>
+        <div id="flashcards"></div>
+      </section>
+      <section class="tab-panel" id="panel-playground">
+        <h2>Python-Playground</h2>
+        <div id="playgrounds"></div>
+      </section>
+      <section class="tab-panel" id="panel-quiz">
+        <h2>Quiz — Modul 4</h2>
+        <div id="quiz"></div>
+      </section>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    PCEP.initFlashcards({
+      container: document.getElementById("flashcards"),
+      moduleId: "4",
+      cards: [
+        { front: "Syntax einer <code>if</code>-Anweisung in Python?", back: "<code>if bedingung:</code> + eingerückter Block. Doppelpunkt nicht vergessen!" },
+        { front: "Was bedeutet <code>elif</code>?", back: "„else if" — folgt nach <code>if</code>, kann mehrfach vorkommen." },
+        { front: "Wie viele <code>else</code>-Blöcke darf ein <code>if</code> haben?", back: "<strong>Höchstens einen</strong>, immer am Ende. Optional." },
+        { front: "Was iteriert <code>for x in \"abc\"</code>?", back: "Die Zeichen: <code>a</code>, <code>b</code>, <code>c</code> — Strings sind iterierbar." },
+        { front: "Was iteriert <code>for k in {\"a\": 1, \"b\": 2}</code>?", back: "Die <strong>Keys</strong>: <code>a</code>, <code>b</code>." },
+        { front: "Was gibt <code>range(5)</code> zurück?", back: "Ein iterierbares Objekt mit 0, 1, 2, 3, 4." },
+        { front: "Was gibt <code>range(2, 8)</code> zurück?", back: "2, 3, 4, 5, 6, 7 — <strong>8 ist nicht enthalten</strong>." },
+        { front: "Was gibt <code>range(0, 10, 2)</code>?", back: "0, 2, 4, 6, 8 — Step = 2." },
+        { front: "Wie zählt man rückwärts mit range?", back: "Negativer Step: <code>range(10, 0, -1)</code> → 10, 9, ..., 1." },
+        { front: "Was macht <code>break</code>?", back: "Verlässt die innerste Schleife komplett." },
+        { front: "Was macht <code>continue</code>?", back: "Überspringt den Rest der aktuellen Iteration, geht zur nächsten." },
+        { front: "Was macht <code>pass</code>?", back: "„Nichts tun" — Platzhalter für einen Block, der Syntax erfordert. z. B. in leeren Funktionen oder if-Branches." },
+        { front: "Was bewirkt <code>for-else</code>?", back: "<code>else</code> läuft, wenn die Schleife <strong>ohne break</strong> zu Ende lief. Nützlich für Suchschleifen." },
+        { front: "Läuft <code>else</code> nach <code>break</code>?", back: "<strong>Nein.</strong> <code>else</code> wird übersprungen." },
+        { front: "Wie oft läuft <code>while False: ...</code>?", back: "Nullmal — Bedingung ist gleich false." },
+        { front: "Wie oft läuft <code>while True: break</code>?", back: "Einmal — Körper läuft einmal, dann break." },
+        { front: "Kann man in Python die Bedingung von for am Zeilenanfang prüfen?", back: "Nein — Python-<code>for</code> iteriert immer über Sequenzen, es gibt keine C-Style-<code>for</code>." },
+        { front: "Wie iteriert man mit Index über eine Liste?", back: "<code>for i, x in enumerate(liste):</code>" },
+        { front: "Wie iteriert man über 2 Listen parallel?", back: "<code>for a, b in zip(liste1, liste2):</code>" },
+        { front: "Wie prüft man, ob eine Liste leer ist?", back: "<code>if not liste:</code> — leere Listen sind falsy." },
+        { front: "Ternär-Syntax in Python?", back: "<code>wert_true if bedingung else wert_false</code>" },
+        { front: "Was gibt dieser Code aus? <code>for i in range(1,10,3): print(i)</code>", back: "1, 4, 7" },
+        { front: "Gibt es <code>do...while</code> in Python?", back: "<strong>Nein.</strong> Emuliert mit <code>while True: ... if bedingung: break</code>." },
+        { front: "Was passiert bei <code>for i in range(0):</code>?", back: "Körper läuft nicht — leerer Range." },
+        { front: "Warum Doppelpunkt <code>:</code> hinter <code>if</code> / <code>for</code> / <code>def</code>?", back: "Python-Syntax: Der Doppelpunkt leitet den eingerückten Block ein." },
+        { front: "Wie break't man aus einer verschachtelten Schleife?", back: "Mit Flag-Variable, <code>return</code> (in Funktion) oder Exception — Python hat keine Labels." },
+        { front: "Wie gibt man <code>0 1 2 3 4 5 6 7 8 9</code> aus?", back: "<code>for i in range(10): print(i)</code>" },
+        { front: "Unterschied <code>range(5)</code> und <code>list(range(5))</code>?", back: "<code>range(5)</code> ist ein Iterator-Objekt, <code>list(range(5))</code> ist <code>[0,1,2,3,4]</code> — eine echte Liste." }
+      ]
+    });
+
+    const pgRoot = document.getElementById("playgrounds");
+    PCEP.initPlaygrounds([
+      { container: pgRoot,
+        task: "FizzBuzz: Zahlen 1–20. Vielfache von 3 → „Fizz", von 5 → „Buzz", von beiden → „FizzBuzz".",
+        initialCode: 'for i in range(1, 21):\n    # TODO\n    pass\n' },
+      { container: pgRoot,
+        task: "Summe aller Zahlen von 1 bis 100 berechnen und ausgeben.",
+        initialCode: 'summe = 0\nfor i in range(1, 101):\n    summe += i\nprint(summe)\n' },
+      { container: pgRoot,
+        task: "Demonstration <code>for-else</code>: suche in einer Liste nach der Zahl 99. Wenn nicht gefunden, gib „nicht da" aus.",
+        initialCode: 'liste = [1, 5, 10, 20]\nfor x in liste:\n    if x == 99:\n        print("gefunden")\n        break\nelse:\n    print("nicht da")\n' },
+      { container: pgRoot,
+        task: "Multiplikationstabelle 1–5 (verschachtelte for-Schleifen).",
+        initialCode: 'for i in range(1, 6):\n    for j in range(1, 6):\n        print(f"{i} × {j} = {i*j}")\n' },
+      { container: pgRoot,
+        task: "Frage eine Zahl ab und gib ihre Fakultät mit einer <code>while</code>-Schleife aus.",
+        initialCode: 'n = 5\nfak = 1\nwhile n > 1:\n    fak *= n\n    n -= 1\nprint(fak)\n' }
+    ]);
+
+    PCEP.initQuiz({
+      container: document.getElementById("quiz"),
+      moduleId: "4",
+      questions: [
+        { q: "Wie viele Werte liefert <code>range(2, 8)</code>?",
+          options: ["5","6","7","8"],
+          correct: 1,
+          explain: "2, 3, 4, 5, 6, 7 → 6 Werte (stop ist ausschließlich)." },
+        { q: "Was gibt dieser Code aus?",
+          code: 'for i in range(3):\n    print(i, end=" ")',
+          options: ["0 1 2","1 2 3","0 1 2 3","1 2"],
+          correct: 0,
+          explain: "range(3) = 0, 1, 2. <code>end=\" \"</code> vermeidet Zeilenumbruch." },
+        { q: "Was gibt dieser Code aus?",
+          code: 'for i in range(1, 10, 3):\n    print(i)',
+          options: ["1 4 7","1 4 7 10","3 6 9","1 2 3"],
+          correct: 0,
+          explain: "Start 1, Stop 10 (ausschl.), Step 3 → 1, 4, 7." },
+        { q: "Was bewirkt <code>else</code> nach einer <code>for</code>-Schleife?",
+          options: [
+            "Läuft bei jedem Durchlauf",
+            "Läuft nur bei Fehler",
+            "Läuft wenn die Schleife ohne break zu Ende ging",
+            "Läuft immer am Anfang"],
+          correct: 2,
+          explain: "<code>for-else</code>: <code>else</code> wird ausgeführt, wenn kein <code>break</code> die Schleife beendete." },
+        { q: "Was gibt dieser Code aus?",
+          code: 'for i in range(5):\n    if i == 3: break\n    print(i)\nelse:\n    print("done")',
+          options: ["0 1 2 done","0 1 2","0 1 2 3","done"],
+          correct: 1,
+          explain: "Mit break → else-Block läuft NICHT. Ausgabe: 0, 1, 2." },
+        { q: "Was macht <code>pass</code>?",
+          options: ["Beendet die Schleife","Überspringt Iteration","Tut nichts — Platzhalter","Wirft Fehler"],
+          correct: 2,
+          explain: "<code>pass</code> ist eine leere Anweisung, erlaubt syntaktisch leere Blöcke." },
+        { q: "Wie iteriert man über die Keys eines Dicts?",
+          options: ["for k in dict.keys():","for k in dict:","beides möglich","mit for k in dict.items():"],
+          correct: 2,
+          explain: "<code>for k in dict</code> iteriert über die Keys, <code>.keys()</code> macht dasselbe explizit." },
+        { q: "Was gibt dieser Code aus?",
+          code: 'i = 0\nwhile i < 3:\n    i += 1\n    if i == 2: continue\n    print(i)',
+          options: ["1 2 3","1 3","1 2","2 3"],
+          correct: 1,
+          explain: "Bei i=2 überspringt <code>continue</code> das print. Ausgabe: 1, 3." },
+        { q: "Welches Statement gibt es in Python <strong>nicht</strong>?",
+          options: ["if","for","switch","while"],
+          correct: 2,
+          explain: "Python hat kein <code>switch</code>. Seit 3.10 gibt es <code>match/case</code> — aber kein klassisches switch." },
+        { q: "Was ergibt <code>list(range(5, 0, -1))</code>?",
+          options: ["[5,4,3,2,1,0]","[5,4,3,2,1]","[0,1,2,3,4,5]","[1,2,3,4,5]"],
+          correct: 1,
+          explain: "Step -1, stop 0 (ausschließlich): 5, 4, 3, 2, 1." }
+      ]
+    });
+  </script>
+</body>
+</html>

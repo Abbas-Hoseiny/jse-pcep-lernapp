@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JSE Lern-App · JavaScript Essentials 1</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%23f7df1e%22 rx=%2215%22/><text x=%2250%22 y=%2272%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-weight=%22900%22 font-size=%2250%22 fill=%22%23000%22>JS</text></svg>" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><div class="brand-logo">JS</div> JSE Lern-App</div>
+    <nav>
+      <a href="index.html" class="active">Dashboard</a>
+      <a href="pruefung.html">Prüfung</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h1>JavaScript Essentials 1 — JSE-40-01</h1>
+      <p class="subtitle">Ziel: In 6 Tagen prüfungsbereit. 7 Module · Theorie · Lernkarteien · Code-Playground · Quiz · vollständige Prüfungssimulation.</p>
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-label">Fortschritt gesamt</div><div class="stat-value" data-overall-progress>0%</div></div>
+        <div class="stat"><div class="stat-label">Prüfung beste</div><div class="stat-value" data-exam-best>—</div></div>
+        <div class="stat"><div class="stat-label">Prüfungsversuche</div><div class="stat-value" data-exam-attempts>0</div></div>
+      </div>
+    </section>
+
+    <h2>Lernpfad</h2>
+    <p class="subtitle">Arbeite die Module der Reihe nach durch. Jedes Modul hat Theorie, Lernkarteien, einen Code-Playground und ein Quiz.</p>
+
+    <div class="module-grid">
+      <a class="module-card" href="modul-1.html" data-module-progress="1">
+        <div class="module-num">MODUL 1 · 8% der Prüfung</div>
+        <h3 class="module-title">Einführung & Programmiergrundlagen</h3>
+        <p class="module-desc">Was ist JavaScript? Wie läuft es? Syntax, Kommentare, Literale, <code>console.log</code>.</p>
+        <div class="module-meta"><span>🎯 ~20 Karten</span><span>10 Fragen</span></div>
+        <div class="module-progress"><div class="progress-bar"><div class="progress-fill"></div></div><div class="progress-label">0% abgeschlossen</div></div>
+      </a>
+
+      <a class="module-card" href="modul-2.html" data-module-progress="2">
+        <div class="module-num">MODUL 2 · 22% der Prüfung</div>
+        <h3 class="module-title">Variablen, Datentypen & Type Casting</h3>
+        <p class="module-desc"><code>var</code>, <code>let</code>, <code>const</code>, primitive Typen, <code>typeof</code>, Typumwandlung, Template Literals.</p>
+        <div class="module-meta"><span>🎯 ~30 Karten</span><span>10 Fragen</span></div>
+        <div class="module-progress"><div class="progress-bar"><div class="progress-fill"></div></div><div class="progress-label">0% abgeschlossen</div></div>
+      </a>
+
+      <a class="module-card" href="modul-3.html" data-module-progress="3">
+        <div class="module-num">MODUL 3 · 14% der Prüfung</div>
+        <h3 class="module-title">Operatoren & Benutzerinteraktion</h3>
+        <p class="module-desc">Arithmetik, Vergleich, Logik, Zuweisung, Precedence, <code>prompt</code>/<code>alert</code>/<code>confirm</code>.</p>
+        <div class="module-meta"><span>🎯 ~25 Karten</span><span>10 Fragen</span></div>
+        <div class="module-progress"><div class="progress-bar"><div class="progress-fill"></div></div><div class="progress-label">0% abgeschlossen</div></div>
+      </a>
+
+      <a class="module-card" href="modul-4.html" data-module-progress="4">
+        <div class="module-num">MODUL 4 · 20% der Prüfung</div>
+        <h3 class="module-title">Kontrollfluss: if, switch, Schleifen</h3>
+        <p class="module-desc">Bedingungen, <code>switch/case</code>, <code>while</code>/<code>do-while</code>/<code>for</code>, <code>break</code>/<code>continue</code>.</p>
+        <div class="module-meta"><span>🎯 ~25 Karten</span><span>10 Fragen</span></div>
+        <div class="module-progress"><div class="progress-bar"><div class="progress-fill"></div></div><div class="progress-label">0% abgeschlossen</div></div>
+      </a>
+
+      <a class="module-card" href="modul-5.html" data-module-progress="5">
+        <div class="module-num">MODUL 5 · 18% der Prüfung</div>
+        <h3 class="module-title">Funktionen</h3>
+        <p class="module-desc">Deklaration, Ausdrücke, Arrow Functions, Parameter, Scope, Hoisting, Rekursion, Callbacks.</p>
+        <div class="module-meta"><span>🎯 ~28 Karten</span><span>10 Fragen</span></div>
+        <div class="module-progress"><div class="progress-bar"><div class="progress-fill"></div></div><div class="progress-label">0% abgeschlossen</div></div>
+      </a>
+
+      <a class="module-card" href="modul-6.html" data-module-progress="6">
+        <div class="module-num">MODUL 6 · 5% der Prüfung</div>
+        <h3 class="module-title">Fehler, Debugging & Troubleshooting</h3>
+        <p class="module-desc"><code>try</code>/<code>catch</code>/<code>finally</code>, <code>throw</code>, Fehlerklassen, Debugging-Strategien.</p>
+        <div class="module-meta"><span>🎯 ~18 Karten</span><span>10 Fragen</span></div>
+        <div class="module-progress"><div class="progress-bar"><div class="progress-fill"></div></div><div class="progress-label">0% abgeschlossen</div></div>
+      </a>
+
+      <a class="module-card" href="modul-7.html" data-module-progress="7">
+        <div class="module-num">MODUL 7 · 13% der Prüfung</div>
+        <h3 class="module-title">Arrays (einfache Datensammlungen)</h3>
+        <p class="module-desc">Erstellen, zugreifen, Methoden (<code>push</code>, <code>pop</code>, <code>slice</code>…), iterieren, mehrdimensional.</p>
+        <div class="module-meta"><span>🎯 ~25 Karten</span><span>10 Fragen</span></div>
+        <div class="module-progress"><div class="progress-bar"><div class="progress-fill"></div></div><div class="progress-label">0% abgeschlossen</div></div>
+      </a>
+
+      <a class="module-card exam-card" href="pruefung.html">
+        <div class="module-num">📝 PRÜFUNGSSIMULATION</div>
+        <h3 class="module-title">40 Fragen · 60 Minuten · 70%</h3>
+        <p class="module-desc">Echte Prüfungsbedingungen. Zufallsauswahl aus dem vollen Fragenpool. Flag-Funktion, Navigation, Timer, Auswertung mit Erklärungen.</p>
+        <div class="module-meta"><span>Realbedingungen</span><span>Auswertung</span></div>
+      </a>
+    </div>
+
+    <section class="mt-lg">
+      <h2>6-Tage-Lernplan</h2>
+      <div class="theory-section">
+        <ul>
+          <li><strong>Tag 1:</strong> Modul 1 + 2 — Grundlagen, Variablen, Datentypen</li>
+          <li><strong>Tag 2:</strong> Modul 3 + 4 — Operatoren, Kontrollfluss</li>
+          <li><strong>Tag 3:</strong> Modul 5 — Funktionen (größtes Thema)</li>
+          <li><strong>Tag 4:</strong> Modul 6 + 7 — Fehler, Arrays</li>
+          <li><strong>Tag 5:</strong> Wiederholung aller Lernkarten + erste Prüfungssimulation</li>
+          <li><strong>Tag 6:</strong> Schwachstellen gezielt üben + 2× Prüfungssimulation → Prüfung</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="mt-lg">
+      <h2>Tipps zur Nutzung</h2>
+      <div class="theory-section">
+        <ul>
+          <li><strong>Fortschritt</strong> wird im Browser gespeichert (<code>localStorage</code>) — keine Anmeldung nötig.</li>
+          <li>Lernkarteien: Leertaste = umdrehen, ←/→ = navigieren. „Wusste ich" entfernt die Karte aus dem Stapel.</li>
+          <li>Code-Playground: <kbd>Cmd/Ctrl+Enter</kbd> führt Code aus. Nutze <code>console.log()</code> für Ausgaben.</li>
+          <li>Quiz-Fragen haben Erklärungen — lies sie auch wenn du richtig geantwortet hast.</li>
+          <li>Prüfungssimulation mehrfach machen, bis du konstant > 80 % erreichst.</li>
+        </ul>
+      </div>
+    </section>
+
+    <footer class="mt-lg center" style="padding:30px 0; color:var(--text-muted); font-size:13px">
+      Offline nutzbar · Alle Daten bleiben lokal · Fortschritt in der Seitenleiste zurücksetzbar
+    </footer>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Prüfungssimulation · JSE-40-01</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><div class="brand-logo">JS</div> JSE Lern-App</div>
+    <nav>
+      <a href="index.html">← Dashboard</a>
+      <a href="pruefung.html" class="active">Prüfung</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div id="exam-root"></div>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    // =========================================================
+    //  FRAGENPOOL — ca. 90 Fragen, thematisch abgedeckt
+    // =========================================================
+    const POOL = [
+      // ---- Modul 1: Grundlagen ----
+      { q: "Wer hat JavaScript erfunden?", options: ["Brendan Eich","James Gosling","Guido van Rossum","Dennis Ritchie"], correct: 0, explain: "Brendan Eich bei Netscape, 1995." },
+      { q: "In welchem Jahr wurde JavaScript eingeführt?", options: ["1991","1995","2000","2005"], correct: 1, explain: "1995 bei Netscape, in nur 10 Tagen entwickelt." },
+      { q: "Welcher Befehl gibt in der Konsole Text aus?", options: ["print()","echo()","console.log()","System.out.println()"], correct: 2, explain: "<code>console.log()</code> ist Standard in JS." },
+      { q: "Was ist ein gültiger Variablenname?", options: ["2value","my-var","$price","let"], correct: 2, explain: "Bezeichner dürfen nicht mit Ziffer beginnen, nicht <code>-</code> enthalten, und keine reservierten Schlüsselwörter sein." },
+      { q: "Wie schreibt man einen einzeiligen Kommentar?", options: ["# Kommentar","/* Kommentar */","// Kommentar","<!-- Kommentar -->"], correct: 2, explain: "<code>//</code> für eine Zeile, <code>/* */</code> für mehrere." },
+      { q: "Welches Symbol beendet eine Anweisung in JS?", options: [":",".",";",","], correct: 2, explain: "Semikolon. Dank ASI oft optional, aber empfohlen." },
+      { q: "Sind <code>Name</code> und <code>name</code> dieselbe Variable?", options: ["Ja","Nein","Nur im strict mode","Nur in Funktionen"], correct: 1, explain: "JS ist case-sensitive." },
+
+      // ---- Modul 2: Variablen & Typen ----
+      { q: "Welches Schlüsselwort erzeugt eine nicht neu zuweisbare Variable?", options: ["var","let","const","static"], correct: 2, explain: "<code>const</code>." },
+      { q: "Welchen Scope hat <code>let</code>?", options: ["Block","Funktion","Global","Kein Scope"], correct: 0, explain: "Block-Scope (innerhalb <code>{}</code>)." },
+      { q: "Welchen Scope hat <code>var</code>?", options: ["Block","Funktion","Global","Kein Scope"], correct: 1, explain: "Funktions-Scope — ignoriert Blöcke." },
+      { q: "Wie viele primitive Datentypen hat JS?", options: ["5","6","7","8"], correct: 2, explain: "Number, BigInt, String, Boolean, undefined, null, Symbol." },
+      { q: "Was gibt <code>typeof null</code> zurück?", options: ["\"null\"","\"object\"","\"undefined\"","\"boolean\""], correct: 1, explain: "Historischer Bug in JS: <code>\"object\"</code>." },
+      { q: "Was gibt <code>typeof []</code> zurück?", options: ["\"array\"","\"object\"","\"list\"","\"iterable\""], correct: 1, explain: "Arrays sind Objekte. Nutze <code>Array.isArray()</code> zum Prüfen." },
+      { q: "Welcher Wert ist <strong>truthy</strong>?", options: ["0","\"\"","\" \"","null"], correct: 2, explain: "Ein Leerzeichen-String ist truthy. Nur der leere String <code>\"\"</code> ist falsy." },
+      { q: "Welcher Wert ist <strong>falsy</strong>?", options: ["\"0\"","[]","{}","NaN"], correct: 3, explain: "NaN ist falsy. <code>\"0\"</code>, <code>[]</code> und <code>{}</code> sind truthy." },
+      { q: "Was ergibt <code>\"5\" + 3</code>?", options: ["8","\"8\"","\"53\"","NaN"], correct: 2, explain: "<code>+</code> mit String → Konkatenation: <code>\"53\"</code>." },
+      { q: "Was ergibt <code>\"5\" - 3</code>?", options: ["2","\"2\"","\"53\"","NaN"], correct: 0, explain: "<code>-</code> erzwingt Number → <code>2</code>." },
+      { q: "Was ergibt <code>Number(\"\")</code>?", options: ["0","NaN","undefined","null"], correct: 0, explain: "Leerer String wird zu 0." },
+      { q: "Was ergibt <code>Number(\"hallo\")</code>?", options: ["0","NaN","undefined","\"hallo\""], correct: 1, explain: "Nicht konvertierbar → NaN." },
+      { q: "Was ergibt <code>null == undefined</code>?", options: ["true","false","TypeError","NaN"], correct: 0, explain: "Lose Gleichheit sieht beide als „leer"." },
+      { q: "Was ergibt <code>null === undefined</code>?", options: ["true","false","TypeError","NaN"], correct: 1, explain: "Strikt vergleicht auch Typen — unterschiedlich." },
+      { q: "Ergibt <code>0.1 + 0.2 === 0.3</code> true?", options: ["Ja","Nein"], correct: 1, explain: "Wegen Gleitkomma-Arithmetik: <code>0.30000000000000004</code>." },
+      { q: "Was ergibt <code>typeof NaN</code>?", options: ["\"nan\"","\"number\"","\"undefined\"","\"error\""], correct: 1, explain: "NaN ist (kurios) vom Typ Number." },
+      { q: "Was gibt dieser Code aus?", code: 'let x = 5;\nx = "hi";\nconsole.log(typeof x);', options: ["\"number\"","\"string\"","\"any\"","TypeError"], correct: 1, explain: "Dynamische Typisierung — <code>x</code> ist jetzt String." },
+      { q: "Was gibt <code>parseInt(\"12abc\")</code> zurück?", options: ["NaN","12","0","\"12\""], correct: 1, explain: "<code>parseInt</code> liest führende Ziffern, ignoriert Rest." },
+      { q: "Template Literal mit Name-Interpolation?", options: ["\"Hallo, {name}!\"","'Hallo, $name!'","`Hallo, ${name}!`","Hallo + name"], correct: 2, explain: "Backticks <code>\\`\\`</code> und <code>${...}</code>." },
+      { q: "Was passiert bei <code>const x = 5; x = 10;</code>?", options: ["x wird 10","TypeError","SyntaxError","ReferenceError"], correct: 1, explain: "<code>const</code> verhindert Neuzuweisung → TypeError." },
+      { q: "Welche Methode gibt die Länge eines Strings?", options: [".size","length","len()","getLength()"], correct: 1, explain: "Property <code>length</code>, ohne Klammern." },
+      { q: "Was gibt <code>\"hallo\".toUpperCase()</code> zurück?", options: ["\"HALLO\"","\"hallo\"","undefined","Error"], correct: 0, explain: "Gibt neuen String zurück (Strings sind immutable)." },
+
+      // ---- Modul 3: Operatoren ----
+      { q: "Was ergibt <code>10 % 3</code>?", options: ["3","1","0","3.33"], correct: 1, explain: "Modulo: Rest von 10/3 = 1." },
+      { q: "Was ergibt <code>2 ** 5</code>?", options: ["10","25","32","7"], correct: 2, explain: "Potenz: 2^5 = 32." },
+      { q: "Was gibt dieser Code aus?", code: 'let a = 5;\nconsole.log(a++);\nconsole.log(a);', options: ["5 5","5 6","6 6","6 5"], correct: 1, explain: "Post-Increment: erst alter Wert (5), dann erhöhen (6)." },
+      { q: "Was gibt <code>++a</code> bei <code>a = 5</code> zurück?", options: ["5","6","4","NaN"], correct: 1, explain: "Pre-Increment: erst erhöhen, dann zurückgeben." },
+      { q: "Welcher Operator ist <strong>strikte Gleichheit</strong>?", options: ["=","==","===","!="], correct: 2, explain: "<code>===</code> vergleicht ohne Typumwandlung." },
+      { q: "Was ergibt <code>\"5\" == 5</code>?", options: ["true","false","TypeError","NaN"], correct: 0, explain: "Lose Gleichheit konvertiert." },
+      { q: "Was ergibt <code>\"5\" === 5</code>?", options: ["true","false","TypeError","NaN"], correct: 1, explain: "Strikt: unterschiedliche Typen." },
+      { q: "Was gibt <code>null || \"default\"</code> zurück?", options: ["null","\"default\"","false","undefined"], correct: 1, explain: "<code>||</code> nimmt den ersten truthy Wert." },
+      { q: "Was gibt <code>0 ?? \"default\"</code> zurück?", options: ["0","\"default\"","false","undefined"], correct: 0, explain: "<code>??</code> fällt nur bei null/undefined durch." },
+      { q: "Was gibt <code>\"a\" && \"b\"</code> zurück?", options: ["\"a\"","\"b\"","true","false"], correct: 1, explain: "<code>&&</code>: beide truthy → letzter Wert." },
+      { q: "Was ergibt <code>!\"\"</code>?", options: ["true","false","\"\"","undefined"], correct: 0, explain: "<code>\"\"</code> ist falsy, negiert → true." },
+      { q: "Was ergibt <code>!!\"text\"</code>?", options: ["\"text\"","true","false","undefined"], correct: 1, explain: "<code>!!</code> konvertiert zu Boolean." },
+      { q: "Was ergibt <code>2 + 3 * 4</code>?", options: ["20","14","24","11"], correct: 1, explain: "<code>*</code> hat Vorrang: 3*4=12, 2+12=14." },
+      { q: "Was ergibt <code>(2 + 3) * 4</code>?", options: ["20","14","24","11"], correct: 0, explain: "Klammern zuerst: 5*4=20." },
+      { q: "Was gibt <code>prompt()</code> zurück?", options: ["Number","String","Boolean","Object"], correct: 1, explain: "Immer String (oder <code>null</code> bei Abbruch)." },
+      { q: "Was gibt <code>confirm()</code> zurück?", options: ["String","Number","Boolean","undefined"], correct: 2, explain: "<code>true</code> (OK) oder <code>false</code> (Abbrechen)." },
+      { q: "Welche Bedeutung hat <code>x += 3</code>?", options: ["x = 3","x = x + 3","x > 3","x == 3"], correct: 1, explain: "Zuweisungs-Shortcut." },
+      { q: "Was macht der ternäre Operator?", options: ["3 Werte addieren","if/else als Ausdruck","3-fache Zuweisung","3D-Array erstellen"], correct: 1, explain: "<code>bedingung ? a : b</code> — kompaktes if/else." },
+
+      // ---- Modul 4: Kontrollfluss ----
+      { q: "Was gibt dieser Code aus?", code: 'let x = 10;\nif (x > 5) console.log("a");\nelse console.log("b");', options: ["a","b","a und b","Error"], correct: 0, explain: "10 > 5 ist true → \"a\"." },
+      { q: "Wie oft wird eine <code>do...while(false)</code>-Schleife ausgeführt?", options: ["0","1","∞","Fehler"], correct: 1, explain: "Mindestens einmal — Bedingung wird nach dem ersten Durchlauf geprüft." },
+      { q: "Was gibt dieser Code aus?", code: 'for (let i = 0; i < 3; i++) console.log(i);', options: ["1 2 3","0 1 2","0 1 2 3","1 2"], correct: 1, explain: "Von 0 bis (i < 3): 0, 1, 2." },
+      { q: "Was gibt dieser Code aus?", code: 'let s = 0;\nfor (let i = 1; i <= 3; i++) s += i;\nconsole.log(s);', options: ["3","5","6","0"], correct: 2, explain: "1+2+3 = 6." },
+      { q: "Welcher Operator vergleicht in <code>switch</code>?", options: ["==","===","=","!="], correct: 1, explain: "Strikte Gleichheit." },
+      { q: "Was passiert bei Fall-through in switch?", options: ["Error","Der Code läuft in den nächsten case","Die Schleife bricht ab","default wird ausgeführt"], correct: 1, explain: "Ohne <code>break</code> läuft der Code weiter." },
+      { q: "Was macht <code>break</code>?", options: ["Beendet Funktion","Beendet aktuelle Schleife","Überspringt Iteration","Gibt Fehler"], correct: 1, explain: "Verlässt die innerste Schleife oder switch." },
+      { q: "Was macht <code>continue</code>?", options: ["Beendet Schleife","Startet Schleife neu","Überspringt aktuelle Iteration","Wirft Error"], correct: 2, explain: "Springt zur nächsten Iteration." },
+      { q: "Welche Schleife iteriert über Werte eines Arrays?", options: ["for...in","for...of","while","if"], correct: 1, explain: "<code>for...of</code> Werte, <code>for...in</code> Schlüssel." },
+      { q: "Was gibt dieser Code aus?", code: 'let i = 0;\nwhile (i++ < 3) console.log(i);', options: ["0 1 2","1 2 3","0 1 2 3","1 2 3 4"], correct: 1, explain: "Post-Increment: Vergleich mit altem i, dann i++. Ausgabe: 1, 2, 3." },
+      { q: "Was gibt dieser Code aus?", code: 'for (let i = 0; i < 5; i++) {\n  if (i % 2 === 0) continue;\n  console.log(i);\n}', options: ["0 1 2 3 4","0 2 4","1 3","1 2 3"], correct: 2, explain: "Gerade Zahlen werden übersprungen → 1, 3." },
+
+      // ---- Modul 5: Funktionen ----
+      { q: "Was gibt eine Funktion ohne <code>return</code> zurück?", options: ["null","undefined","0","NaN"], correct: 1, explain: "<code>undefined</code>." },
+      { q: "Syntax einer Arrow Function mit implizitem Return?", options: ["x => x * 2","x -> x * 2","function(x) x*2","x { return x*2 }"], correct: 0, explain: "<code>(params) => expression</code>." },
+      { q: "Welche Aussage über Hoisting ist korrekt?", options: [
+        "let wird mit undefined gehoistet",
+        "Function Declarations werden vollständig gehoistet",
+        "const wird gar nicht gehoistet",
+        "Arrow Functions werden wie Declarations gehoistet"], correct: 1, explain: "Declarations: Name + Körper. <code>let</code>/<code>const</code>: in TDZ." },
+      { q: "Was ergibt dieser Code?", code: 'function f(a, b = 10) { return a + b; }\nconsole.log(f(5));', options: ["5","10","15","NaN"], correct: 2, explain: "Default-Parameter: <code>b = 10</code>, also 5+10=15." },
+      { q: "Was macht der Rest-Parameter <code>...args</code>?", options: ["Spread in Einzelwerte","Sammelt Argumente in Array","Kopiert Array","Löscht Parameter"], correct: 1, explain: "Sammelt beliebig viele Argumente in einem Array." },
+      { q: "Welche Aussage über Arrow Functions ist <strong>falsch</strong>?", options: [
+        "Sie haben kein eigenes this",
+        "Sie können implizit returnen",
+        "Sie können als Konstruktor mit new aufgerufen werden",
+        "Sie haben kein arguments-Objekt"], correct: 2, explain: "Arrow Functions sind KEINE Konstruktoren." },
+      { q: "Was gibt <code>f</code> zurück?", code: 'const f = (x) => ({ a: x });\nconsole.log(f(5));', options: ["{a:5}","5","undefined","Error"], correct: 0, explain: "Objekt in Klammern → direkte Rückgabe." },
+      { q: "Was ist Rekursion?", options: [
+        "Eine Schleife im Array",
+        "Eine Funktion, die sich selbst aufruft",
+        "Paralleler Code",
+        "Ein Fehler-Typ"], correct: 1, explain: "Selbstaufruf. Braucht Basisfall." },
+      { q: "Was ist ein Callback?", options: [
+        "Ein Rückgabewert",
+        "Eine Funktion, die als Argument übergeben wird",
+        "Ein Error-Handler",
+        "Ein DOM-Event"], correct: 1, explain: "Funktion, die später von einer anderen aufgerufen wird." },
+      { q: "Was gibt dieser Code aus?", code: 'function f() { return; 42; }\nconsole.log(f());', options: ["42","undefined","null","SyntaxError"], correct: 1, explain: "ASI fügt Semikolon nach return ein → returned <code>undefined</code>." },
+      { q: "Was gibt dieser Code aus?", code: 'console.log(typeof greet);\nvar greet = function() {};', options: ["\"function\"","\"undefined\"","ReferenceError","\"object\""], correct: 1, explain: "<code>var</code> wird gehoistet, Zuweisung nicht. <code>greet</code> ist <code>undefined</code>." },
+
+      // ---- Modul 6: Fehler & Debugging ----
+      { q: "Welcher Fehler tritt auf, wenn man <code>null.foo</code> schreibt?", options: ["ReferenceError","TypeError","SyntaxError","RangeError"], correct: 1, explain: "Methodenaufruf auf null/undefined → TypeError." },
+      { q: "Welcher Fehler tritt auf bei <code>JSON.parse(\"{\")</code>?", options: ["TypeError","ReferenceError","SyntaxError","RangeError"], correct: 2, explain: "Ungültige JSON-Syntax." },
+      { q: "Welcher Fehler tritt auf bei <code>console.log(x)</code> ohne Deklaration?", options: ["ReferenceError","TypeError","SyntaxError","NullError"], correct: 0, explain: "Variable nicht definiert → ReferenceError." },
+      { q: "Wann läuft <code>finally</code>?", options: ["Nur bei Fehler","Nur ohne Fehler","Immer","Wenn catch fehlt"], correct: 2, explain: "Immer — auch bei return oder erneutem throw." },
+      { q: "Wie wirft man einen Fehler?", options: ["raise Error()","error()","throw new Error()","Error.raise()"], correct: 2, explain: "<code>throw</code> ist das Schlüsselwort." },
+      { q: "Welche Property hat ein Error-Objekt <strong>nicht</strong>?", options: ["name","message","stack","code"], correct: 3, explain: "<code>code</code> ist keine Standard-Property von <code>Error</code> (sondern z. B. bei Node-Errors)." },
+      { q: "Was aktiviert Strict Mode?", options: ["\"use strict\";","strict()","mode strict","--strict"], correct: 0, explain: "Direktive oben in Datei oder Funktion." },
+      { q: "Kann <code>try</code> ohne <code>catch</code> existieren?", options: ["Nie","Nur mit finally","Ja, allein","Nur im strict mode"], correct: 1, explain: "<code>try { } finally { }</code> ist gültig." },
+
+      // ---- Modul 7: Arrays ----
+      { q: "Bei welchem Index beginnt ein Array?", options: ["0","1","-1","beliebig"], correct: 0, explain: "Index 0." },
+      { q: "Was gibt <code>[1,2,3][1]</code> zurück?", options: ["1","2","3","undefined"], correct: 1, explain: "Index 1 = zweites Element." },
+      { q: "Welche Methode fügt am Ende hinzu?", options: ["unshift","push","shift","pop"], correct: 1, explain: "<code>push</code> am Ende." },
+      { q: "Welche Methode entfernt das erste Element?", options: ["pop","push","shift","unshift"], correct: 2, explain: "<code>shift</code>." },
+      { q: "Was ändert <code>slice()</code>?", options: ["Original","Nichts — Kopie","Löscht Array","Wirft Error"], correct: 1, explain: "<code>slice</code> gibt Kopie zurück." },
+      { q: "Was ergibt <code>[1,2,3].indexOf(4)</code>?", options: ["-1","3","undefined","null"], correct: 0, explain: "Nicht gefunden → -1." },
+      { q: "Was ergibt <code>[1,2,3].includes(2)</code>?", options: ["1","2","true","false"], correct: 2, explain: "<code>includes</code> gibt Boolean." },
+      { q: "Was ergibt <code>[3,1,2].sort()</code>?", options: ["[1,2,3]","[3,2,1]","[2,1,3]","[1,3,2]"], correct: 0, explain: "Für einstellige Zahlen funktioniert default sort." },
+      { q: "Was ergibt <code>[10,2,1].sort()</code>?", options: ["[1,2,10]","[1,10,2]","[10,2,1]","[2,10,1]"], correct: 1, explain: "String-Vergleich: \"1\" < \"10\" < \"2\"." },
+      { q: "Was ergibt <code>[1,2,3].map(x => x * x)</code>?", options: ["[1,2,3]","[1,4,9]","[2,4,6]","[3,6,9]"], correct: 1, explain: "<code>map</code>: Quadrat jedes Elements." },
+      { q: "Was ergibt <code>[1,2,3,4].filter(x => x > 2)</code>?", options: ["[1,2]","[3,4]","[2,3,4]","true"], correct: 1, explain: "Nur Elemente > 2." },
+      { q: "Was ergibt <code>[1,2,3].reduce((a,b) => a+b, 0)</code>?", options: ["0","3","6","[1,2,3]"], correct: 2, explain: "Summe: 0+1+2+3=6." },
+      { q: "Wie prüft man, ob eine Variable ein Array ist?", options: ["typeof x === \"array\"","x instanceof List","Array.isArray(x)","x.isArray()"], correct: 2, explain: "<code>Array.isArray()</code>." },
+      { q: "Was gibt <code>[1,2,3].length</code> zurück?", options: ["2","3","4","undefined"], correct: 1, explain: "Anzahl Elemente = 3." },
+      { q: "Was passiert hier?", code: 'const a = [1,2,3];\nconst b = a;\nb.push(4);\nconsole.log(a.length);', options: ["3","4","2","Error"], correct: 1, explain: "<code>b</code> ist Referenz auf <code>a</code> — beide geändert." },
+      { q: "Wie kopiert man ein Array flach?", options: ["a.copy()","[...a]","clone(a)","Array.copy(a)"], correct: 1, explain: "Spread: <code>[...a]</code>, <code>a.slice()</code> oder <code>Array.from(a)</code>." },
+      { q: "Was gibt <code>[1,2,3].join(\"-\")</code> zurück?", options: ["[1,2,3]","\"1-2-3\"","\"123\"","[1,\"-\",2,\"-\",3]"], correct: 1, explain: "<code>join</code> erzeugt einen String." },
+      { q: "Was gibt <code>\"a,b,c\".split(\",\")</code> zurück?", options: ["\"a,b,c\"","[\"a\",\"b\",\"c\"]","[\"a,b,c\"]","[\"a\",\",\",\"b\",\",\",\"c\"]"], correct: 1, explain: "Gegenstück zu <code>join</code>." },
+      { q: "Was macht <code>arr.reverse()</code>?", options: [
+        "Gibt neue umgekehrte Kopie",
+        "Mutiert das Array in-place",
+        "Gibt true/false",
+        "Wirft Fehler bei leerem Array"], correct: 1, explain: "Ändert das Original und gibt es zurück." }
+    ];
+
+    JSE.initExam({
+      container: document.getElementById("exam-root"),
+      pool: POOL,
+      count: 40,
+      minutes: 60,
+      passPct: 70
+    });
+  </script>
+</body>
+</html>

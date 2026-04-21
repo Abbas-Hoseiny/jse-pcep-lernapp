@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Modul 6 · Funktionen · PCEP Lern-App</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="container">
+    <div class="module-num">MODUL 6 · Teil von 28%</div>
+    <h1>Funktionen</h1>
+    <p class="subtitle"><code>def</code>, Parameter, Defaults, <code>*args</code>/<code>**kwargs</code>, Scope (LEGB), <code>global</code>, Rekursion.</p>
+
+    <div class="tabs" data-tabs>
+      <button class="tab-btn active" data-target="panel-theorie">📖 Theorie</button>
+      <button class="tab-btn" data-target="panel-karten">🃏 Lernkarteien</button>
+      <button class="tab-btn" data-target="panel-playground">🐍 Playground</button>
+      <button class="tab-btn" data-target="panel-quiz">✅ Quiz</button>
+    </div>
+    <div>
+      <section class="tab-panel active" id="panel-theorie">
+        <div class="theory-section">
+          <h2>6.1 Funktionen definieren</h2>
+<pre><code class="py">def addiere(a, b):
+    return a + b
+
+print(addiere(2, 3))   # 5</code></pre>
+          <ul>
+            <li><code>def</code> = definiere Funktion</li>
+            <li><code>name(params):</code> — Name + Klammern + Parameter + Doppelpunkt</li>
+            <li>Eingerückter Körper</li>
+            <li><code>return</code> gibt einen Wert zurück (optional)</li>
+          </ul>
+          <p>Ohne <code>return</code> gibt die Funktion <strong>implizit <code>None</code></strong> zurück.</p>
+        </div>
+
+        <div class="theory-section">
+          <h2>6.2 Docstrings</h2>
+<pre><code class="py">def quadrat(x):
+    """Gibt das Quadrat von x zurück."""
+    return x * x
+
+help(quadrat)
+print(quadrat.__doc__)   # "Gibt das Quadrat von x zurück."</code></pre>
+          <p>Ein <strong>Docstring</strong> ist der erste String in einer Funktion — wird für Doku verwendet.</p>
+        </div>
+
+        <div class="theory-section">
+          <h2>6.3 Parameter und Argumente</h2>
+          <ul>
+            <li><strong>Parameter</strong>: die Namen in der <code>def</code>-Signatur.</li>
+            <li><strong>Argumente</strong>: die Werte, die beim Aufruf übergeben werden.</li>
+          </ul>
+          <h3>Positionale Argumente</h3>
+<pre><code class="py">def info(name, alter):
+    print(f"{name} ist {alter}")
+
+info("Ali", 25)   # nach Position</code></pre>
+          <h3>Keyword-Argumente</h3>
+<pre><code class="py">info(alter=25, name="Ali")   # nach Name — Reihenfolge egal</code></pre>
+          <h3>Default-Parameter</h3>
+<pre><code class="py">def gruss(name, gruss_text="Hallo"):
+    print(f"{gruss_text}, {name}!")
+
+gruss("Ali")                      # Hallo, Ali!
+gruss("Ali", "Hi")                # Hi, Ali!
+gruss("Ali", gruss_text="Hey")    # Hey, Ali!</code></pre>
+          <div class="callout danger"><strong>FALLE:</strong> Default-Wert wird <strong>nur einmal</strong> erzeugt. Nie mutable Defaults (<code>= []</code>) verwenden!
+          <pre><code class="py">def bad(l=[]):
+    l.append(1)
+    return l
+bad()   # [1]
+bad()   # [1, 1] !!!</code></pre>
+          </div>
+        </div>
+
+        <div class="theory-section">
+          <h2>6.4 <code>*args</code> und <code>**kwargs</code></h2>
+<pre><code class="py">def summe(*args):         # args ist ein TUPEL
+    s = 0
+    for x in args:
+        s += x
+    return s
+summe(1, 2, 3, 4)          # 10
+
+def info(**kwargs):        # kwargs ist ein DICT
+    for k, v in kwargs.items():
+        print(f"{k} = {v}")
+info(name="Ali", alter=25)
+
+def alles(a, b, *args, **kwargs):
+    print(a, b, args, kwargs)
+alles(1, 2, 3, 4, x=10, y=20)
+# 1 2 (3, 4) {'x': 10, 'y': 20}</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>6.5 Unpacking beim Aufruf</h2>
+<pre><code class="py">def add(a, b, c):
+    return a + b + c
+
+l = [1, 2, 3]
+d = {"a": 1, "b": 2, "c": 3}
+
+add(*l)       # = add(1, 2, 3)
+add(**d)      # = add(a=1, b=2, c=3)</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>6.6 Scope und die LEGB-Regel</h2>
+          <p>Python sucht Namen in dieser Reihenfolge:</p>
+          <ol>
+            <li><strong>L</strong>ocal — innerhalb der aktuellen Funktion</li>
+            <li><strong>E</strong>nclosing — umgebende Funktion (bei Nesting)</li>
+            <li><strong>G</strong>lobal — Modul-Ebene</li>
+            <li><strong>B</strong>uilt-in — Python selbst (<code>print</code>, <code>len</code>, …)</li>
+          </ol>
+<pre><code class="py">x = "global"
+
+def aussen():
+    x = "enclosing"
+    def innen():
+        x = "local"
+        print(x)     # local
+    innen()
+    print(x)         # enclosing
+
+aussen()
+print(x)             # global</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>6.7 <code>global</code> und <code>nonlocal</code></h2>
+<pre><code class="py">zaehler = 0
+
+def erhoehe():
+    global zaehler       # verweist auf globales zaehler
+    zaehler += 1
+
+erhoehe()
+print(zaehler)   # 1
+
+def aussen():
+    x = 10
+    def innen():
+        nonlocal x        # verweist auf enclosing x
+        x = 99
+    innen()
+    print(x)              # 99
+aussen()</code></pre>
+          <div class="callout warn">
+            <strong>Ohne <code>global</code></strong>: Eine Zuweisung in der Funktion erzeugt eine <strong>lokale</strong> Variable — die globale bleibt unverändert.
+          </div>
+        </div>
+
+        <div class="theory-section">
+          <h2>6.8 Rekursion</h2>
+<pre><code class="py">def fakultaet(n):
+    if n <= 1:           # Basisfall!
+        return 1
+    return n * fakultaet(n - 1)
+
+print(fakultaet(5))   # 120
+
+def fib(n):
+    if n < 2:
+        return n
+    return fib(n-1) + fib(n-2)
+
+print(fib(10))   # 55</code></pre>
+          <div class="callout warn"><strong>RecursionError</strong>: Python hat ein Rekursionslimit (standardmäßig 1000). Zu tief → Fehler.</div>
+        </div>
+
+        <div class="theory-section">
+          <h2>6.9 Funktionen sind erste-Klasse-Objekte</h2>
+<pre><code class="py">def doppel(x): return x * 2
+
+f = doppel                  # Zuweisung
+f(5)                         # 10
+
+def wende_an(fn, x):        # Funktion als Argument
+    return fn(x)
+wende_an(doppel, 7)         # 14
+
+# Lambda — anonyme Funktion
+quadrat = lambda x: x * x
+quadrat(4)                   # 16
+
+list(map(lambda x: x*2, [1,2,3]))     # [2,4,6]
+list(filter(lambda x: x>2, [1,2,3,4])) # [3,4]</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>6.10 Mehrere Rückgabewerte (per Tupel)</h2>
+<pre><code class="py">def minmax(liste):
+    return min(liste), max(liste)   # Tuple
+
+lo, hi = minmax([3, 1, 4, 1, 5])
+print(lo, hi)   # 1 5</code></pre>
+        </div>
+
+        <div class="btn-row mt-lg">
+          <button class="btn primary" data-mark-theory="6">✓ Theorie als gelesen markieren</button>
+          <a class="btn" href="modul-7.html">Weiter zu Modul 7 →</a>
+        </div>
+      </section>
+
+      <section class="tab-panel" id="panel-karten">
+        <h2>Lernkarteien</h2>
+        <div id="flashcards"></div>
+      </section>
+      <section class="tab-panel" id="panel-playground">
+        <h2>Python-Playground</h2>
+        <div id="playgrounds"></div>
+      </section>
+      <section class="tab-panel" id="panel-quiz">
+        <h2>Quiz — Modul 6</h2>
+        <div id="quiz"></div>
+      </section>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    PCEP.initFlashcards({
+      container: document.getElementById("flashcards"),
+      moduleId: "6",
+      cards: [
+        { front: "Wie definiert man eine Funktion in Python?", back: "<code>def name(params):</code> + eingerückter Körper. Doppelpunkt nicht vergessen!" },
+        { front: "Was gibt eine Funktion ohne <code>return</code> zurück?", back: "<code>None</code>" },
+        { front: "Unterschied Parameter vs. Argument?", back: "<strong>Parameter</strong>: in der Signatur (<code>def f(x)</code>).<br><strong>Argument</strong>: beim Aufruf (<code>f(5)</code>)." },
+        { front: "Was ist ein Default-Parameter?", back: "Ein Parameter mit Standardwert: <code>def f(x=10):</code> — wird verwendet wenn kein Argument übergeben wird." },
+        { front: "Welche Falle gibt es bei Default-Parametern?", back: "Mutable Defaults (<code>= []</code>) werden nur EINMAL erzeugt und zwischen Aufrufen geteilt!" },
+        { front: "Was sammelt <code>*args</code>?", back: "Positionale Argumente als <strong>Tupel</strong>." },
+        { front: "Was sammelt <code>**kwargs</code>?", back: "Keyword-Argumente als <strong>Dictionary</strong>." },
+        { front: "Wie unpackt man eine Liste als Argumente?", back: "<code>f(*liste)</code>" },
+        { front: "Wie unpackt man ein Dict als Keyword-Argumente?", back: "<code>f(**dict)</code>" },
+        { front: "Was bedeutet LEGB?", back: "<strong>L</strong>ocal → <strong>E</strong>nclosing → <strong>G</strong>lobal → <strong>B</strong>uilt-in — die Scope-Suchreihenfolge." },
+        { front: "Was macht <code>global x</code> in einer Funktion?", back: "Bindet <code>x</code> an die globale Variable, damit Zuweisungen diese ändern." },
+        { front: "Was macht <code>nonlocal x</code>?", back: "Bindet <code>x</code> an die Variable der umgebenden (enclosing) Funktion — nicht global." },
+        { front: "Was passiert wenn man in einer Funktion <code>x = 5</code> ohne <code>global</code> schreibt?", back: "Eine <strong>neue lokale</strong> Variable <code>x</code> wird erzeugt. Globale bleibt unverändert." },
+        { front: "Was ist Rekursion?", back: "Eine Funktion, die sich <strong>selbst</strong> aufruft. Braucht einen Basisfall." },
+        { front: "Welcher Fehler kann bei unendlicher Rekursion auftreten?", back: "<code>RecursionError</code> (Standard-Limit ca. 1000)." },
+        { front: "Syntax einer Lambda-Funktion?", back: "<code>lambda params: ausdruck</code> — ein-zeilige anonyme Funktion." },
+        { front: "Kann man mehrere Werte zurückgeben?", back: "Ja, als Tupel: <code>return a, b</code>. Unpacking: <code>x, y = f()</code>." },
+        { front: "Was ist ein Docstring?", back: "Der erste String-Literal in einer Funktion — dient als Dokumentation, zugreifbar via <code>f.__doc__</code>." },
+        { front: "Was sind <em>first-class functions</em>?", back: "Funktionen können wie Werte behandelt werden: zuweisen, übergeben, zurückgeben." },
+        { front: "Kann eine Funktion eine andere Funktion zurückgeben?", back: "Ja — führt zu Closures: die innere Funktion „merkt sich" ihre enclosing scope." },
+        { front: "Unterschied <code>def f(a, b=2)</code> und <code>def f(a=1, b)</code>?", back: "Die zweite ist <strong>SyntaxError</strong> — Default-Parameter müssen nach positionalen stehen." },
+        { front: "Was gibt dieser Aufruf? <code>def f(a, b, c): ...; f(1, c=3, b=2)</code>", back: "Gültig — a=1 (positional), b und c als Keyword. Ausgabe hängt vom Körper ab." },
+        { front: "Wie viele Argumente nimmt <code>*args</code> maximal?", back: "Beliebig viele — auch 0." },
+        { front: "Kann man <code>return</code> ohne Wert nutzen?", back: "Ja — gibt <code>None</code> zurück und verlässt die Funktion sofort." },
+        { front: "Was ist das <em>Shadowing</em>?", back: "Lokale Variable verdeckt einen gleichnamigen enclosing/globalen Namen." },
+        { front: "In welcher Reihenfolge müssen Parameter stehen?", back: "1. Positional, 2. Default, 3. *args, 4. keyword-only, 5. **kwargs" },
+        { front: "Was gibt <code>def f(): pass</code> zurück?", back: "<code>None</code> — leere Funktion." },
+        { front: "Was passiert hier? <code>def f(l=[]): l.append(1); return l</code> — zwei Aufrufe nacheinander.", back: "Erster: [1]. Zweiter: [1, 1] — mutable Default wird geteilt!" }
+      ]
+    });
+
+    const pgRoot = document.getElementById("playgrounds");
+    PCEP.initPlaygrounds([
+      { container: pgRoot,
+        task: "Schreibe <code>ist_gerade(n)</code>, die True/False zurückgibt.",
+        initialCode: 'def ist_gerade(n):\n    # TODO\n    pass\n\nprint(ist_gerade(4))\nprint(ist_gerade(7))\n' },
+      { container: pgRoot,
+        task: "Fakultät rekursiv. Teste mit <code>fak(5)</code>.",
+        initialCode: 'def fak(n):\n    # TODO\n    pass\n\nprint(fak(5))\n' },
+      { container: pgRoot,
+        task: "Funktion <code>summe(*args)</code> mit beliebig vielen Argumenten.",
+        initialCode: 'def summe(*args):\n    # TODO\n    pass\n\nprint(summe(1,2,3,4,5))\n' },
+      { container: pgRoot,
+        task: "Scope-Test: was gibt dieser Code aus?",
+        initialCode: 'x = 10\n\ndef f():\n    x = 5\n    print("in f:", x)\n\nf()\nprint("global:", x)\n' },
+      { container: pgRoot,
+        task: "Mit <code>global</code>: erhöhe einen Zähler.",
+        initialCode: 'counter = 0\n\ndef up():\n    global counter\n    counter += 1\n\nfor _ in range(5):\n    up()\nprint(counter)\n' },
+      { container: pgRoot,
+        task: "Lambda und <code>map</code>: verdopple alle Zahlen in <code>[1,2,3,4]</code>.",
+        initialCode: 'nums = [1, 2, 3, 4]\n# TODO: list(map(lambda ..., nums))\n' }
+    ]);
+
+    PCEP.initQuiz({
+      container: document.getElementById("quiz"),
+      moduleId: "6",
+      questions: [
+        { q: "Was gibt eine Funktion ohne <code>return</code> zurück?",
+          options: ["null","None","0","undefined"],
+          correct: 1,
+          explain: "Python: ohne <code>return</code> → implizit <code>None</code>." },
+        { q: "Was gibt dieser Code aus?",
+          code: 'def f(a, b=10):\n    return a + b\nprint(f(5))',
+          options: ["5","10","15","Error"],
+          correct: 2,
+          explain: "Default: b=10, also 5+10=15." },
+        { q: "Was sammelt <code>*args</code>?",
+          options: ["Dict","Tuple","List","Set"],
+          correct: 1,
+          explain: "<code>*args</code> ergibt ein Tupel der positionalen Argumente." },
+        { q: "Was sammelt <code>**kwargs</code>?",
+          options: ["Tuple","Dict","Set","List"],
+          correct: 1,
+          explain: "<code>**kwargs</code> ergibt ein Dict der Keyword-Argumente." },
+        { q: "Was gibt dieser Code aus?",
+          code: 'x = 10\ndef f():\n    x = 20\n    print(x)\nf()\nprint(x)',
+          options: ["10 10","20 20","20 10","10 20"],
+          correct: 2,
+          explain: "Lokale Zuweisung ohne <code>global</code> schafft eine neue Variable in f(). Global bleibt 10." },
+        { q: "Was gibt dieser Code aus?",
+          code: 'x = 10\ndef f():\n    global x\n    x = 20\nf()\nprint(x)',
+          options: ["10","20","None","Error"],
+          correct: 1,
+          explain: "<code>global x</code> bindet an die globale Variable." },
+        { q: "Was bedeutet LEGB?",
+          options: ["Literal-Expression-Global-Basic","Local-Enclosing-Global-Built-in","Loop-Else-Global-Block","Lambda-Evaluation-General-Branch"],
+          correct: 1,
+          explain: "Namenssuche: Local → Enclosing → Global → Built-in." },
+        { q: "Was passiert bei diesem Code bei 2× Aufruf?",
+          code: 'def bad(l=[]):\n    l.append(1)\n    return l\n\nprint(bad())\nprint(bad())',
+          options: ["[1] [1]","[1] [1,1]","[] []","Error"],
+          correct: 1,
+          explain: "Mutable Default wird einmalig erzeugt und zwischen Aufrufen geteilt!" },
+        { q: "Was ergibt <code>(lambda x: x*3)(4)</code>?",
+          options: ["12","7","3","Lambda-Object"],
+          correct: 0,
+          explain: "Lambda wird direkt aufgerufen: 4*3=12." },
+        { q: "Kann eine Funktion mehrere Werte zurückgeben?",
+          options: ["Nein","Ja, als Tuple","Nur mit Array","Nur mit Klassen"],
+          correct: 1,
+          explain: "<code>return a, b</code> gibt ein Tupel zurück — kann entpackt werden." }
+      ]
+    });
+  </script>
+</body>
+</html>

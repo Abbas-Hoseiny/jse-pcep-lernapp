@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Modul 7 · Arrays · JSE Lern-App</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><div class="brand-logo">JS</div> JSE Lern-App</div>
+    <nav>
+      <a href="index.html">← Dashboard</a>
+      <a href="modul-6.html">← Modul 6</a>
+      <a href="pruefung.html">Prüfung →</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div class="module-num">MODUL 7 · 13% der Prüfung</div>
+    <h1>Arrays (einfache Datensammlungen)</h1>
+    <p class="subtitle">Erstellen, zugreifen, Methoden, iterieren, mehrdimensional.</p>
+
+    <div class="tabs" data-tabs>
+      <button class="tab-btn active" data-target="panel-theorie">📖 Theorie</button>
+      <button class="tab-btn" data-target="panel-karten">🃏 Lernkarteien</button>
+      <button class="tab-btn" data-target="panel-playground">💻 Playground</button>
+      <button class="tab-btn" data-target="panel-quiz">✅ Quiz</button>
+    </div>
+    <div>
+      <section class="tab-panel active" id="panel-theorie">
+        <div class="theory-section">
+          <h2>7.1 Was ist ein Array?</h2>
+          <p>Ein <strong>Array</strong> ist eine geordnete Liste von Werten, zugreifbar über einen <strong>numerischen Index</strong> ab 0.</p>
+<pre><code class="js">const obst = ["Apfel", "Banane", "Kirsche"];
+
+obst[0];        // "Apfel"
+obst[1];        // "Banane"
+obst[2];        // "Kirsche"
+obst[3];        // undefined — nicht vorhanden
+obst.length;    // 3</code></pre>
+          <p>Arrays in JS sind <strong>Objekte</strong> (<code>typeof [] === "object"</code>), können beliebige Typen mischen und dynamisch wachsen.</p>
+        </div>
+
+        <div class="theory-section">
+          <h2>7.2 Arrays erzeugen</h2>
+<pre><code class="js">// Literal (empfohlen):
+const a = [1, 2, 3];
+const leer = [];
+const mixed = [1, "zwei", true, null];
+
+// Konstruktor:
+const b = new Array(1, 2, 3);   // [1, 2, 3]
+const c = new Array(3);         // Array mit length=3, leer!
+const d = Array.of(3);          // [3]  — vorhersehbarer
+
+// Von iterable:
+const e = Array.from("abc");    // ["a", "b", "c"]
+const f = Array.from({length: 3}, (_, i) => i * 2);  // [0, 2, 4]</code></pre>
+          <div class="callout warn"><strong>Achtung:</strong> <code>new Array(3)</code> erzeugt ein <em>leeres</em> Array der Länge 3, nicht <code>[3]</code>. Lieber <code>Array.of()</code>.</div>
+        </div>
+
+        <div class="theory-section">
+          <h2>7.3 Zugriff & Ändern</h2>
+<pre><code class="js">const arr = ["a", "b", "c"];
+arr[0];              // "a"
+arr[arr.length - 1]; // letztes Element: "c"
+arr.at(-1);          // "c"  — negative Indizes mit at()
+
+arr[1] = "B";        // ["a", "B", "c"]
+arr[5] = "f";        // ["a", "B", "c", undefined, undefined, "f"]
+arr.length = 2;      // kürzt auf ["a", "B"]</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>7.4 Die wichtigsten Array-Methoden</h2>
+          <h3>Hinzufügen & Entfernen</h3>
+<pre><code class="js">const arr = [2, 3];
+arr.push(4);         // fügt am Ende an → [2, 3, 4] — Rückgabe: neue length
+arr.pop();            // entfernt letztes → 4, arr = [2, 3]
+arr.unshift(1);      // fügt am Anfang → [1, 2, 3]
+arr.shift();          // entfernt erstes → 1, arr = [2, 3]</code></pre>
+
+          <h3>Teile & Einfügen</h3>
+<pre><code class="js">// slice(start, end) — gibt KOPIE zurück, ändert original NICHT
+[1,2,3,4].slice(1, 3);    // [2, 3]
+[1,2,3,4].slice(-2);       // [3, 4]
+
+// splice(start, deleteCount, ...items) — ÄNDERT Original
+const a = [1, 2, 3, 4];
+a.splice(1, 2);           // entfernt 2,3 → a = [1, 4], Rückgabe: [2, 3]
+a.splice(1, 0, "neu");    // fügt ein → a = [1, "neu", 4]</code></pre>
+
+          <h3>Suchen</h3>
+<pre><code class="js">[1, 2, 3].indexOf(2);      // 1
+[1, 2, 3].indexOf(99);     // -1 (nicht gefunden)
+[1, 2, 3].includes(2);     // true
+[1, 2, 3].find(x => x > 1);  // 2 — erstes Element, das Bedingung erfüllt
+[1, 2, 3].findIndex(x => x > 1); // 1</code></pre>
+
+          <h3>Kombinieren & Umwandeln</h3>
+<pre><code class="js">[1, 2].concat([3, 4]);    // [1, 2, 3, 4]  (auch: [...[1,2], ...[3,4]])
+["a", "b", "c"].join("-"); // "a-b-c"
+"a-b-c".split("-");        // ["a", "b", "c"]
+[1, 2, 3].reverse();       // [3, 2, 1]  (ändert Original!)
+[3, 1, 2].sort();          // [1, 2, 3]  (als STRING sortiert!)
+[10, 2, 1].sort((a,b) => a-b);  // [1, 2, 10] numerisch</code></pre>
+          <div class="callout danger">
+            <strong>Sortier-Stolperfalle:</strong> <code>[10, 2, 1].sort()</code> ergibt <code>[1, 10, 2]</code> — weil Strings lexikographisch. Immer Comparator übergeben!
+          </div>
+
+          <h3>Iterieren (Higher-Order)</h3>
+<pre><code class="js">[1, 2, 3].forEach(x => console.log(x));
+[1, 2, 3].map(x => x * 2);         // [2, 4, 6]
+[1, 2, 3, 4].filter(x => x % 2);   // [1, 3]
+[1, 2, 3].reduce((acc, x) => acc + x, 0);  // 6 (Summe)
+[1, 2, 3].every(x => x > 0);       // true
+[1, 2, 3].some(x => x > 2);        // true</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>7.5 Iterieren</h2>
+<pre><code class="js">const arr = ["a", "b", "c"];
+
+// klassisches for
+for (let i = 0; i < arr.length; i++) {
+  console.log(i, arr[i]);
+}
+
+// for...of — Werte
+for (const w of arr) {
+  console.log(w);
+}
+
+// forEach
+arr.forEach((w, i) => console.log(i, w));
+
+// VERMEIDEN für Arrays: for...in (gibt Indizes als Strings)
+for (const i in arr) { /* nicht empfohlen */ }</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>7.6 Mehrdimensionale Arrays</h2>
+          <p>JS hat keine echten 2D-Arrays — man nutzt <strong>Arrays von Arrays</strong>:</p>
+<pre><code class="js">const matrix = [
+  [1, 2, 3],
+  [4, 5, 6],
+  [7, 8, 9]
+];
+
+matrix[0][0];   // 1
+matrix[2][1];   // 8
+
+// Iterieren:
+for (let i = 0; i < matrix.length; i++) {
+  for (let j = 0; j < matrix[i].length; j++) {
+    console.log(matrix[i][j]);
+  }
+}</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>7.7 Referenz vs. Kopie</h2>
+<pre><code class="js">const a = [1, 2, 3];
+const b = a;        // SELBE Referenz!
+b.push(4);
+console.log(a);     // [1, 2, 3, 4]  — auch a wurde verändert!
+
+// Flache Kopie:
+const c = [...a];           // Spread
+const d = a.slice();        // oder slice
+const e = Array.from(a);    // oder from
+
+// Tiefe Kopie (für verschachtelte):
+const f = JSON.parse(JSON.stringify(matrix));
+const g = structuredClone(matrix);  // moderner</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>7.8 Arrays prüfen</h2>
+<pre><code class="js">typeof [];             // "object"  — nicht hilfreich!
+Array.isArray([]);     // true
+Array.isArray("hi");   // false
+Array.isArray({ length: 0 });  // false — kein echtes Array</code></pre>
+        </div>
+
+        <div class="btn-row mt-lg">
+          <button class="btn primary" data-mark-theory="7">✓ Theorie als gelesen markieren</button>
+          <a class="btn primary" href="pruefung.html">▶ Zur Prüfungssimulation</a>
+        </div>
+      </section>
+
+      <section class="tab-panel" id="panel-karten">
+        <h2>Lernkarteien</h2>
+        <div id="flashcards"></div>
+      </section>
+      <section class="tab-panel" id="panel-playground">
+        <h2>Code-Playground</h2>
+        <div id="playgrounds"></div>
+      </section>
+      <section class="tab-panel" id="panel-quiz">
+        <h2>Quiz — Modul 7</h2>
+        <div id="quiz"></div>
+      </section>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    JSE.initFlashcards({
+      container: document.getElementById("flashcards"),
+      moduleId: "7",
+      cards: [
+        { front: "Was ist ein Array?", back: "Eine geordnete Liste von Werten mit numerischem Index ab 0." },
+        { front: "Bei welchem Index beginnt ein Array?", back: "Bei <strong>0</strong>." },
+        { front: "Wie bekommt man die Länge eines Arrays?", back: "<code>arr.length</code>" },
+        { front: "Was gibt <code>arr[99]</code> zurück, wenn nicht vorhanden?", back: "<code>undefined</code> — kein Fehler." },
+        { front: "Was gibt <code>typeof []</code> zurück?", back: "<code>\"object\"</code>" },
+        { front: "Wie prüfst du zuverlässig, ob etwas ein Array ist?", back: "<code>Array.isArray(wert)</code>" },
+        { front: "Was macht <code>push()</code>?", back: "Fügt am <strong>Ende</strong> hinzu. Gibt die neue Länge zurück." },
+        { front: "Was macht <code>pop()</code>?", back: "Entfernt und gibt das <strong>letzte</strong> Element zurück." },
+        { front: "Was macht <code>shift()</code>?", back: "Entfernt und gibt das <strong>erste</strong> Element zurück." },
+        { front: "Was macht <code>unshift()</code>?", back: "Fügt am <strong>Anfang</strong> hinzu. Gibt die neue Länge zurück." },
+        { front: "Ändert <code>slice()</code> das Original?", back: "<strong>Nein</strong> — gibt eine Kopie zurück." },
+        { front: "Ändert <code>splice()</code> das Original?", back: "<strong>Ja</strong> — entfernt/fügt ein und gibt entfernte Elemente zurück." },
+        { front: "Was macht <code>arr.indexOf(wert)</code>?", back: "Gibt den Index des ersten Vorkommens zurück, oder <code>-1</code> wenn nicht gefunden." },
+        { front: "Unterschied <code>indexOf</code> vs <code>includes</code>?", back: "<code>indexOf</code> gibt Index oder -1. <code>includes</code> gibt <code>true</code>/<code>false</code>." },
+        { front: "Was macht <code>arr.join(\"-\")</code>?", back: "Verbindet alle Elemente zu einem String mit \"-\" als Trennzeichen." },
+        { front: "Was macht <code>arr.reverse()</code>?", back: "Kehrt die Reihenfolge um und <strong>ändert das Original</strong>." },
+        { front: "Was ist das Problem mit <code>[10, 2, 1].sort()</code>?", back: "Ergibt <code>[1, 10, 2]</code> — Elemente werden als Strings verglichen. Mit Comparator lösen: <code>sort((a,b) => a-b)</code>." },
+        { front: "Was macht <code>map()</code>?", back: "Erzeugt ein <strong>neues Array</strong> mit den Rückgabewerten der Callback-Funktion." },
+        { front: "Was macht <code>filter()</code>?", back: "Erzeugt ein neues Array mit nur den Elementen, für die der Callback <code>true</code> zurückgibt." },
+        { front: "Was macht <code>reduce()</code>?", back: "Reduziert das Array zu einem einzelnen Wert: <code>arr.reduce((acc, x) => acc+x, 0)</code> = Summe." },
+        { front: "Was gibt <code>arr.forEach()</code> zurück?", back: "<code>undefined</code> — nur Seiteneffekte, kein neues Array." },
+        { front: "Wie kopiert man ein Array flach?", back: "<code>[...arr]</code>, <code>arr.slice()</code> oder <code>Array.from(arr)</code>" },
+        { front: "Was passiert bei <code>const b = a</code>, wenn <code>a</code> ein Array ist?", back: "<code>b</code> ist die <strong>gleiche Referenz</strong>. Änderungen an <code>b</code> betreffen auch <code>a</code>." },
+        { front: "Wie greift man auf das letzte Element ohne Index zu?", back: "<code>arr.at(-1)</code> oder <code>arr[arr.length - 1]</code>" },
+        { front: "Wie erstellt man ein 2D-Array der Größe 3×3 mit Nullen?", back: "<code>Array.from({length: 3}, () => Array(3).fill(0))</code>" }
+      ]
+    });
+
+    const pgRoot = document.getElementById("playgrounds");
+    JSE.initPlaygrounds([
+      { container: pgRoot,
+        task: "Gib die Summe aller Zahlen im Array aus (mit <code>reduce</code> oder <code>for</code>).",
+        initialCode: 'const zahlen = [3, 1, 4, 1, 5, 9, 2, 6];\n// TODO\n' },
+      { container: pgRoot,
+        task: "Filtere alle geraden Zahlen und verdopple sie (<code>filter</code> + <code>map</code>).",
+        initialCode: 'const nums = [1, 2, 3, 4, 5, 6];\nconst result = nums /* TODO */;\nconsole.log(result);\n' },
+      { container: pgRoot,
+        task: "Finde den maximalen Wert im Array <strong>ohne</strong> <code>Math.max</code>.",
+        initialCode: 'const arr = [3, 7, 2, 9, 4];\n// TODO\n' },
+      { container: pgRoot,
+        task: "Entferne Duplikate aus einem Array (Tipp: <code>Set</code> oder <code>filter</code> mit <code>indexOf</code>).",
+        initialCode: 'const arr = [1, 2, 2, 3, 3, 4];\n// TODO\n' },
+      { container: pgRoot,
+        task: "2D-Matrix: gib die Summe jeder Zeile aus.",
+        initialCode: 'const m = [[1,2,3],[4,5,6],[7,8,9]];\n// TODO\n' }
+    ]);
+
+    JSE.initQuiz({
+      container: document.getElementById("quiz"),
+      moduleId: "7",
+      questions: [
+        { q: "Was gibt <code>[1,2,3].length</code> zurück?",
+          options: ["2", "3", "4", "undefined"],
+          correct: 1,
+          explain: "<code>length</code> gibt die Anzahl der Elemente zurück." },
+        { q: "Welche Methode fügt ein Element am <strong>Anfang</strong> hinzu?",
+          options: ["push()", "pop()", "shift()", "unshift()"],
+          correct: 3,
+          explain: "<code>unshift</code> am Anfang, <code>push</code> am Ende, <code>shift</code> entfernt am Anfang, <code>pop</code> am Ende." },
+        { q: "Was gibt <code>[1,2,3].indexOf(4)</code> zurück?",
+          options: ["0", "3", "-1", "undefined"],
+          correct: 2,
+          explain: "Nicht gefunden → <code>-1</code>." },
+        { q: "Was ergibt <code>[1,2,3,4].slice(1,3)</code>?",
+          options: ["[1,2]", "[2,3]", "[2,3,4]", "[1,2,3]"],
+          correct: 1,
+          explain: "<code>slice(start, end)</code>: ab Index 1 bis (ausschließlich) Index 3 → <code>[2, 3]</code>." },
+        { q: "Was ändert <code>splice()</code> am Original-Array?",
+          options: ["Nichts", "Fügt ein und/oder entfernt", "Erzeugt immer Kopie", "Wirft Fehler"],
+          correct: 1,
+          explain: "<code>splice</code> mutiert das Original — entfernt und/oder fügt ein." },
+        { q: "Was ergibt <code>[10, 2, 1].sort()</code>?",
+          options: ["[1, 2, 10]", "[1, 10, 2]", "[10, 2, 1]", "[2, 10, 1]"],
+          correct: 1,
+          explain: "Ohne Comparator werden Elemente als Strings verglichen: \"1\" < \"10\" < \"2\"." },
+        { q: "Was ergibt <code>[1,2,3].map(x => x * 2)</code>?",
+          options: ["[1,2,3]", "[2,4,6]", "undefined", "[6]"],
+          correct: 1,
+          explain: "<code>map</code> erzeugt ein neues Array mit den Rückgabewerten des Callbacks." },
+        { q: "Was gibt <code>[1,2,3].reduce((a,b) => a+b, 0)</code> zurück?",
+          options: ["[1,2,3]", "6", "0", "123"],
+          correct: 1,
+          explain: "Summe mit initialem Akkumulator 0: 0+1+2+3 = 6." },
+        { q: "Wie prüft man, ob <code>x</code> ein Array ist?",
+          options: ["typeof x === \"array\"", "x instanceof List", "Array.isArray(x)", "x.isArray()"],
+          correct: 2,
+          explain: "<code>Array.isArray(x)</code> ist die einzige zuverlässige Methode." },
+        { q: "Was gibt dieser Code aus?",
+          code: 'const a = [1, 2, 3];\nconst b = a;\nb.push(4);\nconsole.log(a);',
+          options: ["[1,2,3]", "[1,2,3,4]", "Error", "[4]"],
+          correct: 1,
+          explain: "<code>b</code> ist die gleiche Referenz wie <code>a</code>. Änderungen betreffen beide." }
+      ]
+    });
+  </script>
+</body>
+</html>

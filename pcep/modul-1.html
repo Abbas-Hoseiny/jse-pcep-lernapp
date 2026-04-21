@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Modul 1 · Python-Grundlagen · PCEP Lern-App</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="container">
+    <div class="module-num">MODUL 1 · 17% der Prüfung</div>
+    <h1>Python-Grundlagen</h1>
+    <p class="subtitle">Interpreter, Syntax, Indentation, <code>print()</code>, Kommentare, Literale, Numeralsysteme, Keywords.</p>
+
+    <div class="tabs" data-tabs>
+      <button class="tab-btn active" data-target="panel-theorie">📖 Theorie</button>
+      <button class="tab-btn" data-target="panel-karten">🃏 Lernkarteien</button>
+      <button class="tab-btn" data-target="panel-playground">🐍 Playground</button>
+      <button class="tab-btn" data-target="panel-quiz">✅ Quiz</button>
+    </div>
+    <div>
+      <section class="tab-panel active" id="panel-theorie">
+        <div class="theory-section">
+          <h2>1.1 Was ist Python?</h2>
+          <p>Python ist eine <strong>high-level</strong>, <strong>interpretierte</strong>, <strong>dynamisch typisierte</strong>, <strong>stark typisierte</strong> Programmiersprache. Entwickelt 1989/1991 von Guido van Rossum.</p>
+          <ul>
+            <li><strong>Interpretiert</strong>: Code wird zur Laufzeit ausgeführt (kein manueller Kompilierschritt).</li>
+            <li><strong>Dynamisch typisiert</strong>: Variablen haben keinen festen Typ.</li>
+            <li><strong>Stark typisiert</strong>: Typen werden nicht automatisch gemischt (<code>"5" + 3</code> wirft Fehler!).</li>
+            <li><strong>Multi-Paradigma</strong>: prozedural, objektorientiert, funktional.</li>
+            <li><strong>Open Source</strong>, plattformunabhängig.</li>
+          </ul>
+        </div>
+
+        <div class="theory-section">
+          <h2>1.2 Compilation vs. Interpretation</h2>
+          <ul>
+            <li><strong>Compiler</strong>: Übersetzt den gesamten Quellcode <em>einmal</em> in Maschinencode (.exe). Schnelle Ausführung, aber nicht plattformunabhängig. Beispiele: C, C++, Go.</li>
+            <li><strong>Interpreter</strong>: Liest und führt den Code <em>Zeile für Zeile</em> aus. Langsamer, aber portabel. Python, JavaScript, Ruby.</li>
+          </ul>
+          <p>Python nutzt <strong>beides</strong>: Der Quellcode wird zuerst in <em>Bytecode</em> (<code>.pyc</code>) kompiliert und dann von der <strong>Python Virtual Machine (PVM)</strong> interpretiert.</p>
+        </div>
+
+        <div class="theory-section">
+          <h2>1.3 Lexis, Syntax, Semantik</h2>
+          <ul>
+            <li><strong>Lexis</strong>: Das Alphabet der Sprache — Tokens (Keywords, Operatoren, Bezeichner).</li>
+            <li><strong>Syntax</strong>: Die Grammatik — wie Tokens kombiniert werden dürfen.</li>
+            <li><strong>Semantik</strong>: Die Bedeutung — was der Code tatsächlich tut.</li>
+          </ul>
+        </div>
+
+        <div class="theory-section">
+          <h2>1.4 Dein erstes Python-Programm</h2>
+<pre><code class="py">print("Hello, World!")</code></pre>
+          <p><code>print()</code> ist eine <strong>eingebaute Funktion</strong>, die Text ausgibt. Keine Import-Anweisung nötig.</p>
+
+          <h3>Mehrere Argumente & Parameter</h3>
+<pre><code class="py">print("Hallo", "Welt")            # "Hallo Welt"  (Standard-Trenner: Leerzeichen)
+print("A", "B", sep="-")           # "A-B"
+print("Zeile 1", end=" ")          # kein Zeilenumbruch
+print("Zeile 2")                    # → "Zeile 1 Zeile 2"
+print()                             # nur Zeilenumbruch</code></pre>
+          <ul>
+            <li><strong><code>sep</code></strong>: Trenner zwischen Argumenten (Standard: <code>" "</code>).</li>
+            <li><strong><code>end</code></strong>: was nach dem letzten Wert kommt (Standard: <code>"\n"</code>).</li>
+          </ul>
+        </div>
+
+        <div class="theory-section">
+          <h2>1.5 Indentation (Einrückung) — KEINE Klammern!</h2>
+          <div class="callout danger">
+            <strong>Wichtigste Python-Regel:</strong> Code-Blöcke werden <strong>durch Einrückung</strong> definiert — nicht durch <code>{ }</code>. PEP 8 empfiehlt <strong>4 Leerzeichen</strong>. Tabs und Spaces nie mischen!
+          </div>
+<pre><code class="py">if True:
+    print("eingerückt")     # Teil des if-Blocks
+    print("auch hier")      # immer noch drin
+print("außerhalb")          # nicht eingerückt → außerhalb</code></pre>
+          <p>Falsche Einrückung → <code>IndentationError</code> oder <code>TabError</code>.</p>
+        </div>
+
+        <div class="theory-section">
+          <h2>1.6 Kommentare</h2>
+<pre><code class="py"># Einzeiliger Kommentar
+x = 5  # auch am Zeilenende
+
+"""
+Sogenannter "Docstring" — ein String,
+der als Kommentar verwendet wird (nicht offiziell,
+aber Konvention für Doku am Funktions-Anfang).
+"""</code></pre>
+          <p>Python kennt <strong>nur</strong> einzeilige Kommentare mit <code>#</code>. Mehrzeilige „Kommentare" sind eigentlich nur ungenutzte Strings.</p>
+        </div>
+
+        <div class="theory-section">
+          <h2>1.7 Literale</h2>
+          <p>Ein <strong>Literal</strong> ist ein Wert direkt im Quellcode.</p>
+<pre><code class="py">42              # int-Literal
+3.14            # float-Literal
+2.5e3           # 2500.0 — wissenschaftliche Notation
+True            # bool-Literal (Großbuchstabe!)
+False
+None            # "nichts" — wie null in JS
+"Hallo"         # str-Literal
+'Welt'          # auch str
+[1, 2, 3]       # list-Literal
+(1, 2, 3)       # tuple-Literal
+{1, 2, 3}       # set-Literal
+{"a": 1}        # dict-Literal</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>1.8 Numeralsysteme (Zahlenbasis)</h2>
+<pre><code class="py">decimal = 255
+binary  = 0b11111111      # = 255
+octal   = 0o377           # = 255
+hex     = 0xff            # = 255
+
+# Konvertierung zurück:
+bin(255)                  # '0b11111111'
+oct(255)                  # '0o377'
+hex(255)                  # '0xff'</code></pre>
+          <div class="callout"><strong>Präfixe:</strong> <code>0b</code> = binär, <code>0o</code> = oktal, <code>0x</code> = hexadezimal. Keine Präfixe bei Dezimal.</div>
+        </div>
+
+        <div class="theory-section">
+          <h2>1.9 Python-Keywords (reserviert)</h2>
+          <p>Diese 35 Wörter darfst du <strong>nicht</strong> als Bezeichner verwenden:</p>
+          <p class="mono" style="font-size:14px">False, None, True, and, as, assert, async, await, break, class, continue, def, del, elif, else, except, finally, for, from, global, if, import, in, is, lambda, nonlocal, not, or, pass, raise, return, try, while, with, yield</p>
+          <p>Python ist <strong>case-sensitive</strong>: <code>True</code> ≠ <code>true</code>.</p>
+        </div>
+
+        <div class="theory-section">
+          <h2>1.10 Bezeichner-Regeln</h2>
+          <ul>
+            <li>Erlaubt: Buchstaben (a–Z), Ziffern (0–9), Unterstrich <code>_</code>.</li>
+            <li>Dürfen <strong>nicht</strong> mit einer Ziffer beginnen.</li>
+            <li>Case-sensitive.</li>
+            <li>Keine Keywords.</li>
+            <li>Konvention: <strong>snake_case</strong> für Variablen/Funktionen, <strong>PascalCase</strong> für Klassen, <strong>UPPER_CASE</strong> für Konstanten.</li>
+          </ul>
+<pre><code class="py">my_var = 10       # ✓ snake_case (Konvention)
+_private = 5      # ✓ (Unterstrich am Anfang → "privat")
+__dunder__ = 1    # ✓ (doppelte Unterstriche: reserviert für Python)
+2fast = 10        # ✗ SyntaxError
+my-var = 10       # ✗ (Bindestrich = Minus!)
+class = 1         # ✗ reserviertes Wort</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>1.11 Python-Versionen</h2>
+          <p>Aktuell ist <strong>Python 3</strong>. Python 2 ist seit 2020 end-of-life.</p>
+          <p>Prüfen: <code>python --version</code> oder im Code:</p>
+<pre><code class="py">import sys
+print(sys.version)</code></pre>
+        </div>
+
+        <div class="btn-row mt-lg">
+          <button class="btn primary" data-mark-theory="1">✓ Theorie als gelesen markieren</button>
+          <a class="btn" href="modul-2.html">Weiter zu Modul 2 →</a>
+        </div>
+      </section>
+
+      <section class="tab-panel" id="panel-karten">
+        <h2>Lernkarteien</h2>
+        <p class="subtitle">Klicke zum Umdrehen. Markiere „Wusste ich" um zu lernen.</p>
+        <div id="flashcards"></div>
+      </section>
+
+      <section class="tab-panel" id="panel-playground">
+        <h2>Python-Playground</h2>
+        <p class="subtitle">Echtes Python im Browser via Pyodide. Erster Start dauert ~5–10 Sek (Download), danach sofort.</p>
+        <div id="playgrounds"></div>
+      </section>
+
+      <section class="tab-panel" id="panel-quiz">
+        <h2>Quiz — Modul 1</h2>
+        <p class="subtitle">10 Fragen. 70% zum Bestehen.</p>
+        <div id="quiz"></div>
+      </section>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    PCEP.initFlashcards({
+      container: document.getElementById("flashcards"),
+      moduleId: "1",
+      cards: [
+        { front: "Wer hat Python entwickelt und wann?", back: "<strong>Guido van Rossum</strong>, 1989 begonnen, 1991 veröffentlicht." },
+        { front: "Ist Python kompiliert oder interpretiert?", back: "<strong>Beides</strong>: zuerst wird der Code in <em>Bytecode</em> kompiliert, dann von der <strong>PVM</strong> (Python Virtual Machine) interpretiert." },
+        { front: "Dynamisch oder statisch typisiert?", back: "<strong>Dynamisch</strong> — Variablen-Typen werden zur Laufzeit bestimmt." },
+        { front: "Stark oder schwach typisiert?", back: "<strong>Stark</strong> typisiert — keine automatische Typ-Mischung. <code>\"5\" + 3</code> wirft TypeError." },
+        { front: "Welches Zeichen leitet einen Kommentar ein?", back: "<code>#</code> (Raute). Python hat keine offiziellen Mehrzeilen-Kommentare." },
+        { front: "Wie definiert Python Code-Blöcke?", back: "Durch <strong>Einrückung</strong> (Indentation). Typisch: 4 Leerzeichen. Keine geschweiften Klammern!" },
+        { front: "Was ist PEP 8?", back: "Python Enhancement Proposal 8 — der offizielle <strong>Style Guide</strong> für Python-Code." },
+        { front: "Wie heißt die eingebaute Funktion zum Ausgeben?", back: "<code>print()</code>" },
+        { front: "Was ist der Standard-Trenner von <code>print()</code>?", back: "Ein <strong>Leerzeichen</strong> (<code>sep=\" \"</code>)." },
+        { front: "Was macht <code>print(\"a\", \"b\", sep=\"-\")</code>?", back: "Gibt <code>a-b</code> aus." },
+        { front: "Was macht <code>print(\"x\", end=\"\")</code>?", back: "Gibt <code>x</code> aus <strong>ohne</strong> Zeilenumbruch." },
+        { front: "Standard-Wert von <code>end</code>?", back: "<code>\"\\n\"</code> (Zeilenumbruch)." },
+        { front: "Wie schreibt man eine Binärzahl?", back: "Mit Präfix <code>0b</code>: <code>0b1010</code> = 10." },
+        { front: "Wie schreibt man eine Hexadezimalzahl?", back: "Mit Präfix <code>0x</code>: <code>0xff</code> = 255." },
+        { front: "Wie schreibt man eine Oktalzahl?", back: "Mit Präfix <code>0o</code>: <code>0o17</code> = 15." },
+        { front: "Wie viele reservierte Keywords hat Python (ca.)?", back: "Ca. <strong>35</strong> — inkl. True, False, None, def, class, if, for, while, try, except, import, …" },
+        { front: "Sind <code>True</code> und <code>true</code> dasselbe?", back: "<strong>Nein!</strong> Python ist case-sensitive — <code>True</code> ist das Keyword, <code>true</code> wäre ein undefinierter Name." },
+        { front: "Wie heißt der „nichts"-Wert in Python?", back: "<code>None</code> (Großbuchstabe). Entspricht <code>null</code> in anderen Sprachen." },
+        { front: "Was ist ein Literal?", back: "Ein fester Wert im Code, z. B. <code>42</code>, <code>\"Hallo\"</code>, <code>True</code>, <code>[1,2]</code>." },
+        { front: "Darf ein Bezeichner mit einer Ziffer beginnen?", back: "<strong>Nein.</strong> Erlaubt: Buchstabe oder <code>_</code>." },
+        { front: "Welche Namenskonvention nutzt Python?", back: "<strong>snake_case</strong> für Variablen/Funktionen, <strong>PascalCase</strong> für Klassen, <strong>UPPER_CASE</strong> für Konstanten." },
+        { front: "Was ist die PVM?", back: "<strong>Python Virtual Machine</strong> — führt den kompilierten Bytecode aus." },
+        { front: "Welchen Fehler gibt falsche Einrückung?", back: "<code>IndentationError</code> (oder <code>TabError</code> bei gemischten Tabs/Spaces)." },
+        { front: "Was macht <code>print()</code> ohne Argumente?", back: "Gibt nur eine <strong>Leerzeile</strong> aus (nur <code>\"\\n\"</code>)." },
+        { front: "Welche aktuelle Python-Version ist relevant?", back: "<strong>Python 3</strong>. Python 2 wurde Anfang 2020 abgekündigt." }
+      ]
+    });
+
+    const pgRoot = document.getElementById("playgrounds");
+    PCEP.initPlaygrounds([
+      { container: pgRoot,
+        task: "Gib <code>Hello, PCEP!</code> mit <code>print()</code> aus.",
+        initialCode: '# Dein Code hier:\nprint("...")\n' },
+      { container: pgRoot,
+        task: "Gib <code>Python · ist · toll</code> (mit „ · " als Trenner) in einer Zeile aus. Nutze <code>sep</code>.",
+        initialCode: '# Tipp: print(..., ..., ..., sep=" · ")\n' },
+      { container: pgRoot,
+        task: "Gib die Zahlen 1, 2, 3 in <strong>einer Zeile</strong> aus, getrennt durch Bindestrich.",
+        initialCode: '# Nutze sep="-"\n' },
+      { container: pgRoot,
+        task: "Probiere alle Numeralsysteme: gib <code>0b1010</code>, <code>0o17</code>, <code>0xff</code> als Dezimalzahl aus.",
+        initialCode: 'print(0b1010)\nprint(0o17)\nprint(0xff)\n' },
+      { container: pgRoot,
+        task: "Versuche eine fehlerhafte Einrückung — was passiert?",
+        initialCode: 'if True:\nprint("falsch eingerückt")\n' }
+    ]);
+
+    PCEP.initQuiz({
+      container: document.getElementById("quiz"),
+      moduleId: "1",
+      questions: [
+        { q: "Wer hat Python entwickelt?",
+          options: ["Dennis Ritchie","Guido van Rossum","James Gosling","Brendan Eich"],
+          correct: 1,
+          explain: "Guido van Rossum, Ende der 1980er-Jahre. Der Name kommt von „Monty Python's Flying Circus"." },
+        { q: "Welche Aussage über Python ist korrekt?",
+          options: ["Statisch typisiert","Nur objektorientiert","Dynamisch und stark typisiert","Nur im Browser lauffähig"],
+          correct: 2,
+          explain: "Dynamisch: Typ wird zur Laufzeit bestimmt. Stark: keine implizite Mischung unterschiedlicher Typen." },
+        { q: "Was ergibt dieser Code?",
+          code: 'print("Hallo", "Welt")',
+          options: ["HalloWelt","Hallo Welt","Hallo-Welt","Fehler"],
+          correct: 1,
+          explain: "Standard-Separator von <code>print()</code> ist ein Leerzeichen." },
+        { q: "Was ergibt dieser Code?",
+          code: 'print("A", "B", sep="")',
+          options: ["A B","A-B","AB","A\\nB"],
+          correct: 2,
+          explain: "<code>sep=\"\"</code> entfernt den Trenner → AB." },
+        { q: "Wie schreibt man einen Kommentar in Python?",
+          options: ["// Kommentar","/* Kommentar */","# Kommentar","<!-- Kommentar -->"],
+          correct: 2,
+          explain: "<code>#</code> ist das einzige offizielle Kommentar-Zeichen in Python." },
+        { q: "Wie definiert Python Code-Blöcke?",
+          options: ["Geschweifte Klammern","Einrückung","Semikolons","begin/end"],
+          correct: 1,
+          explain: "Einrückung (Indentation). Üblich: 4 Leerzeichen pro Ebene." },
+        { q: "Welcher Bezeichner ist <strong>gültig</strong>?",
+          options: ["2var","my-var","_value","class"],
+          correct: 2,
+          explain: "<code>_value</code> ist gültig. Ziffer am Anfang, Bindestrich oder Keywords sind verboten." },
+        { q: "Was ist der Dezimalwert von <code>0xff</code>?",
+          options: ["15","99","255","256"],
+          correct: 2,
+          explain: "0xff = 15·16 + 15 = 255." },
+        { q: "Was ist der Dezimalwert von <code>0b1010</code>?",
+          options: ["5","8","10","20"],
+          correct: 2,
+          explain: "Binär 1010 = 8+0+2+0 = 10." },
+        { q: "Was passiert bei falscher Einrückung?",
+          options: ["SyntaxWarning","IndentationError","ValueError","Der Code läuft trotzdem"],
+          correct: 1,
+          explain: "Python ist bezüglich Einrückung strikt und wirft <code>IndentationError</code>." }
+      ]
+    });
+  </script>
+</body>
+</html>

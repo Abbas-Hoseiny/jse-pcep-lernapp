@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Modul 5 · Funktionen · JSE Lern-App</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><div class="brand-logo">JS</div> JSE Lern-App</div>
+    <nav>
+      <a href="index.html">← Dashboard</a>
+      <a href="modul-4.html">← Modul 4</a>
+      <a href="modul-6.html">Modul 6 →</a>
+      <a href="pruefung.html">Prüfung</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div class="module-num">MODUL 5 · 18% der Prüfung</div>
+    <h1>Funktionen</h1>
+    <p class="subtitle">Wiederverwendbare Code-Blöcke. Deklaration, Ausdrücke, Arrow Functions, Scope, Hoisting, Rekursion.</p>
+
+    <div class="tabs" data-tabs>
+      <button class="tab-btn active" data-target="panel-theorie">📖 Theorie</button>
+      <button class="tab-btn" data-target="panel-karten">🃏 Lernkarteien</button>
+      <button class="tab-btn" data-target="panel-playground">💻 Playground</button>
+      <button class="tab-btn" data-target="panel-quiz">✅ Quiz</button>
+    </div>
+    <div>
+      <section class="tab-panel active" id="panel-theorie">
+        <div class="theory-section">
+          <h2>5.1 Function Declaration</h2>
+<pre><code class="js">function addiere(a, b) {
+  return a + b;
+}
+
+console.log(addiere(2, 3));  // 5</code></pre>
+          <ul>
+            <li><strong>Name</strong>: <code>addiere</code></li>
+            <li><strong>Parameter</strong>: <code>a</code>, <code>b</code></li>
+            <li><strong>Körper</strong>: <code>{ return a + b; }</code></li>
+            <li><strong>return</strong>: gibt Wert zurück. Ohne <code>return</code> → <code>undefined</code></li>
+          </ul>
+          <p>Function Declarations werden <strong>gehoistet</strong> — man kann sie schon vor der Definition aufrufen.</p>
+        </div>
+
+        <div class="theory-section">
+          <h2>5.2 Function Expression</h2>
+<pre><code class="js">const addiere = function(a, b) {
+  return a + b;
+};
+
+// Benannte Function Expression:
+const fak = function fakultaet(n) {
+  return n <= 1 ? 1 : n * fakultaet(n - 1);
+};</code></pre>
+          <p>Eine Function Expression ist eine Funktion als <strong>Wert</strong> — kann einer Variable zugewiesen werden. Kein Hoisting der Funktion selbst.</p>
+        </div>
+
+        <div class="theory-section">
+          <h2>5.3 Arrow Functions</h2>
+<pre><code class="js">// Kompakte Syntax:
+const addiere = (a, b) => a + b;           // implizites return
+const quadrat = x => x * x;                 // ein Parameter: Klammern optional
+const gruss = () => console.log("hi");     // keine Parameter: ()
+const mehr = (a, b) => {                    // mit Körper:
+  const s = a + b;
+  return s;
+};</code></pre>
+          <div class="callout warn">
+            <strong>Unterschiede zu normalen Funktionen:</strong>
+            <ul>
+              <li><strong>Kein eigenes <code>this</code></strong> — übernimmt es aus dem umgebenden Scope.</li>
+              <li>Kein <code>arguments</code>-Objekt.</li>
+              <li>Nicht als Konstruktor mit <code>new</code> verwendbar.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="theory-section">
+          <h2>5.4 Parameter & Argumente</h2>
+<pre><code class="js">function greet(name = "Gast") {    // Default-Parameter
+  console.log("Hallo, " + name);
+}
+greet();          // "Hallo, Gast"
+greet("Ali");     // "Hallo, Ali"
+
+function sum(...zahlen) {          // Rest-Parameter — sammelt in Array
+  let s = 0;
+  for (const z of zahlen) s += z;
+  return s;
+}
+sum(1, 2, 3, 4);  // 10
+
+// Spread beim Aufruf:
+const arr = [1, 2, 3];
+Math.max(...arr);  // 3</code></pre>
+          <p>Wenn du weniger Argumente übergibst als Parameter, sind die fehlenden <code>undefined</code>:</p>
+<pre><code class="js">function f(a, b) { console.log(a, b); }
+f(1);  // 1 undefined</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>5.5 <code>return</code></h2>
+<pre><code class="js">function doppel(x) { return x * 2; }
+function ohneReturn() { console.log("hi"); }
+
+doppel(5);        // 10
+ohneReturn();     // gibt undefined zurück</code></pre>
+          <div class="callout danger">
+            <strong>ASI-Stolperfalle:</strong>
+            <pre><code class="js">return
+  42;
+// Interpretiert als: return; 42; → gibt undefined zurück!
+
+// Besser:
+return 42;</code></pre>
+          </div>
+        </div>
+
+        <div class="theory-section">
+          <h2>5.6 Scope (Gültigkeitsbereich)</h2>
+<pre><code class="js">let global = "überall";  // globaler Scope
+
+function f() {
+  let lokal = "nur in f";   // Funktions-Scope
+  if (true) {
+    let block = "nur im if"; // Block-Scope (let/const)
+    var auchLokal = "aber in ganzer Funktion"; // var ignoriert Block!
+  }
+  console.log(auchLokal);   // OK
+  // console.log(block);    // ReferenceError
+}</code></pre>
+          <h3>Lexikalischer Scope</h3>
+          <p>Eine innere Funktion kann auf Variablen der <strong>äußeren</strong> zugreifen (nicht umgekehrt):</p>
+<pre><code class="js">function aussen() {
+  const x = 1;
+  function innen() {
+    console.log(x);  // 1 — funktioniert!
+  }
+  innen();
+}</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>5.7 Hoisting</h2>
+<pre><code class="js">// Function Declarations werden gehoistet (Name + Körper):
+greet();   // funktioniert!
+function greet() { console.log("hi"); }
+
+// Function Expressions NICHT:
+sag();     // TypeError: sag is not a function
+var sag = function() { console.log("hi"); };
+
+// let/const werden in TDZ gehoistet (nicht zugreifbar):
+console.log(x);   // ReferenceError
+let x = 5;</code></pre>
+          <p><strong>TDZ</strong> = Temporal Dead Zone: der Bereich zwischen Block-Beginn und Deklaration.</p>
+        </div>
+
+        <div class="theory-section">
+          <h2>5.8 Rekursion</h2>
+          <p>Eine Funktion, die sich selbst aufruft. Wichtig: <strong>Basisfall</strong>, sonst Endlosschleife.</p>
+<pre><code class="js">function fakultaet(n) {
+  if (n <= 1) return 1;          // Basisfall
+  return n * fakultaet(n - 1);   // rekursiver Aufruf
+}
+fakultaet(5);   // 120  (5 * 4 * 3 * 2 * 1)
+
+function fib(n) {
+  if (n < 2) return n;
+  return fib(n - 1) + fib(n - 2);
+}
+fib(10);  // 55</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>5.9 Callbacks</h2>
+          <p>Ein <strong>Callback</strong> ist eine Funktion, die als Argument an eine andere übergeben wird.</p>
+<pre><code class="js">function machWas(callback) {
+  callback("Hallo");
+}
+machWas(function(nachricht) {
+  console.log(nachricht);  // "Hallo"
+});
+
+// Mit Arrow Function:
+machWas(msg => console.log(msg));
+
+// Häufig bei Array-Methoden:
+[1, 2, 3].forEach(x => console.log(x));
+[1, 2, 3].map(x => x * 2);   // [2, 4, 6]</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>5.10 IIFE (Immediately Invoked Function Expression)</h2>
+<pre><code class="js">(function() {
+  console.log("läuft sofort!");
+})();
+
+// Mit Arrow:
+(() => console.log("auch sofort"))();</code></pre>
+          <p>Nützlich, um einen eigenen Scope zu erzeugen.</p>
+        </div>
+
+        <div class="btn-row mt-lg">
+          <button class="btn primary" data-mark-theory="5">✓ Theorie als gelesen markieren</button>
+          <a class="btn" href="modul-6.html">Weiter zu Modul 6 →</a>
+        </div>
+      </section>
+
+      <section class="tab-panel" id="panel-karten">
+        <h2>Lernkarteien</h2>
+        <div id="flashcards"></div>
+      </section>
+      <section class="tab-panel" id="panel-playground">
+        <h2>Code-Playground</h2>
+        <div id="playgrounds"></div>
+      </section>
+      <section class="tab-panel" id="panel-quiz">
+        <h2>Quiz — Modul 5</h2>
+        <div id="quiz"></div>
+      </section>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    JSE.initFlashcards({
+      container: document.getElementById("flashcards"),
+      moduleId: "5",
+      cards: [
+        { front: "Syntax einer Function Declaration?", back: "<code>function name(param) { return wert; }</code>" },
+        { front: "Syntax einer Arrow Function mit 2 Parametern und implizitem return?", back: "<code>(a, b) => a + b</code>" },
+        { front: "Wann sind Klammern um den Arrow-Parameter optional?", back: "Wenn es <strong>genau einen</strong> Parameter gibt: <code>x => x * 2</code>" },
+        { front: "Was ist der Unterschied zwischen Function Declaration und Expression beim Hoisting?", back: "<strong>Declaration</strong> wird komplett gehoistet — vor Definition aufrufbar.<br><strong>Expression</strong> nicht — vor Zuweisung <code>undefined</code>." },
+        { front: "Was gibt eine Funktion ohne <code>return</code> zurück?", back: "<code>undefined</code>" },
+        { front: "Was ist ein Default-Parameter?", back: "Ein Standardwert, der verwendet wird, wenn kein Argument übergeben wird: <code>function f(x = 10) {}</code>" },
+        { front: "Was ist ein Rest-Parameter?", back: "<code>...name</code> — sammelt beliebig viele Argumente in einem Array: <code>function f(...args) {}</code>" },
+        { front: "Wie nennt man <code>Math.max(...arr)</code>?", back: "<strong>Spread-Syntax</strong> — „entpackt" ein Array zu einzelnen Argumenten." },
+        { front: "Was passiert, wenn du mehr Argumente übergibst als Parameter?", back: "Die zusätzlichen werden ignoriert (bzw. sind in <code>arguments</code> oder Rest-Parameter verfügbar)." },
+        { front: "Was passiert, wenn du weniger Argumente übergibst?", back: "Fehlende Parameter sind <code>undefined</code>." },
+        { front: "Was ist Scope?", back: "Der <strong>Gültigkeitsbereich</strong>, in dem eine Variable sichtbar ist. Global, Funktion, Block." },
+        { front: "Welchen Scope hat <code>var</code> innerhalb einer Funktion?", back: "<strong>Funktions-Scope</strong> — <code>var</code> ignoriert Blöcke." },
+        { front: "Was ist lexikalischer Scope?", back: "Der Scope wird durch die <strong>Position im Code</strong> bestimmt — innere Funktionen sehen Variablen der äußeren." },
+        { front: "Was ist Hoisting?", back: "JS „zieht" Deklarationen an den Anfang des Scopes — vor der Ausführung des Codes. Gilt für <code>var</code>, Function Declarations und partiell <code>let</code>/<code>const</code>." },
+        { front: "Was ist die Temporal Dead Zone (TDZ)?", back: "Der Bereich zwischen Block-Beginn und <code>let</code>/<code>const</code>-Deklaration. Zugriff → <code>ReferenceError</code>." },
+        { front: "Was ist Rekursion?", back: "Eine Funktion ruft sich <strong>selbst</strong> auf. Braucht einen <strong>Basisfall</strong>, sonst Endlos." },
+        { front: "Nenne den Basisfall für <code>fakultaet(n)</code>.", back: "<code>if (n <= 1) return 1;</code>" },
+        { front: "Was ist ein Callback?", back: "Eine Funktion, die als <strong>Argument</strong> an eine andere Funktion übergeben wird, um später aufgerufen zu werden." },
+        { front: "Was bedeutet IIFE?", back: "<strong>Immediately Invoked Function Expression</strong> — <code>(function(){...})()</code>. Läuft sofort, eigener Scope." },
+        { front: "Hat eine Arrow Function ein eigenes <code>this</code>?", back: "<strong>Nein</strong> — sie erbt <code>this</code> aus dem umgebenden Scope." },
+        { front: "Kann man eine Arrow Function mit <code>new</code> aufrufen?", back: "<strong>Nein</strong> — Arrow Functions sind keine Konstruktoren." },
+        { front: "Was gibt <code>arguments</code> zurück?", back: "Ein <strong>array-ähnliches Objekt</strong> mit allen Argumenten (nur in normalen Funktionen, nicht Arrow)." },
+        { front: "Wie schreibt man eine Arrow Function, die ein Objekt zurückgibt?", back: "Objekt in Klammern: <code>() => ({ a: 1 })</code> — sonst wird <code>{}</code> als Funktionskörper interpretiert." },
+        { front: "Reihenfolge der Argumente in <code>arr.map((wert, index, array) => ...)</code>?", back: "Wert, Index, das ganze Array." },
+        { front: "Kann eine Function Expression anonym sein?", back: "Ja: <code>const f = function() {};</code>" },
+        { front: "Was passiert bei <code>return</code> allein auf einer Zeile?", back: "ASI fügt ein Semikolon ein — die nächste Zeile wird nicht als Rückgabewert behandelt!" },
+        { front: "Wie nennt man eine Funktion, die eine andere als Argument nimmt oder zurückgibt?", back: "<strong>Higher-Order Function</strong>." },
+        { front: "Wie deklariert man einen optionalen Parameter mit Standardwert „Welt"?", back: "<code>function hi(name = \"Welt\") {}</code>" }
+      ]
+    });
+
+    const pgRoot = document.getElementById("playgrounds");
+    JSE.initPlaygrounds([
+      { container: pgRoot,
+        task: "Schreibe eine Funktion <code>istGerade(n)</code>, die <code>true</code>/<code>false</code> zurückgibt. Teste mit 4 und 7.",
+        initialCode: 'function istGerade(n) {\n  // TODO\n}\nconsole.log(istGerade(4));\nconsole.log(istGerade(7));\n' },
+      { container: pgRoot,
+        task: "Schreibe <code>fakultaet(n)</code> <strong>rekursiv</strong>. Teste mit 5 (soll 120 sein).",
+        initialCode: 'function fakultaet(n) {\n  // TODO\n}\nconsole.log(fakultaet(5));\n' },
+      { container: pgRoot,
+        task: "Arrow Function: Berechne <code>quadrat</code> einer Zahl.",
+        initialCode: 'const quadrat = /* TODO */;\nconsole.log(quadrat(7));\n' },
+      { container: pgRoot,
+        task: "Rest-Parameter: <code>summe(...zahlen)</code> addiert beliebig viele Argumente.",
+        initialCode: 'function summe(...zahlen) {\n  // TODO\n}\nconsole.log(summe(1,2,3,4,5));\n' },
+      { container: pgRoot,
+        task: "Higher-Order Function: <code>wiederhole(n, fn)</code> ruft <code>fn</code> n-mal auf.",
+        initialCode: 'function wiederhole(n, fn) {\n  // TODO\n}\nwiederhole(3, () => console.log("hi"));\n' }
+    ]);
+
+    JSE.initQuiz({
+      container: document.getElementById("quiz"),
+      moduleId: "5",
+      questions: [
+        { q: "Was gibt eine Funktion <strong>ohne</strong> <code>return</code> zurück?",
+          options: ["null", "undefined", "0", "NaN"],
+          correct: 1,
+          explain: "Ohne <code>return</code> ist der Rückgabewert <code>undefined</code>." },
+        { q: "Welcher Code funktioniert dank Hoisting?",
+          options: [
+            "greet(); function greet() { console.log('hi'); }",
+            "greet(); const greet = () => console.log('hi');",
+            "greet(); let greet = function() { console.log('hi'); };",
+            "greet(); var greet = function() { console.log('hi'); };"],
+          correct: 0,
+          explain: "Function Declarations werden vollständig gehoistet — Name UND Körper. Function Expressions nicht." },
+        { q: "Was gibt dieser Code aus?",
+          code: 'function f(a, b) { return a + b; }\nconsole.log(f(2));',
+          options: ["2", "NaN", "undefined", "TypeError"],
+          correct: 1,
+          explain: "<code>b</code> ist <code>undefined</code>. <code>2 + undefined = NaN</code>." },
+        { q: "Wie gibt eine Arrow Function ein Objekt direkt zurück?",
+          options: ["() => { a: 1 }", "() => ({ a: 1 })", "() => [a: 1]", "() => return { a: 1 }"],
+          correct: 1,
+          explain: "Geschweifte Klammern werden als Funktionskörper gelesen. Mit <code>()</code> umschließen." },
+        { q: "Was passiert hier?",
+          code: 'console.log(typeof greet);\nvar greet = function() {};',
+          options: ["\"function\"", "\"undefined\"", "ReferenceError", "TypeError"],
+          correct: 1,
+          explain: "<code>var</code>-Deklaration wird gehoistet, nicht die Zuweisung. Zu dem Zeitpunkt ist <code>greet</code> noch <code>undefined</code>." },
+        { q: "Was ist ein Default-Parameter?",
+          options: [
+            "Ein Parameter ohne Wert",
+            "Ein Parameter mit Standardwert falls nicht übergeben",
+            "Ein global definierter Wert",
+            "Ein reservierter Parametername"],
+          correct: 1,
+          explain: "<code>function f(x = 10)</code> — wenn kein Argument übergeben wird, ist <code>x = 10</code>." },
+        { q: "Welche Aussage über Arrow Functions ist <strong>falsch</strong>?",
+          options: [
+            "Sie haben kein eigenes this",
+            "Sie haben kein arguments-Objekt",
+            "Sie können als Konstruktor mit new genutzt werden",
+            "Sie können implizit returnen"],
+          correct: 2,
+          explain: "Arrow Functions sind <strong>keine Konstruktoren</strong>. <code>new (() => {})()</code> wirft einen TypeError." },
+        { q: "Was gibt dieser Code aus?",
+          code: 'function f() {\n  if (true) { var x = 1; }\n  console.log(x);\n}\nf();',
+          options: ["1", "undefined", "ReferenceError", "TypeError"],
+          correct: 0,
+          explain: "<code>var</code> ist funktions-skopiert — <code>x</code> ist auch außerhalb des if sichtbar." },
+        { q: "Was gibt <code>fib(4)</code> zurück?",
+          code: 'function fib(n) {\n  if (n < 2) return n;\n  return fib(n-1) + fib(n-2);\n}',
+          options: ["2", "3", "4", "5"],
+          correct: 1,
+          explain: "fib: 0,1,1,2,3,5,… also fib(4) = 3." },
+        { q: "Wofür wird ein <strong>Callback</strong> verwendet?",
+          options: [
+            "Um eine Funktion zu deklarieren",
+            "Um eine Funktion als Argument zu übergeben und später aufzurufen",
+            "Um eine Funktion rückgängig zu machen",
+            "Um Fehler abzufangen"],
+          correct: 1,
+          explain: "Callbacks sind Funktionen, die man übergibt, damit sie später (z. B. nach einem Event) aufgerufen werden." }
+      ]
+    });
+  </script>
+</body>
+</html>

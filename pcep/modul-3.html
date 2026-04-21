@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Modul 3 · Operatoren · PCEP Lern-App</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="container">
+    <div class="module-num">MODUL 3 · Teil von 20%</div>
+    <h1>Operatoren</h1>
+    <p class="subtitle">Arithmetisch, Vergleich, Logik, Bitweise, Identität, Membership, Präzedenz.</p>
+
+    <div class="tabs" data-tabs>
+      <button class="tab-btn active" data-target="panel-theorie">📖 Theorie</button>
+      <button class="tab-btn" data-target="panel-karten">🃏 Lernkarteien</button>
+      <button class="tab-btn" data-target="panel-playground">🐍 Playground</button>
+      <button class="tab-btn" data-target="panel-quiz">✅ Quiz</button>
+    </div>
+    <div>
+      <section class="tab-panel active" id="panel-theorie">
+        <div class="theory-section">
+          <h2>3.1 Arithmetische Operatoren</h2>
+<pre><code class="py">5 + 2       # 7    Addition
+5 - 2       # 3    Subtraktion
+5 * 2       # 10   Multiplikation
+5 / 2       # 2.5  Division (IMMER float!)
+5 // 2      # 2    Ganzzahl-Division (floor)
+5 % 2       # 1    Modulo (Rest)
+5 ** 2      # 25   Potenz
+-5          # Negation
++5          # Plus (selten genutzt)</code></pre>
+          <div class="callout danger">
+            <strong>Wichtig für PCEP:</strong>
+            <ul>
+              <li><code>/</code> gibt <strong>immer float</strong> zurück: <code>4 / 2 == 2.0</code> (nicht 2!)</li>
+              <li><code>//</code> ist <strong>Floor-Division</strong> (rundet ab, auch bei negativen Zahlen): <code>-7 // 2 == -4</code> (nicht -3!)</li>
+              <li><code>**</code> ist <strong>Potenz</strong>, nicht XOR</li>
+            </ul>
+          </div>
+<pre><code class="py">10 / 3      # 3.3333333333333335
+10 // 3     # 3
+-10 // 3    # -4   ← floor, nicht truncation!
+10.0 // 3   # 3.0  — wenn ein float dabei ist, bleibt float
+10 % 3      # 1
+-10 % 3     # 2    ← Vorsicht: Python-Modulo folgt dem Vorzeichen des Divisors</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>3.2 Zuweisungsoperatoren</h2>
+<pre><code class="py">x = 10
+
+x += 5     # x = x + 5   → 15
+x -= 3     # x = x - 3   → 12
+x *= 2     # x = x * 2   → 24
+x /= 4     # x = x / 4   → 6.0  (wird float!)
+x //= 2    # x = x // 2  → 3.0
+x %= 2     # x = x % 2   → 1.0
+x **= 3    # x = x ** 3  → 1.0
+x &= 5     # bitweise
+x |= 5
+x ^= 5
+x <<= 1
+x >>= 1</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>3.3 Vergleichsoperatoren</h2>
+<pre><code class="py">5 == 5         # True
+5 != 3         # True
+5 > 3          # True
+5 < 3          # False
+5 >= 5         # True
+5 <= 4         # False
+
+# String-Vergleich (lexikographisch, Unicode):
+"apfel" < "banane"    # True
+"B" < "a"              # True ('B'=66, 'a'=97)
+
+# Chained Comparisons — Python-Spezialität!
+1 < x < 10             # äquivalent zu: 1 < x and x < 10
+0 <= alter < 18        # Minderjährig?</code></pre>
+          <div class="callout"><strong>Nur <code>==</code>, kein <code>===</code>!</strong> Python vergleicht immer strikt nach Wert — Typ wird nicht umgewandelt.</div>
+        </div>
+
+        <div class="theory-section">
+          <h2>3.4 Logische Operatoren</h2>
+          <p>In Python heißen sie <code>and</code>, <code>or</code>, <code>not</code> — <strong>ausgeschrieben</strong>, nicht <code>&amp;&amp;</code>/<code>||</code>/<code>!</code>.</p>
+<pre><code class="py">True and False     # False
+True or False      # True
+not True           # False
+
+# Short-Circuit wie in JS:
+# and gibt den ersten falsy Wert oder den letzten
+True and "hallo"   # 'hallo'
+0 and "hallo"      # 0
+"a" and "b" and "c"  # 'c'
+
+# or gibt den ersten truthy Wert oder den letzten
+None or "default"  # 'default'
+0 or "" or "x"     # 'x'
+"a" or "b"         # 'a'</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>3.5 Bitweise Operatoren</h2>
+<pre><code class="py">5 & 3     # 1    AND
+5 | 3     # 7    OR
+5 ^ 3     # 6    XOR
+~5        # -6   NOT (bitweise Inversion)
+5 << 1    # 10   Left-Shift (× 2)
+5 >> 1    # 2    Right-Shift (÷ 2)</code></pre>
+          <p>Selten genutzt, aber PCEP fragt danach. Merke: <code>^</code> in Python ist XOR, <strong>nicht Potenz</strong> (das ist <code>**</code>).</p>
+        </div>
+
+        <div class="theory-section">
+          <h2>3.6 Identitäts-Operatoren: <code>is</code> / <code>is not</code></h2>
+<pre><code class="py">x = [1, 2]
+y = x          # gleiche Referenz
+z = [1, 2]    # gleicher Wert, andere Referenz
+
+x == y         # True  (gleicher Wert)
+x == z         # True
+x is y         # True  (gleiches Objekt)
+x is z         # False (verschiedene Objekte)
+
+# Standard-Fall: is bei None
+if x is None:
+    pass</code></pre>
+          <div class="callout warn"><strong>Faustregel:</strong> <code>is</code> nur für <code>None</code>, <code>True</code>, <code>False</code>. Für Wertvergleiche immer <code>==</code>.</div>
+        </div>
+
+        <div class="theory-section">
+          <h2>3.7 Membership-Operatoren: <code>in</code> / <code>not in</code></h2>
+<pre><code class="py">3 in [1, 2, 3]           # True
+5 in [1, 2, 3]           # False
+"a" in "banana"           # True
+"x" not in "banana"       # True
+"name" in {"name": "Ali"} # True  (prüft KEYS bei dicts)</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>3.8 Der „walrus" Operator <code>:=</code> (ab 3.8)</h2>
+<pre><code class="py">if (n := len([1,2,3])) > 2:
+    print(f"Liste hat {n} Elemente")</code></pre>
+          <p>Weist zu und gibt gleichzeitig den Wert zurück. Für PCEP nicht kritisch, aber gut zu kennen.</p>
+        </div>
+
+        <div class="theory-section">
+          <h2>3.9 String-Operatoren</h2>
+<pre><code class="py">"Hallo" + " " + "Welt"    # 'Hallo Welt'   Konkatenation
+"ab" * 3                   # 'ababab'       Wiederholung
+"a" in "banana"            # True
+"e" not in "banana"        # True</code></pre>
+          <p>Achtung: <code>"5" + 3</code> wirft <code>TypeError</code> — explizit konvertieren: <code>"5" + str(3)</code>.</p>
+        </div>
+
+        <div class="theory-section">
+          <h2>3.10 Operator-Präzedenz (von hoch nach niedrig)</h2>
+          <ol>
+            <li><code>()</code> Klammern, Literale</li>
+            <li><code>**</code> Potenz (rechtsassoziativ!)</li>
+            <li>unär <code>+x</code>, <code>-x</code>, <code>~x</code></li>
+            <li><code>*</code>, <code>/</code>, <code>//</code>, <code>%</code></li>
+            <li><code>+</code>, <code>-</code> (binär)</li>
+            <li>Shifts <code>&lt;&lt;</code>, <code>&gt;&gt;</code></li>
+            <li>Bitweise <code>&amp;</code></li>
+            <li>Bitweise <code>^</code></li>
+            <li>Bitweise <code>|</code></li>
+            <li>Vergleiche <code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>in</code>, <code>is</code></li>
+            <li><code>not</code></li>
+            <li><code>and</code></li>
+            <li><code>or</code></li>
+            <li>Ternär <code>a if b else c</code></li>
+          </ol>
+          <div class="callout warn">
+            <strong>Spezial:</strong> <code>**</code> ist rechtsassoziativ!<br>
+            <code>2 ** 3 ** 2 == 2 ** (3 ** 2) == 2 ** 9 == 512</code>
+          </div>
+        </div>
+
+        <div class="theory-section">
+          <h2>3.11 Ternärer Ausdruck</h2>
+          <p>Python hat kein <code>? :</code>, aber eine andere Syntax:</p>
+<pre><code class="py">status = "erwachsen" if alter >= 18 else "minderjährig"</code></pre>
+        </div>
+
+        <div class="btn-row mt-lg">
+          <button class="btn primary" data-mark-theory="3">✓ Theorie als gelesen markieren</button>
+          <a class="btn" href="modul-4.html">Weiter zu Modul 4 →</a>
+        </div>
+      </section>
+
+      <section class="tab-panel" id="panel-karten">
+        <h2>Lernkarteien</h2>
+        <div id="flashcards"></div>
+      </section>
+      <section class="tab-panel" id="panel-playground">
+        <h2>Python-Playground</h2>
+        <div id="playgrounds"></div>
+      </section>
+      <section class="tab-panel" id="panel-quiz">
+        <h2>Quiz — Modul 3</h2>
+        <div id="quiz"></div>
+      </section>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    PCEP.initFlashcards({
+      container: document.getElementById("flashcards"),
+      moduleId: "3",
+      cards: [
+        { front: "Was ergibt <code>10 / 3</code> in Python 3?", back: "<code>3.333...</code> — <code>/</code> gibt IMMER float zurück." },
+        { front: "Was ergibt <code>10 // 3</code>?", back: "<code>3</code> — Floor-Division." },
+        { front: "Was ergibt <code>-7 // 2</code>?", back: "<code>-4</code> — Floor-Division rundet Richtung −∞, nicht Richtung 0." },
+        { front: "Was ergibt <code>10 % 3</code>?", back: "<code>1</code> — Modulo (Rest)." },
+        { front: "Was ergibt <code>2 ** 10</code>?", back: "<code>1024</code> — Potenz (2 hoch 10)." },
+        { front: "Was ergibt <code>2 ** 3 ** 2</code>?", back: "<code>512</code> — <code>**</code> ist <strong>rechtsassoziativ</strong>: <code>2 ** (3 ** 2)</code> = <code>2 ** 9</code>." },
+        { front: "Wie heißen die logischen Operatoren in Python?", back: "<code>and</code>, <code>or</code>, <code>not</code> — <strong>ausgeschrieben</strong>, nicht <code>&amp;&amp;</code>/<code>||</code>/<code>!</code>." },
+        { front: "Gibt es <code>===</code> in Python?", back: "<strong>Nein</strong> — nur <code>==</code>. Python vergleicht immer strikt nach Wert." },
+        { front: "Was ergibt <code>True and \"hi\"</code>?", back: "<code>\"hi\"</code> — <code>and</code> gibt den letzten truthy Wert zurück, wenn alles truthy." },
+        { front: "Was ergibt <code>None or 0 or \"x\"</code>?", back: "<code>\"x\"</code> — <code>or</code> gibt den ersten truthy Wert zurück." },
+        { front: "Was ist der Unterschied zwischen <code>==</code> und <code>is</code>?", back: "<code>==</code>: gleicher <strong>Wert</strong>. <code>is</code>: gleiches <strong>Objekt im Speicher</strong>." },
+        { front: "Wann nutzt man <code>is</code>?", back: "Fast nur für <code>None</code>-Checks: <code>if x is None:</code>." },
+        { front: "Was prüft <code>\"name\" in {\"name\": \"Ali\"}</code>?", back: "Prüft ob <code>\"name\"</code> ein <strong>Key</strong> im Dict ist — Ergebnis <code>True</code>." },
+        { front: "Was ergibt <code>\"ab\" * 3</code>?", back: "<code>\"ababab\"</code> — String-Wiederholung." },
+        { front: "Was ergibt <code>\"5\" + 3</code>?", back: "<code>TypeError</code> — Python konvertiert nicht implizit." },
+        { front: "Was ergibt <code>1 < 5 < 10</code>?", back: "<code>True</code> — Chained Comparison: <code>1 &lt; 5 and 5 &lt; 10</code>." },
+        { front: "Welches Zeichen ist Potenz in Python?", back: "<code>**</code> — <code>^</code> ist XOR!" },
+        { front: "Was macht der Walrus-Operator <code>:=</code>?", back: "Weist einen Wert zu UND gibt ihn zurück, als Ausdruck. Ab Python 3.8." },
+        { front: "Welcher Operator hat die höchste Präzedenz?", back: "Klammern <code>()</code>, dann Potenz <code>**</code>, dann unär <code>+/-</code>." },
+        { front: "Welcher hat die niedrigste (unter den Bool-Ops)?", back: "<code>or</code> hat die niedrigste Präzedenz — <code>not</code> > <code>and</code> > <code>or</code>." },
+        { front: "Wie formuliert man einen ternären Ausdruck?", back: "<code>wert_wenn_true if bedingung else wert_wenn_false</code>" },
+        { front: "Was ergibt <code>True + True</code>?", back: "<code>2</code> — <code>bool</code> ist Subtyp von <code>int</code>, <code>True == 1</code>." },
+        { front: "Was ergibt <code>not 0</code>?", back: "<code>True</code> — 0 ist falsy, negiert → True." },
+        { front: "Was ergibt <code>not \"0\"</code>?", back: "<code>False</code> — String \"0\" ist truthy (nicht leer)." },
+        { front: "Was ergibt <code>5 ^ 3</code>?", back: "<code>6</code> — XOR (bitweise), NICHT Potenz!" }
+      ]
+    });
+
+    const pgRoot = document.getElementById("playgrounds");
+    PCEP.initPlaygrounds([
+      { container: pgRoot,
+        task: "Teste die Division-Arten: gib <code>10/3</code>, <code>10//3</code>, <code>10%3</code>, <code>10**3</code> aus.",
+        initialCode: 'print(10/3)\nprint(10//3)\nprint(10%3)\nprint(10**3)\n' },
+      { container: pgRoot,
+        task: "Chained Comparison: prüfe ob <code>alter</code> zwischen 18 und 65 liegt.",
+        initialCode: 'alter = 30\n# TODO: ein Ausdruck 18 <= ... < 65\n' },
+      { container: pgRoot,
+        task: "Teste Short-Circuit: gib <code>0 and print(\"x\")</code> und <code>1 or print(\"y\")</code> aus. Was passiert?",
+        initialCode: 'print(0 and print("a"))\nprint(1 or print("b"))\n' },
+      { container: pgRoot,
+        task: "Überraschung: was ist der Unterschied zwischen <code>a is b</code> und <code>a == b</code>?",
+        initialCode: 'a = [1, 2, 3]\nb = [1, 2, 3]\nc = a\nprint(a == b, a is b)\nprint(a == c, a is c)\n' },
+      { container: pgRoot,
+        task: "Ternär: wandle eine Note (0–100) in A/B/C/F um.",
+        initialCode: 'note = 85\nklasse = "A" if note >= 90 else "B" if note >= 80 else "C" if note >= 70 else "F"\nprint(klasse)\n' }
+    ]);
+
+    PCEP.initQuiz({
+      container: document.getElementById("quiz"),
+      moduleId: "3",
+      questions: [
+        { q: "Was ergibt <code>7 / 2</code> in Python 3?",
+          options: ["3","3.5","4","TypeError"],
+          correct: 1,
+          explain: "<code>/</code> gibt immer float zurück — auch bei glatter Teilung." },
+        { q: "Was ergibt <code>7 // 2</code>?",
+          options: ["3","3.5","4","3.0"],
+          correct: 0,
+          explain: "<code>//</code> Floor-Division, Ergebnis ist int wenn beide Operanden int sind." },
+        { q: "Was ergibt <code>-7 // 2</code>?",
+          options: ["-3","-4","-3.5","3"],
+          correct: 1,
+          explain: "Floor-Division rundet Richtung −∞, nicht Richtung 0." },
+        { q: "Was ergibt <code>2 ** 3 ** 2</code>?",
+          options: ["64","512","36","81"],
+          correct: 1,
+          explain: "<code>**</code> ist rechtsassoziativ: 2^(3^2) = 2^9 = 512." },
+        { q: "Was ergibt <code>10 % 3</code>?",
+          options: ["3","1","0","3.33"],
+          correct: 1,
+          explain: "10 ÷ 3 = 3 Rest 1." },
+        { q: "Was ergibt <code>\"abc\" * 2</code>?",
+          options: ["\"abcabc\"","TypeError","\"abcabc2\"","\"2abc\""],
+          correct: 0,
+          explain: "<code>*</code> wiederholt Strings." },
+        { q: "Wie lautet der logische UND-Operator?",
+          options: ["&","&&","and","AND"],
+          correct: 2,
+          explain: "Python: <code>and</code> (klein geschrieben)." },
+        { q: "Was gibt dieser Code aus?",
+          code: 'a = [1]\nb = [1]\nprint(a == b, a is b)',
+          options: ["True True","True False","False True","False False"],
+          correct: 1,
+          explain: "Gleicher Wert → <code>==</code> True. Verschiedene Objekte → <code>is</code> False." },
+        { q: "Was ergibt <code>0 or \"hi\"</code>?",
+          options: ["0","\"hi\"","True","False"],
+          correct: 1,
+          explain: "<code>or</code> gibt den ersten truthy Wert zurück." },
+        { q: "Was ergibt <code>3 < 5 < 10</code>?",
+          options: ["True","False","TypeError","SyntaxError"],
+          correct: 0,
+          explain: "Chained Comparison: 3 &lt; 5 ist True und 5 &lt; 10 ist True." }
+      ]
+    });
+  </script>
+</body>
+</html>

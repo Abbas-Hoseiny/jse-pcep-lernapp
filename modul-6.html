@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Modul 6 · Fehler & Debugging · JSE Lern-App</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><div class="brand-logo">JS</div> JSE Lern-App</div>
+    <nav>
+      <a href="index.html">← Dashboard</a>
+      <a href="modul-5.html">← Modul 5</a>
+      <a href="modul-7.html">Modul 7 →</a>
+      <a href="pruefung.html">Prüfung</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div class="module-num">MODUL 6 · 5% der Prüfung</div>
+    <h1>Fehler, Debugging & Troubleshooting</h1>
+    <p class="subtitle">Fehlerklassen, <code>try/catch/finally</code>, <code>throw</code>, Debugging-Strategien.</p>
+
+    <div class="tabs" data-tabs>
+      <button class="tab-btn active" data-target="panel-theorie">📖 Theorie</button>
+      <button class="tab-btn" data-target="panel-karten">🃏 Lernkarteien</button>
+      <button class="tab-btn" data-target="panel-playground">💻 Playground</button>
+      <button class="tab-btn" data-target="panel-quiz">✅ Quiz</button>
+    </div>
+    <div>
+      <section class="tab-panel active" id="panel-theorie">
+        <div class="theory-section">
+          <h2>6.1 Fehlerarten</h2>
+          <p>Drei große Kategorien:</p>
+          <ol>
+            <li><strong>Syntaxfehler</strong> — der Code kann gar nicht erst geparst werden (z. B. fehlende Klammer).</li>
+            <li><strong>Laufzeitfehler</strong> (Runtime Errors, auch „Exceptions") — treten während der Ausführung auf.</li>
+            <li><strong>Logische Fehler</strong> — der Code läuft, macht aber das Falsche.</li>
+          </ol>
+        </div>
+
+        <div class="theory-section">
+          <h2>6.2 Fehlerklassen in JavaScript</h2>
+          <ul>
+            <li><code>Error</code> — Basisklasse</li>
+            <li><code>SyntaxError</code> — ungültige Syntax (z. B. <code>JSON.parse("{")</code>)</li>
+            <li><code>ReferenceError</code> — Variable existiert nicht: <code>console.log(x)</code> ohne Deklaration</li>
+            <li><code>TypeError</code> — Operation auf falschem Typ: <code>null.foo</code></li>
+            <li><code>RangeError</code> — Wert außerhalb des gültigen Bereichs: <code>new Array(-1)</code></li>
+            <li><code>URIError</code> — bei <code>decodeURI</code>-Problemen</li>
+            <li><code>EvalError</code> — historisch, selten</li>
+          </ul>
+<pre><code class="js">console.log(x);                // ReferenceError: x is not defined
+null.foo;                       // TypeError: Cannot read property of null
+[].length = -1;                 // RangeError: Invalid array length
+JSON.parse("{");                // SyntaxError: Unexpected end of JSON</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>6.3 <code>try</code> / <code>catch</code> / <code>finally</code></h2>
+<pre><code class="js">try {
+  // Code, der fehlschlagen KANN
+  let x = JSON.parse(input);
+} catch (err) {
+  // Wird ausgeführt, WENN ein Fehler geworfen wurde
+  console.log("Fehler:", err.message);
+} finally {
+  // Wird IMMER ausgeführt — mit oder ohne Fehler
+  console.log("Aufräumen");
+}</code></pre>
+          <p>Reihenfolge:</p>
+          <ol>
+            <li><code>try</code>-Block läuft.</li>
+            <li>Wird ein Fehler <code>throw</code>n, springt die Ausführung in <code>catch</code>.</li>
+            <li><code>finally</code> läuft immer — auch bei <code>return</code> oder erneutem <code>throw</code>.</li>
+          </ol>
+          <div class="callout warn">
+            <strong>Wichtig:</strong>
+            <ul>
+              <li><code>catch</code> oder <code>finally</code> ist Pflicht (mindestens einer der beiden).</li>
+              <li>Moderne Syntax: <code>catch { }</code> ohne Parameter möglich (optional binding).</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="theory-section">
+          <h2>6.4 Fehler werfen mit <code>throw</code></h2>
+<pre><code class="js">function teile(a, b) {
+  if (b === 0) throw new Error("Division durch 0!");
+  return a / b;
+}
+
+try {
+  teile(10, 0);
+} catch (err) {
+  console.log(err.name);     // "Error"
+  console.log(err.message);  // "Division durch 0!"
+}
+
+// Eigene Fehlerklassen:
+class ValidationError extends Error {
+  constructor(msg) {
+    super(msg);
+    this.name = "ValidationError";
+  }
+}
+throw new ValidationError("Ungültige Eingabe");</code></pre>
+          <p>Man kann <strong>alles</strong> werfen, aber Konvention ist <code>Error</code>-Instanz:</p>
+<pre><code class="js">throw "einfacher String";     // funktioniert, aber unüblich
+throw { code: 42 };            // auch erlaubt
+throw new Error("Besser!");    // empfohlen</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>6.5 Das <code>Error</code>-Objekt</h2>
+<pre><code class="js">const err = new Error("Etwas ging schief");
+err.name;      // "Error"
+err.message;   // "Etwas ging schief"
+err.stack;     // Call-Stack (Debug-Info)
+
+// Subklassen:
+new TypeError("falscher Typ");
+new RangeError("außer Bereich");</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>6.6 Debugging-Strategien</h2>
+          <ul>
+            <li><code>console.log(wert)</code> — der Klassiker</li>
+            <li><code>console.table(arr)</code> — schöner Output für Arrays/Objekte</li>
+            <li><code>console.error()</code>, <code>console.warn()</code> — farblich markiert</li>
+            <li><code>console.dir(obj)</code> — tiefer Einblick in ein Objekt</li>
+            <li><code>debugger;</code> im Code → der Browser-Debugger stoppt dort</li>
+            <li>Breakpoints im DevTools → Sources-Tab</li>
+            <li>Call-Stack prüfen: wer hat die Funktion aufgerufen?</li>
+            <li>Schrittweise ausführen (Step Over / Step Into)</li>
+          </ul>
+<pre><code class="js">function f(x) {
+  debugger;         // Browser stoppt hier
+  return x * 2;
+}</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>6.7 Strict Mode</h2>
+<pre><code class="js">"use strict";
+
+x = 10;           // ReferenceError (nicht deklariert)
+delete Object.prototype;  // TypeError (statt silent fail)</code></pre>
+          <p>Strict Mode macht JS strenger und hilft beim Debugging. Er ist <strong>Standard</strong> in Modulen und <code>class</code>-Bodies.</p>
+        </div>
+
+        <div class="btn-row mt-lg">
+          <button class="btn primary" data-mark-theory="6">✓ Theorie als gelesen markieren</button>
+          <a class="btn" href="modul-7.html">Weiter zu Modul 7 →</a>
+        </div>
+      </section>
+
+      <section class="tab-panel" id="panel-karten">
+        <h2>Lernkarteien</h2>
+        <div id="flashcards"></div>
+      </section>
+      <section class="tab-panel" id="panel-playground">
+        <h2>Code-Playground</h2>
+        <div id="playgrounds"></div>
+      </section>
+      <section class="tab-panel" id="panel-quiz">
+        <h2>Quiz — Modul 6</h2>
+        <div id="quiz"></div>
+      </section>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    JSE.initFlashcards({
+      container: document.getElementById("flashcards"),
+      moduleId: "6",
+      cards: [
+        { front: "Nenne 3 Kategorien von Fehlern in JS", back: "<strong>Syntax-</strong>, <strong>Laufzeit-</strong> und <strong>logische</strong> Fehler." },
+        { front: "Was ist ein <code>ReferenceError</code>?", back: "Eine Variable wird verwendet, die nicht deklariert ist. <code>console.log(x)</code> wenn <code>x</code> nicht existiert." },
+        { front: "Was ist ein <code>TypeError</code>?", back: "Operation auf einem unpassenden Typ — z. B. <code>null.foo</code> oder <code>\"abc\"()</code>." },
+        { front: "Was ist ein <code>SyntaxError</code>?", back: "Der Code ist nicht parsebar — z. B. <code>if (true {</code> (fehlende Klammer)." },
+        { front: "Was ist ein <code>RangeError</code>?", back: "Wert außerhalb des gültigen Bereichs — z. B. <code>new Array(-1)</code>." },
+        { front: "Struktur eines <code>try</code>-Blocks?", back: "<code>try { ... } catch (err) { ... } finally { ... }</code> — catch ODER finally muss vorhanden sein." },
+        { front: "Wann läuft der <code>finally</code>-Block?", back: "<strong>Immer</strong> — mit oder ohne Fehler, auch bei <code>return</code>." },
+        { front: "Wie wirft man einen Fehler?", back: "<code>throw new Error(\"Nachricht\");</code>" },
+        { front: "Welche Properties hat ein Error-Objekt?", back: "<code>name</code>, <code>message</code>, <code>stack</code>" },
+        { front: "Kann man auch Strings werfen?", back: "Ja: <code>throw \"Fehler!\";</code> — aber unüblich. Besser <code>Error</code>-Instanzen." },
+        { front: "Was macht <code>debugger;</code>?", back: "Hält die Ausführung an, wenn die DevTools offen sind — wie ein Breakpoint im Code." },
+        { front: "Was aktiviert Strict Mode?", back: "<code>\"use strict\";</code> am Anfang einer Datei oder Funktion. In Modulen und Klassen ist er automatisch aktiv." },
+        { front: "Was ist ein Vorteil von Strict Mode?", back: "Fehler werden früher gefangen, stille Fehler werden zu echten Fehlern. Z. B. <code>x = 10</code> ohne Deklaration wirft ReferenceError." },
+        { front: "Was ist der Unterschied zwischen <code>console.log</code> und <code>console.error</code>?", back: "Funktional gleich, aber <code>error</code> wird farblich markiert (rot) und in <code>stderr</code> in Node geschrieben." },
+        { front: "Wie erstellt man eine eigene Fehlerklasse?", back: "<code>class MyError extends Error { constructor(msg) { super(msg); this.name = \"MyError\"; } }</code>" },
+        { front: "Was passiert mit <code>err</code> in <code>catch(err)</code>?", back: "<code>err</code> ist das geworfene Objekt (Error oder was auch immer geworfen wurde). Zugriff auf <code>err.message</code>, <code>err.name</code>." },
+        { front: "Läuft <code>finally</code> auch wenn <code>catch</code> selbst einen Fehler wirft?", back: "Ja — <code>finally</code> läuft immer." },
+        { front: "Kann man <code>try</code> ohne <code>catch</code> verwenden?", back: "Ja — aber nur mit <code>finally</code>. <code>try { } finally { }</code> ist erlaubt." }
+      ]
+    });
+
+    const pgRoot = document.getElementById("playgrounds");
+    JSE.initPlaygrounds([
+      { container: pgRoot,
+        task: "Wirf einen Fehler und fange ihn mit <code>try/catch</code>. Gib <code>err.message</code> aus.",
+        initialCode: 'try {\n  throw new Error("Etwas schief gelaufen");\n} catch (err) {\n  // TODO\n}\n' },
+      { container: pgRoot,
+        task: "Teste <code>JSON.parse(\"{\")</code> und fange den <code>SyntaxError</code> ab.",
+        initialCode: 'try {\n  // TODO\n} catch (err) {\n  console.log(err.name, err.message);\n}\n' },
+      { container: pgRoot,
+        task: "Schreibe <code>teile(a, b)</code>, die bei <code>b === 0</code> einen Fehler wirft.",
+        initialCode: 'function teile(a, b) {\n  // TODO: throw\n  return a / b;\n}\ntry {\n  teile(10, 0);\n} catch (e) {\n  console.log(e.message);\n}\n' },
+      { container: pgRoot,
+        task: "Zeige, dass <code>finally</code> auch bei <code>return</code> läuft.",
+        initialCode: 'function test() {\n  try {\n    return "try";\n  } finally {\n    console.log("finally läuft!");\n  }\n}\nconsole.log(test());\n' }
+    ]);
+
+    JSE.initQuiz({
+      container: document.getElementById("quiz"),
+      moduleId: "6",
+      questions: [
+        { q: "Welchen Fehler verursacht <code>console.log(x);</code>, wenn <code>x</code> nicht deklariert ist?",
+          options: ["TypeError", "ReferenceError", "SyntaxError", "RangeError"],
+          correct: 1,
+          explain: "Zugriff auf eine nicht deklarierte Variable → <code>ReferenceError</code>." },
+        { q: "Welchen Fehler verursacht <code>null.toString()</code>?",
+          options: ["TypeError", "ReferenceError", "SyntaxError", "Kein Fehler"],
+          correct: 0,
+          explain: "Methodenaufruf auf <code>null</code>/<code>undefined</code> → <code>TypeError</code>." },
+        { q: "Wird <code>finally</code> ausgeführt, wenn im <code>try</code> ein <code>return</code> steht?",
+          options: ["Ja", "Nein", "Nur wenn kein Fehler", "Nur wenn Fehler"],
+          correct: 0,
+          explain: "<code>finally</code> läuft <strong>immer</strong> — auch bei <code>return</code>, <code>throw</code> oder normalem Ende." },
+        { q: "Welches Schlüsselwort wirft einen Fehler?",
+          options: ["raise", "throw", "error", "signal"],
+          correct: 1,
+          explain: "In JS wird ein Fehler mit <code>throw</code> geworfen. <code>raise</code> ist Python." },
+        { q: "Was gibt dieser Code aus?",
+          code: 'try {\n  throw "Fehler";\n} catch (e) {\n  console.log(typeof e);\n}',
+          options: ["\"object\"", "\"string\"", "\"error\"", "\"undefined\""],
+          correct: 1,
+          explain: "Es wurde ein String geworfen — <code>e</code> ist also ein String, <code>typeof e</code> ist <code>\"string\"</code>." },
+        { q: "Was aktiviert Strict Mode?",
+          options: ["\"use strict\";", "enableStrict()", "'strict'", "mode = 'strict';"],
+          correct: 0,
+          explain: "Direktive <code>\"use strict\";</code> am Anfang von Datei oder Funktion." },
+        { q: "Ist <code>try { } catch { }</code> (ohne Parameter) gültig?",
+          options: ["Ja (optional catch binding)", "Nein — Parameter Pflicht", "Nur in Strict Mode", "Nur mit finally"],
+          correct: 0,
+          explain: "Seit ES2019 ist optional catch binding erlaubt: <code>try { } catch { }</code>." },
+        { q: "Welche Aussage ist richtig?",
+          options: [
+            "finally kann nur einmal pro try verwendet werden",
+            "try muss immer mit catch enden",
+            "finally läuft nur bei Fehlern",
+            "catch wird ausgeführt ohne Fehler"],
+          correct: 0,
+          explain: "Richtig: <code>finally</code> einmal. <code>try</code> braucht catch ODER finally (nicht beide zwingend). <code>finally</code> läuft immer." },
+        { q: "Was ist ein <code>RangeError</code>?",
+          options: ["Falscher Typ", "Variable nicht definiert", "Wert außerhalb des gültigen Bereichs", "Syntax-Problem"],
+          correct: 2,
+          explain: "z. B. <code>new Array(-1)</code> oder <code>toFixed(200)</code>." },
+        { q: "Was tut <code>debugger;</code>?",
+          options: [
+            "Startet den Debugger immer",
+            "Stoppt die Ausführung, wenn DevTools geöffnet sind",
+            "Wirft einen Error",
+            "Deaktiviert Fehlermeldungen"],
+          correct: 1,
+          explain: "Wie ein Breakpoint im Code — wirkt nur, wenn die Entwicklerkonsole offen ist." }
+      ]
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Modul 5 · Datenstrukturen · PCEP Lern-App</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="container">
+    <div class="module-num">MODUL 5 · 15% der Prüfung</div>
+    <h1>Datenstrukturen: Listen, Tupel, Dicts, Strings</h1>
+    <p class="subtitle">Erstellen, zugreifen, slicen, Methoden, iterieren, 2D.</p>
+
+    <div class="tabs" data-tabs>
+      <button class="tab-btn active" data-target="panel-theorie">📖 Theorie</button>
+      <button class="tab-btn" data-target="panel-karten">🃏 Lernkarteien</button>
+      <button class="tab-btn" data-target="panel-playground">🐍 Playground</button>
+      <button class="tab-btn" data-target="panel-quiz">✅ Quiz</button>
+    </div>
+    <div>
+      <section class="tab-panel active" id="panel-theorie">
+        <div class="theory-section">
+          <h2>5.1 Listen (<code>list</code>) — veränderlich</h2>
+<pre><code class="py">leer = []
+zahlen = [1, 2, 3]
+gemischt = [1, "hi", True, None, [4, 5]]
+
+# Zugriff (Index ab 0):
+zahlen[0]      # 1
+zahlen[-1]     # 3   — negativer Index von hinten
+zahlen[99]     # IndexError!
+
+# Länge:
+len(zahlen)    # 3
+
+# Ändern:
+zahlen[0] = 99
+# zahlen → [99, 2, 3]</code></pre>
+          <p>Listen sind <strong>mutable</strong> (veränderlich) und können beliebige Typen mischen.</p>
+        </div>
+
+        <div class="theory-section">
+          <h2>5.2 Slicing — <code>[start:stop:step]</code></h2>
+<pre><code class="py">l = [0, 1, 2, 3, 4, 5]
+l[1:4]       # [1, 2, 3]         start inklusiv, stop exklusiv
+l[:3]        # [0, 1, 2]         von Anfang
+l[3:]        # [3, 4, 5]         bis Ende
+l[::2]       # [0, 2, 4]         jedes 2.
+l[::-1]      # [5, 4, 3, 2, 1, 0]  umgekehrt
+l[-3:]       # [3, 4, 5]         letzte 3
+
+# Slicing gibt KOPIE zurück:
+kopie = l[:]</code></pre>
+          <div class="callout"><strong>Wichtig:</strong> Slicing funktioniert genauso für Strings und Tupel.</div>
+        </div>
+
+        <div class="theory-section">
+          <h2>5.3 Listen-Methoden</h2>
+<pre><code class="py">l = [2, 3]
+l.append(4)        # l = [2, 3, 4]          am Ende anfügen
+l.insert(0, 1)     # l = [1, 2, 3, 4]       an Position einfügen
+l.extend([5, 6])   # l = [1, 2, 3, 4, 5, 6] mehrere anfügen
+l.remove(3)        # entfernt erste 3
+l.pop()             # entfernt & gibt letztes zurück
+l.pop(0)            # entfernt & gibt erstes zurück
+l.index(2)          # gibt Index von 2 zurück (ValueError wenn fehlt)
+l.count(2)          # zählt Vorkommen
+l.sort()            # sortiert IN PLACE
+l.sort(reverse=True)
+l.reverse()         # kehrt IN PLACE um
+l.clear()           # leert die Liste
+l.copy()            # flache Kopie
+
+# Built-in-Funktionen:
+len(l)
+sum(l)               # nur für Zahlen
+max(l), min(l)
+sorted(l)            # gibt neue sortierte Liste (Original bleibt)
+reversed(l)          # Iterator
+list(range(5))       # [0,1,2,3,4]</code></pre>
+          <div class="callout warn">
+            <strong>In-place vs. neue Liste:</strong>
+            <ul>
+              <li><code>l.sort()</code> ändert die Liste, gibt <code>None</code> zurück!</li>
+              <li><code>sorted(l)</code> gibt eine neue Liste zurück.</li>
+              <li>Gleiches für <code>.reverse()</code> vs <code>reversed()</code>.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="theory-section">
+          <h2>5.4 <code>del</code>-Statement</h2>
+<pre><code class="py">l = [10, 20, 30, 40]
+del l[1]          # [10, 30, 40]
+del l[1:3]        # [10]
+del l             # Variable komplett löschen</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>5.5 Mehrdimensionale Listen</h2>
+<pre><code class="py">matrix = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+]
+matrix[0][0]    # 1
+matrix[2][1]    # 8
+
+for zeile in matrix:
+    for wert in zeile:
+        print(wert, end=" ")
+    print()</code></pre>
+          <div class="callout danger">
+            <strong>Falle:</strong> <code>[[0]*3]*3</code> erzeugt 3× die <em>gleiche</em> Referenz!
+            <pre><code class="py">m = [[0]*3]*3
+m[0][0] = 1
+print(m)   # [[1,0,0],[1,0,0],[1,0,0]] — alle Zeilen geändert!</code></pre>
+            Korrekt: <code>[[0]*3 for _ in range(3)]</code>
+          </div>
+        </div>
+
+        <div class="theory-section">
+          <h2>5.6 Tupel (<code>tuple</code>) — unveränderlich</h2>
+<pre><code class="py">leer = ()
+einer = (1,)        # Komma erforderlich!
+ohne_komma = (1)    # ist int, KEIN Tupel!
+mehrere = (1, 2, 3)
+auch_tupel = 1, 2, 3  # Klammern optional
+punkt = 3, 4        # Tuple-Packing
+
+x, y = punkt        # Tuple-Unpacking
+a, b, c = 1, 2, 3
+
+# Zugriff wie Liste, aber kein Ändern:
+mehrere[0]          # 1
+# mehrere[0] = 99   # TypeError!</code></pre>
+          <h3>Tupel-Methoden (nur 2!)</h3>
+<pre><code class="py">t = (1, 2, 2, 3)
+t.count(2)    # 2
+t.index(3)    # 3</code></pre>
+          <p>Tupel sind <strong>schneller</strong> als Listen und nutzbar als Dict-Keys. Listen nicht!</p>
+        </div>
+
+        <div class="theory-section">
+          <h2>5.7 Dictionaries (<code>dict</code>) — Schlüssel-Wert-Paare</h2>
+<pre><code class="py">d = {"name": "Ali", "alter": 25}
+
+# Zugriff:
+d["name"]           # 'Ali'
+d["fehlt"]           # KeyError!
+d.get("fehlt")      # None (kein Error)
+d.get("fehlt", 0)   # Default 0
+
+# Ändern / hinzufügen:
+d["name"] = "Bob"
+d["stadt"] = "Berlin"
+
+# Entfernen:
+del d["alter"]
+d.pop("stadt")
+d.clear()
+
+# Prüfen:
+"name" in d         # True  — prüft KEYS
+"Ali" in d.values()
+
+# Durchlaufen:
+for key in d:                       # Keys
+    print(key)
+for key, value in d.items():        # Paare
+    print(key, value)
+for value in d.values():
+    print(value)</code></pre>
+          <div class="callout"><strong>Regeln für Keys:</strong> müssen <em>hashable</em> sein → int, str, tuple (von hashables) OK. List, dict, set NICHT.</div>
+        </div>
+
+        <div class="theory-section">
+          <h2>5.8 Dict-Methoden</h2>
+<pre><code class="py">d.keys()       # dict_keys([...])
+d.values()     # dict_values([...])
+d.items()      # dict_items([(k,v), ...])
+d.get(k)       # Value oder None
+d.get(k, def)  # Value oder def
+d.pop(k)       # entfernt & gibt zurück
+d.update({"x": 1})  # fügt hinzu / überschreibt
+d.copy()       # flache Kopie
+len(d)         # Anzahl Paare</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>5.9 Strings als Sequenzen</h2>
+          <p>Strings in Python verhalten sich wie unveränderliche Sequenzen.</p>
+<pre><code class="py">s = "Python"
+s[0]          # 'P'
+s[-1]         # 'n'
+s[1:4]        # 'yth'
+s[::-1]       # 'nohtyP'
+len(s)        # 6
+"P" in s       # True
+
+# ord / chr (wichtig für PCEP!)
+ord("A")      # 65
+chr(65)       # 'A'</code></pre>
+
+          <h3>Wichtige String-Methoden</h3>
+<pre><code class="py">"hallo".upper()         # 'HALLO'
+"HALLO".lower()          # 'hallo'
+"hi welt".title()        # 'Hi Welt'
+"hi".capitalize()        # 'Hi'
+"hi".swapcase()          # 'HI'
+"  hi  ".strip()         # 'hi'
+"abc".replace("a", "X")  # 'Xbc'
+"a,b,c".split(",")       # ['a','b','c']
+",".join(["a","b","c"])  # 'a,b,c'
+"abc".startswith("ab")   # True
+"abc".endswith("bc")     # True
+"abc".find("b")          # 1       — -1 wenn fehlt
+"abc".index("b")          # 1       — ValueError wenn fehlt
+"a".isalpha()            # True
+"1".isdigit()            # True
+"a1".isalnum()           # True
+"ABC".isupper()          # True
+" ".isspace()            # True
+"abc".center(7, "*")     # '**abc**'
+"abc".ljust(7, "-")      # 'abc----'
+"abc".rjust(7, "-")      # '----abc'
+"5".zfill(3)             # '005'</code></pre>
+          <div class="callout warn"><strong>Alle String-Methoden</strong> geben einen <strong>neuen String</strong> zurück — Strings sind immutable!</div>
+        </div>
+
+        <div class="theory-section">
+          <h2>5.10 Kopieren — flach vs. tief</h2>
+<pre><code class="py">a = [1, [2, 3]]
+b = a             # SELBE Referenz!
+c = a[:]          # flache Kopie
+d = a.copy()      # flache Kopie
+import copy
+e = copy.deepcopy(a)  # tiefe Kopie
+
+a[0] = 99
+print(a, b, c)    # a und b geändert, c original
+a[1].append(4)
+print(c)          # [1, [2, 3, 4]] — innere Liste geteilt!
+print(e)          # [1, [2, 3]]    — tiefe Kopie unabhängig</code></pre>
+        </div>
+
+        <div class="btn-row mt-lg">
+          <button class="btn primary" data-mark-theory="5">✓ Theorie als gelesen markieren</button>
+          <a class="btn" href="modul-6.html">Weiter zu Modul 6 →</a>
+        </div>
+      </section>
+
+      <section class="tab-panel" id="panel-karten">
+        <h2>Lernkarteien</h2>
+        <div id="flashcards"></div>
+      </section>
+      <section class="tab-panel" id="panel-playground">
+        <h2>Python-Playground</h2>
+        <div id="playgrounds"></div>
+      </section>
+      <section class="tab-panel" id="panel-quiz">
+        <h2>Quiz — Modul 5</h2>
+        <div id="quiz"></div>
+      </section>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    PCEP.initFlashcards({
+      container: document.getElementById("flashcards"),
+      moduleId: "5",
+      cards: [
+        { front: "Sind Listen in Python mutable oder immutable?", back: "<strong>Mutable</strong> — veränderlich." },
+        { front: "Sind Tupel mutable oder immutable?", back: "<strong>Immutable</strong> — unveränderlich." },
+        { front: "Bei welchem Index beginnt eine Liste?", back: "Bei <strong>0</strong>." },
+        { front: "Was ergibt <code>[1,2,3][-1]</code>?", back: "<code>3</code> — negativer Index zählt von hinten, -1 = letztes." },
+        { front: "Syntax eines Slices?", back: "<code>seq[start:stop:step]</code> — stop ausschließlich." },
+        { front: "Was ergibt <code>\"Python\"[::-1]</code>?", back: "<code>\"nohtyP\"</code> — umgekehrt mit Step -1." },
+        { front: "Was ergibt <code>[1,2,3,4][1:3]</code>?", back: "<code>[2, 3]</code>" },
+        { front: "Unterschied <code>list.sort()</code> vs <code>sorted(list)</code>?", back: "<code>.sort()</code>: <strong>in-place</strong>, gibt <code>None</code>.<br><code>sorted()</code>: gibt neue Liste." },
+        { front: "Was gibt <code>l.append(4)</code> zurück?", back: "<code>None</code> — verändert in-place." },
+        { front: "Wie fügt man mehrere Elemente ans Ende an?", back: "<code>l.extend([4, 5])</code> oder <code>l += [4, 5]</code>." },
+        { front: "Wie entfernt man das letzte Element und gibt es zurück?", back: "<code>l.pop()</code>" },
+        { front: "Wie entfernt man das erste Vorkommen von 5?", back: "<code>l.remove(5)</code> — ValueError wenn nicht vorhanden." },
+        { front: "Was ergibt <code>len([1,2,3])</code>?", back: "<code>3</code>" },
+        { front: "Wie erzeugt man ein Tupel mit einem Element?", back: "<code>(1,)</code> — Komma nötig. <code>(1)</code> ist nur int." },
+        { front: "Wie viele Methoden hat ein Tupel?", back: "Nur <strong>2</strong>: <code>count()</code> und <code>index()</code>." },
+        { front: "Können Listen als Dict-Keys dienen?", back: "<strong>Nein</strong> — Listen sind nicht hashable. Tupel schon." },
+        { front: "Wie greift man auf einen Dict-Wert zu?", back: "<code>d[\"key\"]</code> oder <code>d.get(\"key\")</code>." },
+        { front: "Unterschied <code>d[k]</code> vs <code>d.get(k)</code>?", back: "<code>d[k]</code>: <code>KeyError</code> wenn fehlt.<br><code>d.get(k)</code>: <code>None</code> wenn fehlt." },
+        { front: "Wie iteriert man über Key-Value-Paare?", back: "<code>for k, v in d.items():</code>" },
+        { front: "Was prüft <code>\"x\" in d</code> bei einem Dict?", back: "Ob <code>\"x\"</code> ein <strong>Key</strong> ist." },
+        { front: "Wie kopiert man eine Liste (flach)?", back: "<code>l.copy()</code>, <code>l[:]</code>, <code>list(l)</code>." },
+        { front: "Wie macht man eine tiefe Kopie?", back: "<code>import copy; copy.deepcopy(x)</code>" },
+        { front: "Was ergibt <code>ord(\"A\")</code>?", back: "<code>65</code> — Unicode/ASCII-Code von 'A'." },
+        { front: "Was ergibt <code>chr(97)</code>?", back: "<code>\"a\"</code> — Buchstabe zum Unicode-Code 97." },
+        { front: "Was ergibt <code>\"abc\"[0] = \"X\"</code>?", back: "<code>TypeError</code> — Strings sind immutable." },
+        { front: "Was macht <code>\"a-b-c\".split(\"-\")</code>?", back: "Gibt <code>[\"a\",\"b\",\"c\"]</code> zurück." },
+        { front: "Was macht <code>\"-\".join([\"a\",\"b\",\"c\"])</code>?", back: "Gibt <code>\"a-b-c\"</code> zurück." },
+        { front: "Wie bekommt man das Maximum einer Liste?", back: "<code>max(liste)</code>" },
+        { front: "Wie summiert man Zahlen in einer Liste?", back: "<code>sum(liste)</code>" },
+        { front: "Gibt es einen Unterschied zwischen <code>x, y = 1, 2</code> und <code>(x, y) = (1, 2)</code>?", back: "Nein — beides ist Tuple-Unpacking. Die Klammern sind optional." }
+      ]
+    });
+
+    const pgRoot = document.getElementById("playgrounds");
+    PCEP.initPlaygrounds([
+      { container: pgRoot,
+        task: "Erstelle eine Liste mit Zahlen 1–10, reverse sie, und gib sie aus.",
+        initialCode: 'l = list(range(1, 11))\n# TODO: reverse\nprint(l)\n' },
+      { container: pgRoot,
+        task: "Tuple Unpacking: tausche zwei Werte <code>a</code> und <code>b</code> in einer Zeile.",
+        initialCode: 'a, b = 5, 10\n# TODO: tauschen\nprint(a, b)  # soll 10 5 ausgeben\n' },
+      { container: pgRoot,
+        task: "Dict: erstelle ein Wörterbuch mit 3 Personen und ihrem Alter, gib dann alle Paare aus.",
+        initialCode: 'personen = {"Ali": 25, "Bob": 30, "Carol": 28}\nfor name, alter in personen.items():\n    print(f"{name} ist {alter} Jahre alt")\n' },
+      { container: pgRoot,
+        task: "Slicing: nimm den String <code>\"Python ist toll\"</code> und gib 1) erste 6 Zeichen 2) letzte 4 Zeichen 3) umgekehrt aus.",
+        initialCode: 's = "Python ist toll"\n# TODO\n' },
+      { container: pgRoot,
+        task: "2D-Liste: erzeuge eine 3×3-Matrix mit <code>[[0]*3 for _ in range(3)]</code> und setze die Diagonale auf 1.",
+        initialCode: 'm = [[0]*3 for _ in range(3)]\n# TODO: Diagonale\nfor z in m:\n    print(z)\n' },
+      { container: pgRoot,
+        task: "Zähle Vorkommen jedes Zeichens in einem String mit einem Dict.",
+        initialCode: 's = "mississippi"\nhaeufigkeit = {}\nfor c in s:\n    haeufigkeit[c] = haeufigkeit.get(c, 0) + 1\nprint(haeufigkeit)\n' }
+    ]);
+
+    PCEP.initQuiz({
+      container: document.getElementById("quiz"),
+      moduleId: "5",
+      questions: [
+        { q: "Was ergibt <code>[1, 2, 3, 4, 5][1:4]</code>?",
+          options: ["[1,2,3]","[2,3,4]","[2,3,4,5]","[1,2,3,4]"],
+          correct: 1,
+          explain: "start=1 (inkl.), stop=4 (exkl.) → Indizes 1,2,3 → [2,3,4]." },
+        { q: "Was ergibt <code>[1, 2, 3][::-1]</code>?",
+          options: ["[1,2,3]","[3,2,1]","[-1,-2,-3]","Error"],
+          correct: 1,
+          explain: "Step -1 → umgekehrt." },
+        { q: "Welche Methode fügt ein Element am Ende hinzu?",
+          options: ["insert()","append()","extend()","add()"],
+          correct: 1,
+          explain: "<code>.append(x)</code>. <code>.extend()</code> fügt <em>mehrere</em> an." },
+        { q: "Was gibt <code>[1,2,3].sort()</code> zurück?",
+          options: ["[1,2,3]","[3,2,1]","None","Error"],
+          correct: 2,
+          explain: "<code>.sort()</code> sortiert in-place und gibt <code>None</code> zurück." },
+        { q: "Ist <code>(1)</code> ein Tupel?",
+          options: ["Ja","Nein — ist ein int","Nein — SyntaxError","Nur im Kontext"],
+          correct: 1,
+          explain: "<code>(1)</code> ist nur ein geklammerter int. Für ein 1-Tupel: <code>(1,)</code>." },
+        { q: "Welche Operation ist bei einem Tupel <strong>nicht</strong> erlaubt?",
+          options: ["t[0]","t.count(1)","t[0] = 5","len(t)"],
+          correct: 2,
+          explain: "Tupel sind immutable — Zuweisung → TypeError." },
+        { q: "Was gibt <code>{\"a\":1}.get(\"b\", 0)</code> zurück?",
+          options: ["None","0","KeyError","\"b\""],
+          correct: 1,
+          explain: "<code>.get(key, default)</code> gibt Default zurück wenn Key fehlt." },
+        { q: "Was prüft <code>\"x\" in {\"x\": 1, \"y\": 2}</code>?",
+          options: ["Ob \"x\" ein Wert ist","Ob \"x\" ein Key ist","Ob dict leer ist","Wirft immer True"],
+          correct: 1,
+          explain: "<code>in</code> bei Dicts prüft die Keys." },
+        { q: "Was gibt dieser Code aus?",
+          code: 'a = [1, 2, 3]\nb = a\nb.append(4)\nprint(len(a))',
+          options: ["3","4","None","Error"],
+          correct: 1,
+          explain: "<code>b = a</code> ist Referenz — beide zeigen auf dieselbe Liste." },
+        { q: "Was macht <code>del l[1:3]</code>?",
+          options: ["Entfernt ein Element","Entfernt den Slice","Macht Copy","Setzt auf None"],
+          correct: 1,
+          explain: "<code>del</code> mit Slice entfernt diesen Bereich aus der Liste." }
+      ]
+    });
+  </script>
+</body>
+</html>

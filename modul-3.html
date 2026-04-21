@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Modul 3 · Operatoren · JSE Lern-App</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><div class="brand-logo">JS</div> JSE Lern-App</div>
+    <nav>
+      <a href="index.html">← Dashboard</a>
+      <a href="modul-2.html">← Modul 2</a>
+      <a href="modul-4.html">Modul 4 →</a>
+      <a href="pruefung.html">Prüfung</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div class="module-num">MODUL 3 · 14% der Prüfung</div>
+    <h1>Operatoren & Benutzerinteraktion</h1>
+    <p class="subtitle">Arithmetik, Vergleich, Logik, Zuweisung, Precedence, <code>prompt</code>/<code>alert</code>/<code>confirm</code>.</p>
+
+    <div class="tabs" data-tabs>
+      <button class="tab-btn active" data-target="panel-theorie">📖 Theorie</button>
+      <button class="tab-btn" data-target="panel-karten">🃏 Lernkarteien</button>
+      <button class="tab-btn" data-target="panel-playground">💻 Playground</button>
+      <button class="tab-btn" data-target="panel-quiz">✅ Quiz</button>
+    </div>
+    <div>
+      <!-- THEORIE -->
+      <section class="tab-panel active" id="panel-theorie">
+        <div class="theory-section">
+          <h2>3.1 Arithmetische Operatoren</h2>
+<pre><code class="js">5 + 2      // 7    Addition
+5 - 2      // 3    Subtraktion
+5 * 2      // 10   Multiplikation
+5 / 2      // 2.5  Division
+5 % 2      // 1    Modulo (Rest)
+5 ** 2     // 25   Potenz (ES2016)
+
+// Unäre Operatoren:
+-5         // Negation
++"42"      // 42   — Umwandlung zu Number
+++x        // x um 1 erhöhen (Pre-Increment)
+x++        // x um 1 erhöhen (Post-Increment)
+--x; x--;  // Dekrement</code></pre>
+          <div class="callout warn">
+            <strong>Pre vs Post Increment:</strong>
+            <pre><code class="js">let a = 5;
+let b = a++;   // b = 5 (erst lesen, dann erhöhen), a = 6
+let c = ++a;   // c = 7 (erst erhöhen, dann lesen), a = 7</code></pre>
+          </div>
+        </div>
+
+        <div class="theory-section">
+          <h2>3.2 Zuweisungsoperatoren</h2>
+<pre><code class="js">let x = 10;
+
+x += 5;    // x = x + 5   → 15
+x -= 3;    // x = x - 3   → 12
+x *= 2;    // x = x * 2   → 24
+x /= 4;    // x = x / 4   → 6
+x %= 4;    // x = x % 4   → 2
+x **= 3;   // x = x ** 3  → 8
+
+// Auch logisch/nullish:
+x ||= 5;   // wenn x falsy, auf 5 setzen
+x &&= 5;   // wenn x truthy, auf 5 setzen
+x ??= 5;   // wenn x null/undefined, auf 5 setzen</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>3.3 Vergleichsoperatoren</h2>
+<pre><code class="js">5 == "5"      // true   lose Gleichheit (mit Coercion)
+5 === "5"     // false  strikte Gleichheit (ohne Coercion)
+5 != "5"      // false
+5 !== "5"     // true
+5 > 3         // true
+5 < 3         // false
+5 >= 5        // true
+5 <= 4        // false
+
+// String-Vergleich (lexikographisch):
+"apfel" < "banane"   // true
+"B" < "a"             // true (Großbuchstaben < Kleinbuchstaben in ASCII)</code></pre>
+          <div class="callout danger">
+            <strong>Faustregel:</strong> <strong>Immer <code>===</code> und <code>!==</code> benutzen.</strong>
+            <code>==</code> kann zu überraschenden Ergebnissen führen:
+            <pre><code class="js">0 == ""          // true
+0 == "0"         // true
+null == undefined // true
+[] == false      // true
+[] == ![]        // true !!</code></pre>
+          </div>
+        </div>
+
+        <div class="theory-section">
+          <h2>3.4 Logische Operatoren</h2>
+<pre><code class="js">true && false    // false   UND (AND)
+true || false    // true    ODER (OR)
+!true            // false   NICHT (NOT)
+
+// Short-Circuit Evaluation:
+// && gibt den ERSTEN falsy Wert zurück, sonst den LETZTEN
+true && "hallo"      // "hallo"
+0 && "hallo"          // 0
+"a" && "b" && "c"    // "c"
+
+// || gibt den ERSTEN truthy Wert zurück, sonst den LETZTEN
+null || "default"     // "default"
+"a" || "b"            // "a"
+0 || "" || "fallback" // "fallback"
+
+// Nullish Coalescing ?? — nur null/undefined fallen durch
+null ?? "fallback"    // "fallback"
+0 ?? "fallback"       // 0      (0 ist NICHT null/undefined)
+"" ?? "fallback"      // ""</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>3.5 Ternärer Operator</h2>
+          <p>Kurzschreibweise für <code>if/else</code>, die einen Wert zurückgibt:</p>
+<pre><code class="js">// bedingung ? wennTrue : wennFalse
+
+let alter = 20;
+let status = alter >= 18 ? "erwachsen" : "minderjährig";
+
+// Verschachtelbar (aber vorsichtig):
+let note = punkte >= 90 ? "A"
+         : punkte >= 80 ? "B"
+         : punkte >= 70 ? "C" : "F";</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>3.6 Bitweise Operatoren (Überblick)</h2>
+<pre><code class="js">5 & 3    // 1   AND:   0101 & 0011 = 0001
+5 | 3    // 7   OR:    0101 | 0011 = 0111
+5 ^ 3    // 6   XOR:   0101 ^ 0011 = 0110
+~5       // -6  NOT:   ~0101 = ...1010
+5 << 1   // 10  Left-Shift  (× 2)
+5 >> 1   // 2   Right-Shift (÷ 2, signed)
+5 >>> 1  // 2   Unsigned Right-Shift</code></pre>
+          <p>In der Praxis selten gebraucht, aber die Prüfung kann sie abfragen.</p>
+        </div>
+
+        <div class="theory-section">
+          <h2>3.7 Operator Precedence (Vorrang)</h2>
+          <p>Operatoren haben eine Reihenfolge. Wichtige (hoch → niedrig):</p>
+          <ol>
+            <li><code>()</code> Klammern</li>
+            <li><code>++</code>, <code>--</code>, <code>!</code>, <code>typeof</code>, unäres <code>-</code></li>
+            <li><code>**</code> Potenz</li>
+            <li><code>*</code>, <code>/</code>, <code>%</code></li>
+            <li><code>+</code>, <code>-</code></li>
+            <li><code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code></li>
+            <li><code>==</code>, <code>!=</code>, <code>===</code>, <code>!==</code></li>
+            <li><code>&amp;&amp;</code></li>
+            <li><code>||</code>, <code>??</code></li>
+            <li><code>? :</code> ternär</li>
+            <li><code>=</code>, <code>+=</code>, … (Zuweisung)</li>
+          </ol>
+          <div class="callout"><strong>Tipp:</strong> Im Zweifel <em>Klammern setzen</em> — bessere Lesbarkeit und keine Überraschungen.</div>
+        </div>
+
+        <div class="theory-section">
+          <h2>3.8 Benutzerinteraktion (nur im Browser!)</h2>
+<pre><code class="js">alert("Hallo!");
+// Popup mit OK-Button. Rückgabe: undefined.
+
+const name = prompt("Wie heißt du?", "Standard");
+// Popup mit Eingabefeld. Rückgabe: String oder null (bei Abbruch).
+
+const ok = confirm("Bist du sicher?");
+// Popup mit OK/Abbrechen. Rückgabe: true oder false.</code></pre>
+          <div class="callout warn">
+            <strong>Wichtig für die Prüfung:</strong>
+            <ul>
+              <li><code>prompt()</code> gibt IMMER einen <strong>String</strong> zurück — ggf. mit <code>Number(...)</code> umwandeln!</li>
+              <li>Wird „Abbrechen" gedrückt, gibt <code>prompt</code> <code>null</code> zurück.</li>
+              <li>Diese Funktionen gibt es <strong>nur im Browser</strong> (nicht in Node.js).</li>
+            </ul>
+          </div>
+<pre><code class="js">const alterStr = prompt("Wie alt bist du?");
+const alter = Number(alterStr);
+if (alter >= 18) alert("Erwachsen!");</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>3.9 Der <code>typeof</code>- und <code>delete</code>-Operator</h2>
+<pre><code class="js">typeof 42;         // "number"   — gibt den Typ als String zurück
+
+let obj = { a: 1, b: 2 };
+delete obj.a;      // entfernt die Eigenschaft a
+console.log(obj);  // { b: 2 }</code></pre>
+        </div>
+
+        <div class="btn-row mt-lg">
+          <button class="btn primary" data-mark-theory="3">✓ Theorie als gelesen markieren</button>
+          <a class="btn" href="modul-4.html">Weiter zu Modul 4 →</a>
+        </div>
+      </section>
+
+      <!-- LERNKARTEIEN -->
+      <section class="tab-panel" id="panel-karten">
+        <h2>Lernkarteien</h2>
+        <div id="flashcards"></div>
+      </section>
+
+      <!-- PLAYGROUND -->
+      <section class="tab-panel" id="panel-playground">
+        <h2>Code-Playground</h2>
+        <div id="playgrounds"></div>
+      </section>
+
+      <!-- QUIZ -->
+      <section class="tab-panel" id="panel-quiz">
+        <h2>Quiz — Modul 3</h2>
+        <div id="quiz"></div>
+      </section>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    JSE.initFlashcards({
+      container: document.getElementById("flashcards"),
+      moduleId: "3",
+      cards: [
+        { front: "Welcher Operator berechnet den <strong>Rest</strong> einer Division?", back: "<code>%</code> (Modulo). <code>10 % 3 === 1</code>" },
+        { front: "Was ergibt <code>2 ** 3</code>?", back: "<code>8</code> — Potenz-Operator (2³)." },
+        { front: "Unterschied <code>x++</code> und <code>++x</code>?", back: "<code>x++</code>: gibt alten Wert zurück, erhöht dann.<br><code>++x</code>: erhöht, gibt neuen Wert zurück." },
+        { front: "Was ergibt dieser Code?<br><code>let a = 5; let b = a++;</code>", back: "<code>b === 5</code> und <code>a === 6</code>. Post-Increment gibt alten Wert zurück." },
+        { front: "Welcher Operator prüft auf <strong>strikte</strong> Gleichheit?", back: "<code>===</code> — kein Type-Coercion. Empfohlen." },
+        { front: "Was ergibt <code>0 == \"\"</code>?", back: "<code>true</code> — lose Gleichheit konvertiert beides zu 0." },
+        { front: "Was ergibt <code>0 === \"\"</code>?", back: "<code>false</code> — strikt, unterschiedliche Typen." },
+        { front: "Was ergibt <code>null == undefined</code>?", back: "<code>true</code> (lose). Aber <code>null === undefined</code> ist <code>false</code>." },
+        { front: "Was gibt <code>true && \"hallo\"</code> zurück?", back: "<code>\"hallo\"</code> — <code>&&</code> gibt den letzten truthy Wert zurück, wenn alles truthy ist." },
+        { front: "Was gibt <code>0 || \"default\"</code> zurück?", back: "<code>\"default\"</code> — <code>||</code> gibt den ersten truthy Wert zurück (0 ist falsy)." },
+        { front: "Was gibt <code>0 ?? \"default\"</code> zurück?", back: "<code>0</code> — <code>??</code> fällt nur bei <code>null</code> oder <code>undefined</code> durch, nicht bei 0." },
+        { front: "Syntax des ternären Operators?", back: "<code>bedingung ? wertWennTrue : wertWennFalse</code>" },
+        { front: "Was bedeutet <code>x += 3</code>?", back: "<code>x = x + 3</code>" },
+        { front: "Was gibt <code>prompt(\"Alter?\")</code> zurück?", back: "Einen <strong>String</strong> (oder <code>null</code> bei Abbruch). NIE direkt als Number verwenden!" },
+        { front: "Wie wandelst du <code>prompt</code>-Eingabe in eine Zahl?", back: "<code>Number(prompt(\"...\"))</code> oder <code>parseInt(prompt(\"...\"), 10)</code>" },
+        { front: "Was gibt <code>confirm(\"OK?\")</code> zurück?", back: "<code>true</code> (OK) oder <code>false</code> (Abbrechen)." },
+        { front: "Wie negierst du einen Boolean?", back: "<code>!wert</code>. <code>!true === false</code>. <code>!!wert</code> konvertiert in Boolean." },
+        { front: "Reihenfolge von <code>*</code> und <code>+</code>?", back: "<code>*</code> hat höhere Precedence. <code>2 + 3 * 4 === 14</code>, nicht 20." },
+        { front: "Was ergibt <code>\"5\" * \"2\"</code>?", back: "<code>10</code> — <code>*</code> erzwingt Konvertierung zu Number." },
+        { front: "Was ergibt <code>+\"42\"</code>?", back: "<code>42</code> (Number) — unärer Plus konvertiert String zu Number." },
+        { front: "Was ergibt <code>typeof typeof 42</code>?", back: "<code>\"string\"</code> — <code>typeof 42</code> ist <code>\"number\"</code>, <code>typeof \"number\"</code> ist <code>\"string\"</code>." },
+        { front: "Wie entfernt man eine Objekt-Eigenschaft?", back: "<code>delete obj.eigenschaft</code>" },
+        { front: "Was macht <code>x ??= 5</code>?", back: "Wenn <code>x</code> <code>null</code>/<code>undefined</code> ist, setzt es auf 5. Sonst unverändert." },
+        { front: "Was macht <code>x ||= 5</code>?", back: "Wenn <code>x</code> falsy ist, setzt es auf 5." },
+        { front: "Warum <code>===</code> statt <code>==</code> benutzen?", back: "<code>===</code> vermeidet implizite Typumwandlung. <code>==</code> kann überraschende Ergebnisse liefern (z. B. <code>[] == false</code> ist <code>true</code>)." }
+      ]
+    });
+
+    const pgRoot = document.getElementById("playgrounds");
+    JSE.initPlaygrounds([
+      { container: pgRoot,
+        task: "Berechne die Fläche eines Kreises: <code>π * r²</code> für <code>r = 5</code>. Nutze <code>Math.PI</code> und <code>**</code>.",
+        initialCode: 'const r = 5;\n// TODO: Fläche berechnen\n' },
+      { container: pgRoot,
+        task: "Prüfe ob eine Zahl <strong>gerade</strong> ist mit <code>%</code>.",
+        initialCode: 'const n = 7;\n// TODO: true wenn gerade\nconst istGerade = /* ... */;\nconsole.log(istGerade);\n' },
+      { container: pgRoot,
+        task: "Unterschied <code>==</code> und <code>===</code>: gib die Vergleiche <code>0 == false</code>, <code>0 === false</code>, <code>\"1\" == 1</code>, <code>\"1\" === 1</code> aus.",
+        initialCode: 'console.log(0 == false);\n// ...\n' },
+      { container: pgRoot,
+        task: "Kurzschluss: bestimme einen Default-Wert mit <code>||</code> und <code>??</code>. Teste mit <code>0</code>, <code>\"\"</code>, <code>null</code>.",
+        initialCode: 'const wert = 0;\nconsole.log(wert || "default");\nconsole.log(wert ?? "default");\n' },
+      { container: pgRoot,
+        task: "Ternär: wandle die Zahl <code>note</code> in eine Buchstabennote um (A ≥ 90, B ≥ 80, C ≥ 70, sonst F).",
+        initialCode: 'const note = 85;\n// TODO: ternärer Ausdruck\n' }
+    ]);
+
+    JSE.initQuiz({
+      container: document.getElementById("quiz"),
+      moduleId: "3",
+      questions: [
+        { q: "Was ergibt <code>10 % 3</code>?",
+          options: ["3", "1", "3.33", "0"],
+          correct: 1,
+          explain: "Modulo (<code>%</code>) gibt den Rest zurück. 10 ÷ 3 = 3 Rest 1." },
+        { q: "Was gibt dieser Code aus?",
+          code: 'let a = 5;\nlet b = a++;\nconsole.log(a, b);',
+          options: ["5 5", "6 5", "6 6", "5 6"],
+          correct: 1,
+          explain: "Post-Increment: <code>b</code> bekommt den alten Wert (5), dann wird <code>a</code> auf 6 erhöht." },
+        { q: "Welcher Operator ist am besten, um Gleichheit zu prüfen?",
+          options: ["=", "==", "===", "!="],
+          correct: 2,
+          explain: "<code>===</code> ist strikt und vermeidet überraschende Typumwandlungen. <code>=</code> ist Zuweisung!" },
+        { q: "Was ergibt <code>\"5\" == 5</code>?",
+          options: ["true", "false", "TypeError", "undefined"],
+          correct: 0,
+          explain: "<code>==</code> mit Coercion: \"5\" wird zu 5 konvertiert. Deshalb ist <code>===</code> oft die bessere Wahl." },
+        { q: "Was gibt <code>null || \"a\" || \"b\"</code> zurück?",
+          options: ["null", "\"a\"", "\"b\"", "true"],
+          correct: 1,
+          explain: "<code>||</code> gibt den ersten truthy Wert zurück. null ist falsy, \"a\" ist der erste truthy." },
+        { q: "Was gibt <code>0 ?? 5</code> zurück?",
+          options: ["0", "5", "true", "null"],
+          correct: 0,
+          explain: "<code>??</code> fällt nur bei null/undefined durch. 0 bleibt 0." },
+        { q: "Was wird hier ausgegeben?",
+          code: 'console.log(2 + 3 * 4);',
+          options: ["20", "14", "24", "\"234\""],
+          correct: 1,
+          explain: "<code>*</code> hat höhere Precedence als <code>+</code>. 3*4=12, dann 2+12=14." },
+        { q: "Was macht <code>prompt()</code> mit der Eingabe?",
+          options: ["Gibt sie als Number zurück", "Gibt sie als String zurück", "Gibt sie als Boolean zurück", "Gibt ein Objekt zurück"],
+          correct: 1,
+          explain: "<code>prompt()</code> gibt IMMER einen String zurück (oder <code>null</code> bei Abbruch). Für Zahlen: <code>Number(prompt(...))</code>." },
+        { q: "Welcher Ausdruck gibt den ternären Operator korrekt wieder?",
+          options: ["if (x) { a } else { b }", "x ? a : b", "x && a || b", "x == a : b"],
+          correct: 1,
+          explain: "Syntax: <code>bedingung ? wertWennTrue : wertWennFalse</code>" },
+        { q: "Was gibt <code>!!\"\"</code> zurück?",
+          options: ["true", "false", "\"\"", "undefined"],
+          correct: 1,
+          explain: "Erstes <code>!</code>: <code>!\"\"</code> ist true (leerer String falsy). Zweites <code>!</code>: !true ist false." }
+      ]
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+/* =========================================================
+   PCEP Lern-App — nutzt das globale Design, überschreibt
+   nur die Markenfarben für Python (blau + gelb)
+   ========================================================= */
+@import url("../styles.css");
+
+:root {
+  --primary: #ffd43b;         /* Python yellow */
+  --primary-dark: #e6be2f;
+  --primary-soft: rgba(255,212,59,.12);
+  --accent: #4b8bbe;          /* Python blue */
+  --accent-soft: rgba(75,139,190,.18);
+}
+
+/* Python-Logo: gelb-blauer Gradient */
+.sb-brand-logo {
+  background: linear-gradient(135deg, #4b8bbe 0%, #306998 100%) !important;
+  color: #ffd43b !important;
+  box-shadow: 0 4px 14px rgba(75,139,190,.35) !important;
+}
+
+/* Hero-Titel Python-Farben */
+.hero h1 {
+  background: linear-gradient(135deg, #ffd43b 0%, #4b8bbe 100%) !important;
+  -webkit-background-clip: text; background-clip: text; color: transparent !important;
+}
+
+/* Pyodide-Ladebalken */
+.pyodide-loader {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 16px;
+  background: var(--bg-3);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  color: var(--text-dim);
+}
+.pyodide-loader .spinner {
+  width: 16px; height: 16px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* App-Switcher in der Sidebar */
+.sb-switcher {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: var(--bg-3);
+  border-radius: var(--radius-sm);
+  margin: 0 4px 14px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.sb-switcher a {
+  flex: 1;
+  text-align: center;
+  padding: 8px 6px;
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--text-dim);
+  transition: all .15s;
+}
+.sb-switcher a:hover { color: var(--text); }
+.sb-switcher a.active {
+  background: var(--accent);
+  color: #fff;
+}

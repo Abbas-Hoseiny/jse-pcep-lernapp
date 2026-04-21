@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Modul 4 · Kontrollfluss · JSE Lern-App</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><div class="brand-logo">JS</div> JSE Lern-App</div>
+    <nav>
+      <a href="index.html">← Dashboard</a>
+      <a href="modul-3.html">← Modul 3</a>
+      <a href="modul-5.html">Modul 5 →</a>
+      <a href="pruefung.html">Prüfung</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div class="module-num">MODUL 4 · 20% der Prüfung</div>
+    <h1>Kontrollfluss: if, switch, Schleifen</h1>
+    <p class="subtitle">Bedingungen und Schleifen sind das Rückgrat jedes Programms.</p>
+
+    <div class="tabs" data-tabs>
+      <button class="tab-btn active" data-target="panel-theorie">📖 Theorie</button>
+      <button class="tab-btn" data-target="panel-karten">🃏 Lernkarteien</button>
+      <button class="tab-btn" data-target="panel-playground">💻 Playground</button>
+      <button class="tab-btn" data-target="panel-quiz">✅ Quiz</button>
+    </div>
+    <div>
+      <section class="tab-panel active" id="panel-theorie">
+        <div class="theory-section">
+          <h2>4.1 <code>if</code> / <code>else if</code> / <code>else</code></h2>
+<pre><code class="js">if (bedingung) {
+  // führt aus wenn bedingung truthy
+}
+
+if (alter >= 18) {
+  console.log("erwachsen");
+} else if (alter >= 13) {
+  console.log("teenager");
+} else {
+  console.log("kind");
+}</code></pre>
+          <p>Die <strong>Bedingung</strong> wird in einen Boolean umgewandelt (Truthiness-Regeln gelten).</p>
+          <div class="callout warn">
+            <strong>Ohne Block-Klammern</strong> führt <code>if</code> nur die <em>nächste Anweisung</em> aus:
+            <pre><code class="js">if (x) console.log("a");
+  console.log("b");  // immer ausgeführt!</code></pre>
+            → Lieber <strong>immer <code>{ }</code></strong> verwenden.
+          </div>
+        </div>
+
+        <div class="theory-section">
+          <h2>4.2 <code>switch</code> / <code>case</code></h2>
+<pre><code class="js">switch (wert) {
+  case 1:
+    console.log("eins");
+    break;              // ohne break: "Fall-through"!
+  case 2:
+  case 3:
+    console.log("zwei oder drei");
+    break;
+  default:
+    console.log("etwas anderes");
+}</code></pre>
+          <div class="callout danger">
+            <strong>Wichtig:</strong>
+            <ul>
+              <li><code>switch</code> nutzt <strong>strikte Gleichheit</strong> (<code>===</code>).</li>
+              <li>Ohne <code>break</code> läuft der Code in den nächsten <code>case</code> hinein (Fall-through).</li>
+              <li><code>default</code> ist optional und kann überall stehen (üblich: am Ende).</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="theory-section">
+          <h2>4.3 <code>while</code>-Schleife</h2>
+<pre><code class="js">let i = 0;
+while (i < 5) {
+  console.log(i);
+  i++;
+}
+// Ausgabe: 0 1 2 3 4</code></pre>
+          <p>Prüft die Bedingung <strong>vor</strong> jedem Durchlauf. Kann 0× ausgeführt werden.</p>
+          <div class="callout warn"><strong>Endlosschleife!</strong> Wenn du <code>i++</code> vergisst, läuft die Schleife unendlich. Der Browser friert ein.</div>
+        </div>
+
+        <div class="theory-section">
+          <h2>4.4 <code>do...while</code>-Schleife</h2>
+<pre><code class="js">let i = 0;
+do {
+  console.log(i);
+  i++;
+} while (i < 5);</code></pre>
+          <p>Prüft die Bedingung <strong>nach</strong> jedem Durchlauf. Läuft <strong>mindestens einmal</strong>.</p>
+        </div>
+
+        <div class="theory-section">
+          <h2>4.5 <code>for</code>-Schleife</h2>
+<pre><code class="js">for (init; bedingung; update) {
+  // Körper
+}
+
+for (let i = 0; i < 5; i++) {
+  console.log(i);
+}
+// 0 1 2 3 4
+
+// Alle drei Teile sind optional:
+for (;;) { /* Endlosschleife */ }</code></pre>
+          <p>Reihenfolge pro Iteration:</p>
+          <ol>
+            <li>Init (nur beim ersten Mal)</li>
+            <li>Bedingung prüfen — wenn false, Schleife verlassen</li>
+            <li>Körper ausführen</li>
+            <li>Update</li>
+            <li>Zurück zu Schritt 2</li>
+          </ol>
+        </div>
+
+        <div class="theory-section">
+          <h2>4.6 <code>for...of</code> und <code>for...in</code></h2>
+<pre><code class="js">const arr = ["a", "b", "c"];
+
+// for...of — über WERTE iterieren (Arrays, Strings, ...)
+for (const wert of arr) {
+  console.log(wert);   // "a", "b", "c"
+}
+
+// for...in — über SCHLÜSSEL/INDIZES iterieren (meist Objekte)
+for (const key in { a: 1, b: 2 }) {
+  console.log(key);    // "a", "b"
+}</code></pre>
+          <div class="callout warn"><strong>Faustregel:</strong> Für Arrays bevorzuge <code>for...of</code> oder <code>forEach</code>. <code>for...in</code> bei Objekten.</div>
+        </div>
+
+        <div class="theory-section">
+          <h2>4.7 <code>break</code> und <code>continue</code></h2>
+<pre><code class="js">// break — Schleife komplett beenden
+for (let i = 0; i < 10; i++) {
+  if (i === 3) break;
+  console.log(i);   // 0 1 2
+}
+
+// continue — nur aktuelle Iteration überspringen
+for (let i = 0; i < 5; i++) {
+  if (i % 2 === 0) continue;
+  console.log(i);   // 1 3
+}</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>4.8 Verschachtelte Schleifen</h2>
+<pre><code class="js">for (let i = 1; i <= 3; i++) {
+  for (let j = 1; j <= 3; j++) {
+    console.log(i, j);
+  }
+}
+// 1 1, 1 2, 1 3, 2 1, 2 2, 2 3, 3 1, 3 2, 3 3</code></pre>
+          <p><code>break</code> verlässt nur die <em>innerste</em> Schleife. Mit <strong>Labels</strong> kann man mehrere verlassen:</p>
+<pre><code class="js">outer: for (let i = 0; i < 3; i++) {
+  for (let j = 0; j < 3; j++) {
+    if (i === 1 && j === 1) break outer;
+    console.log(i, j);
+  }
+}</code></pre>
+        </div>
+
+        <div class="btn-row mt-lg">
+          <button class="btn primary" data-mark-theory="4">✓ Theorie als gelesen markieren</button>
+          <a class="btn" href="modul-5.html">Weiter zu Modul 5 →</a>
+        </div>
+      </section>
+
+      <section class="tab-panel" id="panel-karten">
+        <h2>Lernkarteien</h2>
+        <div id="flashcards"></div>
+      </section>
+      <section class="tab-panel" id="panel-playground">
+        <h2>Code-Playground</h2>
+        <div id="playgrounds"></div>
+      </section>
+      <section class="tab-panel" id="panel-quiz">
+        <h2>Quiz — Modul 4</h2>
+        <div id="quiz"></div>
+      </section>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    JSE.initFlashcards({
+      container: document.getElementById("flashcards"),
+      moduleId: "4",
+      cards: [
+        { front: "Syntax einer <code>if</code>-Anweisung?", back: "<code>if (bedingung) { /* code */ }</code>" },
+        { front: "Wie fügt man eine alternative Bedingung hinzu?", back: "<code>else if (andereBedingung) { ... }</code>" },
+        { front: "Was prüft <code>switch</code>: <code>==</code> oder <code>===</code>?", back: "<strong>Strikte Gleichheit <code>===</code></strong>." },
+        { front: "Was passiert in <code>switch</code> ohne <code>break</code>?", back: "<strong>Fall-through</strong> — die Ausführung läuft in den nächsten <code>case</code> hinein." },
+        { front: "Ist <code>default</code> in <code>switch</code> Pflicht?", back: "<strong>Nein</strong>, optional. Fehlt er und kein case matcht, wird nichts ausgeführt." },
+        { front: "Unterschied <code>while</code> vs <code>do...while</code>?", back: "<code>while</code>: Bedingung <strong>vor</strong> jedem Durchlauf. Kann 0× laufen.<br><code>do...while</code>: Bedingung <strong>nach</strong> jedem Durchlauf. Läuft min. 1×." },
+        { front: "Die drei Teile einer <code>for</code>-Schleife?", back: "<code>for (init; bedingung; update) { ... }</code>" },
+        { front: "Was macht <code>break</code>?", back: "Verlässt die <strong>innerste</strong> Schleife (oder <code>switch</code>) komplett." },
+        { front: "Was macht <code>continue</code>?", back: "Überspringt den Rest der aktuellen Iteration und geht zur nächsten." },
+        { front: "Wann <code>for...of</code>, wann <code>for...in</code>?", back: "<code>for...of</code>: über <strong>Werte</strong> iterieren (Arrays, Strings).<br><code>for...in</code>: über <strong>Schlüssel/Indizes</strong> (meist Objekte)." },
+        { front: "Was gibt <code>for (const x of \"abc\")</code> aus?", back: "\"a\", \"b\", \"c\" — Strings sind iterierbar." },
+        { front: "Was iteriert <code>for (const i in [\"a\",\"b\"])</code>?", back: "Die Indizes als Strings: \"0\", \"1\". (Deshalb besser <code>for...of</code>.)" },
+        { front: "Was ergibt <code>if ([]) console.log(\"ja\")</code>?", back: "\"ja\" wird ausgegeben — leere Arrays sind truthy." },
+        { front: "Was ergibt <code>if (\"0\") console.log(\"ja\")</code>?", back: "\"ja\" — der String \"0\" ist truthy (nur der leere String ist falsy)." },
+        { front: "Muss <code>if</code> geschweifte Klammern haben?", back: "Nein — ohne <code>{}</code> wird nur die nächste Anweisung bedingt ausgeführt. Trotzdem <strong>immer</strong> Klammern nutzen." },
+        { front: "Wie verlasse ich eine verschachtelte Schleife aus der inneren?", back: "Mit einem <strong>Label</strong>: <code>outer: for(...){ for(...){ break outer; } }</code>" },
+        { front: "Wie viele Iterationen läuft <code>for (let i = 0; i < 10; i += 2)</code>?", back: "5 — i = 0, 2, 4, 6, 8." },
+        { front: "Was gibt dieser Code aus?<br><code>for (let i = 5; i > 0; i--) console.log(i);</code>", back: "5 4 3 2 1 — zählt rückwärts von 5 bis 1 (bei 0 ist Bedingung false)." },
+        { front: "Wie formuliert man eine <strong>Endlosschleife</strong>?", back: "<code>while (true) { ... }</code> oder <code>for (;;) { ... }</code>" },
+        { front: "Wie stellt man mehrere Fälle in <code>switch</code> zusammen?", back: "Mehrere <code>case</code> ohne <code>break</code> stapeln:<br><code>case 1:\\ncase 2:\\n  console.log(\"1 oder 2\");\\n  break;</code>" },
+        { front: "Wird <code>do...while(false)</code> ausgeführt?", back: "<strong>Ja, einmal.</strong> Bedingung wird erst nach dem ersten Durchlauf geprüft." },
+        { front: "Was ist das Ergebnis von <code>while (0) { ... }</code>?", back: "Der Körper wird <strong>nicht</strong> ausgeführt — 0 ist falsy." },
+        { front: "Welche Anweisung verwendet man in einer Schleife, um zur nächsten Iteration zu springen?", back: "<code>continue</code>" },
+        { front: "Was ist ein häufiger Fehler bei <code>while</code>-Schleifen?", back: "Vergessen, die Schleifen-Variable zu aktualisieren → <strong>Endlosschleife</strong>." },
+        { front: "Kann man in einem <code>if</code> mehrere Bedingungen verknüpfen?", back: "Ja, mit <code>&&</code> (UND), <code>||</code> (ODER), <code>!</code> (NICHT). Beispiel: <code>if (a > 0 && a < 10)</code>" }
+      ]
+    });
+
+    const pgRoot = document.getElementById("playgrounds");
+    JSE.initPlaygrounds([
+      { container: pgRoot,
+        task: "FizzBuzz: Gib Zahlen 1–20 aus. Bei Vielfachen von 3 „Fizz", von 5 „Buzz", von beiden „FizzBuzz".",
+        initialCode: 'for (let i = 1; i <= 20; i++) {\n  // TODO\n}\n' },
+      { container: pgRoot,
+        task: "Summe aller Zahlen von 1–100 berechnen und ausgeben.",
+        initialCode: 'let summe = 0;\n// TODO: for-Schleife\nconsole.log(summe);\n' },
+      { container: pgRoot,
+        task: "Wandle eine Note (1–5) in Worte um mit <code>switch</code>.",
+        initialCode: 'const note = 2;\nswitch (note) {\n  // TODO: cases\n}\n' },
+      { container: pgRoot,
+        task: "Gib alle Zahlen von 1–50 aus, überspringe aber Vielfache von 7 mit <code>continue</code>.",
+        initialCode: 'for (let i = 1; i <= 50; i++) {\n  // TODO\n}\n' },
+      { container: pgRoot,
+        task: "Multiplikationstabelle 1–5 mit verschachtelter <code>for</code>-Schleife.",
+        initialCode: '// i = 1..5, j = 1..5 → "1 × 1 = 1"\n' }
+    ]);
+
+    JSE.initQuiz({
+      container: document.getElementById("quiz"),
+      moduleId: "4",
+      questions: [
+        { q: "Welche Aussage über <code>switch</code> ist korrekt?",
+          options: ["nutzt == zur Vergleichsprüfung", "nutzt === zur Vergleichsprüfung", "default ist Pflicht", "Fall-through ist nicht möglich"],
+          correct: 1,
+          explain: "<code>switch</code> nutzt strikte Gleichheit <code>===</code>. Ohne <code>break</code> entsteht Fall-through." },
+        { q: "Was wird ausgegeben?",
+          code: 'let i = 0;\nwhile (i < 3) {\n  console.log(i);\n  i += 1;\n}',
+          options: ["0 1 2", "1 2 3", "0 1 2 3", "Endlosschleife"],
+          correct: 0,
+          explain: "<code>i</code> läuft von 0 bis 2 (bei i=3 ist 3<3 false)." },
+        { q: "Wie oft wird der Körper einer <code>do...while(false)</code>-Schleife ausgeführt?",
+          options: ["0", "1", "∞", "Fehler"],
+          correct: 1,
+          explain: "do...while prüft die Bedingung nach dem ersten Durchlauf — mindestens 1×." },
+        { q: "Was gibt dieser Code aus?",
+          code: 'for (let i = 0; i < 5; i++) {\n  if (i === 2) break;\n  console.log(i);\n}',
+          options: ["0 1", "0 1 2", "0 1 2 3 4", "2"],
+          correct: 0,
+          explain: "Bei i=2 bricht <code>break</code> ab, bevor <code>console.log</code> läuft." },
+        { q: "Was gibt dieser Code aus?",
+          code: 'for (let i = 0; i < 4; i++) {\n  if (i === 2) continue;\n  console.log(i);\n}',
+          options: ["0 1", "0 1 3", "0 1 2 3", "0 1 2"],
+          correct: 1,
+          explain: "Bei i=2 wird mit <code>continue</code> die aktuelle Iteration übersprungen — 2 fehlt." },
+        { q: "Welche Schleife eignet sich am besten, um über die <strong>Werte</strong> eines Arrays zu laufen?",
+          options: ["for...in", "for...of", "while", "do...while"],
+          correct: 1,
+          explain: "<code>for...of</code> iteriert über iterable Werte (Arrays, Strings). <code>for...in</code> gibt Schlüssel/Indizes." },
+        { q: "Welcher Code ist korrekt?",
+          options: ["if x > 5 then { ... }", "if (x > 5): { ... }", "if (x > 5) { ... }", "if { x > 5 } ..."],
+          correct: 2,
+          explain: "JS-Syntax: <code>if (bedingung) { anweisungen }</code>." },
+        { q: "Was ist das Ergebnis dieses <code>switch</code>?",
+          code: 'let x = 2;\nswitch (x) {\n  case 1: console.log("A");\n  case 2: console.log("B");\n  case 3: console.log("C");\n  default: console.log("D");\n}',
+          options: ["B", "B C D", "D", "Fehler"],
+          correct: 1,
+          explain: "Kein <code>break</code> → Fall-through. Ab case 2 werden alle folgenden Ausgaben gemacht." },
+        { q: "Was prüft eine <code>for</code>-Schleife als erstes?",
+          options: ["Die Bedingung", "Den Init-Teil", "Den Update-Teil", "Den Körper"],
+          correct: 1,
+          explain: "Init einmalig → dann Bedingung → Körper → Update → Bedingung → …" },
+        { q: "Wie verlässt man aus einer inneren Schleife <strong>alle</strong> umschließenden?",
+          options: ["break all", "exit", "return", "break mit Label"],
+          correct: 3,
+          explain: "Labels: <code>outer: for(...) { for(...) { break outer; } }</code>" }
+      ]
+    });
+  </script>
+</body>
+</html>

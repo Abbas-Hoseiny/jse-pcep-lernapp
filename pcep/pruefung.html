@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Prüfungssimulation · PCEP-30-02</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="container">
+    <div id="exam-root"></div>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    // =========================================================
+    //  FRAGENPOOL PCEP — ca. 90 Fragen, thematisch abgedeckt
+    // =========================================================
+    const POOL = [
+      // ---- Modul 1: Grundlagen ----
+      { q: "Wer hat Python entwickelt?", options: ["Dennis Ritchie","Brendan Eich","Guido van Rossum","James Gosling"], correct: 2, explain: "Guido van Rossum, Ende der 1980er." },
+      { q: "Ist Python dynamisch oder statisch typisiert?", options: ["Statisch","Dynamisch","Beides","Keines"], correct: 1, explain: "Dynamisch — Typ wird zur Laufzeit bestimmt." },
+      { q: "Wie kommentiert man eine Zeile in Python?", options: ["// Kommentar","# Kommentar","-- Kommentar","/* Kommentar */"], correct: 1, explain: "<code>#</code> ist das einzige Kommentar-Zeichen in Python." },
+      { q: "Wie definiert Python Blöcke?", options: ["{}","Indentation","begin/end","Semikolons"], correct: 1, explain: "Durch Einrückung — 4 Leerzeichen nach PEP 8." },
+      { q: "Was ergibt <code>print(\"A\", \"B\")</code>?", options: ["AB","A-B","A B","A, B"], correct: 2, explain: "Default-Separator ist ein Leerzeichen." },
+      { q: "Was ergibt <code>print(\"A\", \"B\", sep=\"\")</code>?", options: ["AB","A B","A,B","Error"], correct: 0, explain: "Leerer Separator → AB." },
+      { q: "Was ergibt <code>print(\"a\", end=\"!\")</code>?", options: ["a\\n","a","a!","!a"], correct: 2, explain: "<code>end=\"!\"</code> ersetzt den Zeilenumbruch durch <code>!</code>." },
+      { q: "Was ist der Dezimalwert von <code>0xFF</code>?", options: ["15","99","255","256"], correct: 2, explain: "Hex FF = 255." },
+      { q: "Was ist der Dezimalwert von <code>0b1010</code>?", options: ["5","10","12","8"], correct: 1, explain: "Binär 1010 = 10." },
+      { q: "Was ist der Dezimalwert von <code>0o17</code>?", options: ["17","23","15","7"], correct: 2, explain: "Oktal 17 = 1·8 + 7 = 15." },
+      { q: "Welcher Bezeichner ist <strong>ungültig</strong>?", options: ["_name","my_var","2name","$not_allowed"], correct: 2, explain: "Bezeichner dürfen nicht mit Ziffer beginnen. <code>$</code> ist sowieso ungültig." },
+      { q: "Was ist der Name von Pythons Virtual Machine?", options: ["JVM","PVM","CPython","PyPy"], correct: 1, explain: "PVM — Python Virtual Machine." },
+
+      // ---- Modul 2: Variablen & Typen ----
+      { q: "Wie deklariert man eine Variable in Python?", options: ["var x = 5","let x = 5","x = 5","int x = 5"], correct: 2, explain: "Einfach zuweisen." },
+      { q: "Welcher Typ hat <code>True</code>?", options: ["int","bool","str","None"], correct: 1, explain: "<code>bool</code> — Subtyp von int." },
+      { q: "Was ergibt <code>int(3.9)</code>?", options: ["3","4","3.9","ValueError"], correct: 0, explain: "int schneidet ab, rundet nicht." },
+      { q: "Was ergibt <code>int(\"3.14\")</code>?", options: ["3","3.14","ValueError","TypeError"], correct: 2, explain: "int() akzeptiert keine Dezimalstrings." },
+      { q: "Was ergibt <code>float(\"inf\") > 10**100</code>?", options: ["True","False","Error","None"], correct: 0, explain: "Unendlich > alles." },
+      { q: "Was ergibt <code>type(None)</code>?", options: ["&lt;class 'none'&gt;","&lt;class 'NoneType'&gt;","&lt;class 'null'&gt;","None"], correct: 1, explain: "Typ ist NoneType." },
+      { q: "Welcher Wert ist <strong>truthy</strong>?", options: ["0","[]","\"\"","\"False\""], correct: 3, explain: "Der String \"False\" ist nicht leer → truthy." },
+      { q: "Welcher Wert ist <strong>falsy</strong>?", options: ["\"0\"","[0]","(0,)","0"], correct: 3, explain: "Nur die Zahl 0 ist falsy. Die anderen sind nicht-leere Container/Strings." },
+      { q: "Was gibt <code>input()</code> zurück?", options: ["int","float","str","bool"], correct: 2, explain: "Immer String." },
+      { q: "Was ergibt <code>\"5\" + 3</code>?", options: ["\"53\"","8","TypeError","\"8\""], correct: 2, explain: "Python erlaubt keine implizite Mischung von str und int." },
+      { q: "Was ergibt <code>\"5\" * 3</code>?", options: ["\"15\"","15","\"555\"","TypeError"], correct: 2, explain: "<code>*</code> wiederholt Strings." },
+      { q: "Was gibt dieser Code aus?", code: 'x = 5\nx = "hi"\nprint(type(x).__name__)', options: ["int","str","mixed","TypeError"], correct: 1, explain: "Dynamische Typisierung — x ist jetzt str." },
+      { q: "Was ergibt <code>bool(\"\")</code>?", options: ["True","False","\"\"","Error"], correct: 1, explain: "Leerer String → falsy → False." },
+      { q: "Was ergibt <code>bool(\"False\")</code>?", options: ["True","False","Error","None"], correct: 0, explain: "Der String \"False\" ist nicht leer → truthy → True." },
+      { q: "Wie schreibt man 1 Million lesbar?", options: ["1,000,000","1.000.000","1_000_000","1M"], correct: 2, explain: "Unterstriche sind in Zahlen erlaubt und werden ignoriert." },
+
+      // ---- Modul 3: Operatoren ----
+      { q: "Was ergibt <code>7 / 2</code>?", options: ["3","3.5","4","TypeError"], correct: 1, explain: "/ gibt immer float." },
+      { q: "Was ergibt <code>7 // 2</code>?", options: ["3","3.5","4","3.0"], correct: 0, explain: "Floor-Division, Ergebnis int wenn beide int." },
+      { q: "Was ergibt <code>-7 // 2</code>?", options: ["-3","-4","-3.5","3"], correct: 1, explain: "Floor rundet Richtung −∞, also zu -4." },
+      { q: "Was ergibt <code>7 % 3</code>?", options: ["1","2","3","0"], correct: 0, explain: "Rest von 7/3 = 1." },
+      { q: "Was ergibt <code>2 ** 10</code>?", options: ["20","512","1024","100"], correct: 2, explain: "2 hoch 10 = 1024." },
+      { q: "Was ergibt <code>2 ** 3 ** 2</code>?", options: ["64","512","36","81"], correct: 1, explain: "** ist rechtsassoziativ: 2^(3^2) = 2^9." },
+      { q: "Wie heißt der logische AND in Python?", options: ["&&","and","AND","&"], correct: 1, explain: "Python: ausgeschriebene Keywords." },
+      { q: "Was ergibt <code>not 0</code>?", options: ["True","False","0","1"], correct: 0, explain: "0 ist falsy, Negation → True." },
+      { q: "Was ergibt <code>3 < 5 < 10</code>?", options: ["True","False","SyntaxError","TypeError"], correct: 0, explain: "Chained Comparison: 3<5 and 5<10." },
+      { q: "Was gibt <code>a = [1]; b = [1]; print(a is b)</code> aus?", options: ["True","False","None","Error"], correct: 1, explain: "Unterschiedliche Objekte — <code>is</code> prüft Identität." },
+      { q: "Was ergibt <code>\"x\" in \"apple\"</code>?", options: ["True","False","Error","None"], correct: 1, explain: "\"x\" ist nicht in \"apple\"." },
+      { q: "Was ergibt <code>\"a\" in {\"a\": 1}</code>?", options: ["True","False","Error","1"], correct: 0, explain: "<code>in</code> prüft die Keys eines Dicts." },
+      { q: "Welcher Ausdruck ist der ternäre Operator?", options: ["x ? a : b","a if x else b","x ? a ?? b","x and a or b"], correct: 1, explain: "Python-Syntax: <code>a if cond else b</code>." },
+
+      // ---- Modul 4: Kontrollfluss ----
+      { q: "Wie viele Werte liefert <code>range(2, 8)</code>?", options: ["5","6","7","8"], correct: 1, explain: "2,3,4,5,6,7 — stop ist ausschließlich." },
+      { q: "Was ergibt <code>list(range(0, 10, 3))</code>?", options: ["[0,3,6,9]","[0,3,6]","[3,6,9]","[0,3,6,9,10]"], correct: 0, explain: "Start 0, stop 10 (exkl.), step 3 → 0,3,6,9." },
+      { q: "Was ergibt <code>list(range(5, 0))</code>?", options: ["[5,4,3,2,1]","[5,4,3,2,1,0]","[]","Error"], correct: 2, explain: "Ohne negativen step läuft rückwärts-range als leer." },
+      { q: "Was ergibt <code>list(range(5, 0, -1))</code>?", options: ["[5,4,3,2,1]","[5,4,3,2,1,0]","[1,2,3,4,5]","[]"], correct: 0, explain: "Step -1, stop 0 (exkl.) → 5,4,3,2,1." },
+      { q: "Was gibt dieser Code aus?", code: 'for i in range(3):\n    if i == 1:\n        continue\n    print(i)', options: ["0 1 2","0 2","1 2","1"], correct: 1, explain: "continue überspringt i=1." },
+      { q: "Was gibt dieser Code aus?", code: 'for i in range(3):\n    if i == 1:\n        break\n    print(i)', options: ["0 1 2","0","1","0 1"], correct: 1, explain: "break bei i=1, nur 0 wird ausgegeben." },
+      { q: "Wann läuft <code>else</code> einer <code>for</code>-Schleife?", options: ["Immer","Bei break","Wenn break NICHT ausgeführt wurde","Nie"], correct: 2, explain: "else läuft nur wenn die Schleife normal endete (ohne break)." },
+      { q: "Gibt es <code>switch</code> in Python?", options: ["Ja, klassisch","Nein","Nur match/case (3.10+)","Nur als Bibliothek"], correct: 2, explain: "Kein klassisches switch. Ab 3.10 gibt es Pattern Matching." },
+      { q: "Was macht <code>pass</code>?", options: ["Wirft Fehler","Beendet Schleife","Tut nichts","Überspringt Iteration"], correct: 2, explain: "Platzhalter — leeres Statement." },
+      { q: "Was gibt dieser Code aus?", code: 'i = 0\nwhile i < 5:\n    i += 2\nprint(i)', options: ["4","5","6","0"], correct: 2, explain: "0 → 2 → 4 → 6 (bei 6 ist 6<5 false, Schleife endet). Ausgabe: 6." },
+      { q: "Was prüft eine for-Schleife?", options: ["Bedingung","Nichts — iteriert über Sequenz","Timer","Stack-Tiefe"], correct: 1, explain: "Python-for iteriert über iterierbare Objekte." },
+
+      // ---- Modul 5: Datenstrukturen ----
+      { q: "Was ergibt <code>[1,2,3,4,5][1:4]</code>?", options: ["[1,2,3]","[2,3,4]","[2,3,4,5]","[1,2,3,4]"], correct: 1, explain: "Slice [1:4] = Indizes 1,2,3." },
+      { q: "Was ergibt <code>[1,2,3][-1]</code>?", options: ["1","2","3","IndexError"], correct: 2, explain: "Negativer Index von hinten: -1 = letztes Element." },
+      { q: "Was ergibt <code>\"abc\"[::-1]</code>?", options: ["\"abc\"","\"cba\"","Error","\"-abc\""], correct: 1, explain: "Step -1 → umgekehrt." },
+      { q: "Welche Methode fügt am Ende einer Liste ein Element hinzu?", options: ["add()","append()","insert()","push()"], correct: 1, explain: "<code>.append(x)</code>." },
+      { q: "Was gibt <code>[3,1,2].sort()</code> zurück?", options: ["[1,2,3]","[3,2,1]","None","[1,2,3] (neue Liste)"], correct: 2, explain: "sort() sortiert in-place und gibt None zurück." },
+      { q: "Was gibt <code>sorted([3,1,2])</code> zurück?", options: ["[1,2,3]","None","Iterator","[3,1,2]"], correct: 0, explain: "sorted() gibt neue sortierte Liste zurück." },
+      { q: "Was ergibt <code>len([1,[2,3],4])</code>?", options: ["3","4","5","2"], correct: 0, explain: "Drei Top-Level-Elemente." },
+      { q: "Was ergibt <code>(1)</code>?", options: ["Tuple mit 1 Element","int 1","SyntaxError","None"], correct: 1, explain: "Nur geklammerter int. Für 1-Tuple: (1,)." },
+      { q: "Was ergibt <code>(1,)</code>?", options: ["Tuple (1,)","int 1","SyntaxError","[1]"], correct: 0, explain: "Komma macht das Tuple." },
+      { q: "Welche Operation ist bei einem Tuple <strong>unerlaubt</strong>?", options: ["t[0]","t.count(1)","t[0] = 5","len(t)"], correct: 2, explain: "Tupel immutable → keine Zuweisung." },
+      { q: "Was gibt <code>d = {\"a\":1}; d.get(\"b\", 0)</code> zurück?", options: ["None","0","KeyError","\"b\""], correct: 1, explain: "get(key, default) — gibt default zurück wenn key fehlt." },
+      { q: "Was prüft <code>\"a\" in {\"a\":1, \"b\":2}</code>?", options: ["Werte","Keys","nichts","Typ"], correct: 1, explain: "<code>in</code> bei Dicts prüft Keys." },
+      { q: "Was gibt <code>\"hallo\".upper()</code> zurück?", options: ["\"HALLO\"","\"hallo\"","None","Error"], correct: 0, explain: "Gibt neuen String in Großbuchstaben." },
+      { q: "Was gibt <code>\"a,b,c\".split(\",\")</code> zurück?", options: ["\"a,b,c\"","[\"a\",\"b\",\"c\"]","[\"a\",\",\",\"b\"]","3"], correct: 1, explain: "split gibt eine Liste zurück." },
+      { q: "Was gibt <code>\",\".join([\"a\",\"b\",\"c\"])</code> zurück?", options: ["[\"a\",\"b\",\"c\"]","\"a,b,c\"","\"abc\"","3"], correct: 1, explain: "join verbindet Strings zu einem." },
+      { q: "Was ergibt <code>ord(\"A\")</code>?", options: ["\"A\"","65","97","1"], correct: 1, explain: "ord gibt Unicode-Code: 'A' = 65." },
+      { q: "Was ergibt <code>chr(97)</code>?", options: ["\"a\"","\"A\"","97","Error"], correct: 0, explain: "chr(97) = 'a'." },
+      { q: "Was ergibt <code>len(\"hallo\")</code>?", options: ["4","5","6","hallo"], correct: 1, explain: "5 Zeichen." },
+      { q: "Welche Aussage über Strings in Python ist korrekt?", options: ["Mutable","Immutable","Nur ASCII","Brauchen Länge"], correct: 1, explain: "Strings sind immutable — Methoden geben neuen String zurück." },
+
+      // ---- Modul 6: Funktionen ----
+      { q: "Wie definiert man eine Funktion?", options: ["function f():","def f():","fn f():","func f():"], correct: 1, explain: "<code>def</code> in Python." },
+      { q: "Was gibt eine Funktion ohne <code>return</code> zurück?", options: ["null","None","0","void"], correct: 1, explain: "Implizit None." },
+      { q: "Was sammelt <code>*args</code>?", options: ["Dict","Tuple","List","Set"], correct: 1, explain: "Tuple der positionalen Argumente." },
+      { q: "Was sammelt <code>**kwargs</code>?", options: ["Tuple","Dict","Set","List"], correct: 1, explain: "Dict der Keyword-Argumente." },
+      { q: "Was bedeutet LEGB?", options: [
+        "Literal-Evaluation-General-Basic",
+        "Local-Enclosing-Global-Built-in",
+        "Lambda-Expression-Global-Block",
+        "Loop-Else-Global-Body"], correct: 1, explain: "Namenssuch-Reihenfolge." },
+      { q: "Was gibt dieser Code aus?", code: 'x = 10\ndef f():\n    x = 20\nf()\nprint(x)', options: ["10","20","None","Error"], correct: 0, explain: "Lokales x ohne global → globales x bleibt 10." },
+      { q: "Was gibt dieser Code aus?", code: 'x = 10\ndef f():\n    global x\n    x = 20\nf()\nprint(x)', options: ["10","20","Error","None"], correct: 1, explain: "<code>global x</code> → globales x wird auf 20 gesetzt." },
+      { q: "Welche Aussage über Default-Parameter ist richtig?", options: [
+        "Werden bei jedem Aufruf neu erzeugt",
+        "Werden nur einmal zur Def-Zeit erzeugt",
+        "Müssen immer int sein",
+        "Funktionieren nur mit *args"], correct: 1, explain: "Daraus die Mutable-Default-Falle." },
+      { q: "Syntax einer Lambda?", options: ["lambda x: x+1","fn(x) => x+1","func x: x+1","(x) -> x+1"], correct: 0, explain: "<code>lambda params: ausdruck</code>." },
+      { q: "Kann eine Funktion mehrere Werte zurückgeben?", options: ["Nein","Ja, als Tuple","Nur mit Liste","Nur mit Klasse"], correct: 1, explain: "<code>return a, b</code> gibt ein Tuple." },
+      { q: "Wie unpackt man <code>[1,2,3]</code> als Argumente?", options: ["f([1,2,3])","f(*[1,2,3])","f(...[1,2,3])","f(**[1,2,3])"], correct: 1, explain: "<code>*</code> unpackt iterable." },
+
+      // ---- Modul 7: Exceptions ----
+      { q: "Welchen Fehler wirft <code>1/0</code>?", options: ["ValueError","TypeError","ZeroDivisionError","ArithmeticError"], correct: 2, explain: "ZeroDivisionError — Subtyp von ArithmeticError." },
+      { q: "Welchen Fehler wirft <code>int(\"abc\")</code>?", options: ["ValueError","TypeError","NameError","ConversionError"], correct: 0, explain: "Typ stimmt, aber Wert nicht umwandelbar." },
+      { q: "Welchen Fehler wirft <code>[1][5]</code>?", options: ["KeyError","IndexError","AttributeError","ValueError"], correct: 1, explain: "Index außerhalb → IndexError." },
+      { q: "Welchen Fehler wirft <code>{\"a\":1}[\"b\"]</code>?", options: ["IndexError","KeyError","ValueError","LookupError"], correct: 1, explain: "Fehlender Key → KeyError." },
+      { q: "Wann läuft <code>finally</code>?", options: ["Nur bei Fehler","Nur ohne Fehler","Immer","Nur bei return"], correct: 2, explain: "Immer — auch bei return oder erneutem raise." },
+      { q: "Wann läuft <code>else</code> im try-Block?", options: ["Immer","Bei Fehler","Wenn kein Fehler auftrat","Nach finally"], correct: 2, explain: "Nur wenn try erfolgreich war." },
+      { q: "Wie wirft man einen Fehler?", options: ["throw","raise","error","yield"], correct: 1, explain: "<code>raise ExceptionKlasse(msg)</code>." },
+      { q: "Welche Klasse ist Basis aller Exceptions?", options: ["Exception","Error","BaseException","object"], correct: 2, explain: "<code>BaseException</code>." },
+      { q: "Was ist Basisklasse von IndexError und KeyError?", options: ["Exception","LookupError","ArithmeticError","ValueError"], correct: 1, explain: "Beide sind Subklassen von <code>LookupError</code>." },
+      { q: "Was macht <code>assert x > 0</code>?", options: [
+        "Setzt x auf 0",
+        "Wirft AssertionError wenn x nicht > 0",
+        "Warnt",
+        "Sagt x-Wert aus"], correct: 1, explain: "<code>assert cond</code> wirft AssertionError wenn cond false." },
+      { q: "Wie fängt man TypeError UND ValueError in einem Block?", options: [
+        "except TypeError, ValueError:",
+        "except (TypeError, ValueError):",
+        "except TypeError | ValueError:",
+        "except [TypeError, ValueError]:"], correct: 1, explain: "Tuple in Klammern." },
+      { q: "Was passiert bei ungefangener Exception?", options: [
+        "Wird ignoriert",
+        "Programm stürzt mit Traceback ab",
+        "Wird zu None",
+        "Warnung ausgegeben"], correct: 1, explain: "Programm endet und druckt den Traceback." }
+    ];
+
+    PCEP.initExam({
+      container: document.getElementById("exam-root"),
+      pool: POOL,
+      count: 30,
+      minutes: 45,
+      passPct: 70
+    });
+  </script>
+</body>
+</html>

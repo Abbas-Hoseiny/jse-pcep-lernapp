@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Modul 2 · Variablen & Datentypen · PCEP Lern-App</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="container">
+    <div class="module-num">MODUL 2 · Teil von 20%</div>
+    <h1>Variablen & Datentypen</h1>
+    <p class="subtitle">Datentypen (<code>int</code>, <code>float</code>, <code>bool</code>, <code>str</code>, <code>None</code>), Typumwandlung, <code>input()</code>.</p>
+
+    <div class="tabs" data-tabs>
+      <button class="tab-btn active" data-target="panel-theorie">📖 Theorie</button>
+      <button class="tab-btn" data-target="panel-karten">🃏 Lernkarteien</button>
+      <button class="tab-btn" data-target="panel-playground">🐍 Playground</button>
+      <button class="tab-btn" data-target="panel-quiz">✅ Quiz</button>
+    </div>
+    <div>
+      <section class="tab-panel active" id="panel-theorie">
+        <div class="theory-section">
+          <h2>2.1 Variablen deklarieren</h2>
+          <p>In Python gibt es <strong>kein</strong> <code>var</code>, <code>let</code> oder <code>const</code>. Du <strong>weist einfach zu</strong>:</p>
+<pre><code class="py">name = "Ali"
+alter = 25
+groesse = 1.75</code></pre>
+          <ul>
+            <li>Typ wird <strong>automatisch</strong> aus dem Wert abgeleitet.</li>
+            <li>Variablen existieren ab der ersten Zuweisung.</li>
+            <li>Neu-Zuweisung darf den Typ wechseln (dynamic typing).</li>
+          </ul>
+<pre><code class="py">x = 5        # int
+x = "hi"     # jetzt str — völlig ok</code></pre>
+          <div class="callout warn"><strong>Python kennt keine echten Konstanten.</strong> Konvention: <code>UPPER_CASE</code> zeigt „nicht verändern" an, wird aber nicht erzwungen.</div>
+        </div>
+
+        <div class="theory-section">
+          <h2>2.2 Die wichtigsten Datentypen</h2>
+          <table>
+            <thead>
+              <tr><th>Typ</th><th>Beispiele</th><th>Beschreibung</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>int</code></td><td><code>42, -7, 0</code></td><td>Ganzzahl (beliebig groß)</td></tr>
+              <tr><td><code>float</code></td><td><code>3.14, 1.5e3</code></td><td>Gleitkomma (64-bit)</td></tr>
+              <tr><td><code>bool</code></td><td><code>True, False</code></td><td>Wahrheitswert (Subtyp von int!)</td></tr>
+              <tr><td><code>str</code></td><td><code>"Hallo", 'Welt'</code></td><td>Text (unicode, immutable)</td></tr>
+              <tr><td><code>NoneType</code></td><td><code>None</code></td><td>Abwesenheit eines Wertes</td></tr>
+              <tr><td><code>list</code></td><td><code>[1, 2, 3]</code></td><td>Liste (veränderlich)</td></tr>
+              <tr><td><code>tuple</code></td><td><code>(1, 2, 3)</code></td><td>Tupel (unveränderlich)</td></tr>
+              <tr><td><code>dict</code></td><td><code>{"a": 1}</code></td><td>Schlüssel-Wert-Paare</td></tr>
+              <tr><td><code>set</code></td><td><code>{1, 2}</code></td><td>Menge (einzigartige Werte)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="theory-section">
+          <h2>2.3 <code>int</code> — Ganzzahl</h2>
+<pre><code class="py">a = 42
+b = -17
+groß = 10**100        # Python hat keine int-Überlaufgrenze!
+
+# Unterstriche zur Lesbarkeit:
+zahl = 1_000_000      # = 1000000</code></pre>
+          <p><code>int</code> in Python ist <strong>beliebig groß</strong> — keine 32/64-bit-Grenze.</p>
+        </div>
+
+        <div class="theory-section">
+          <h2>2.4 <code>float</code> — Gleitkomma</h2>
+<pre><code class="py">pi = 3.14159
+e = 1.5e3             # 1500.0 (wissenschaftlich)
+klein = 1.5e-3        # 0.0015
+unendlich = float("inf")
+nix = float("nan")
+
+# Gleitkomma-Ungenauigkeit!
+0.1 + 0.2 == 0.3      # False !
+0.1 + 0.2             # 0.30000000000000004</code></pre>
+          <div class="callout warn"><strong>Achtung:</strong> Wie in allen IEEE-754-Sprachen. Für exakte Dezimalzahlen: <code>decimal.Decimal</code>.</div>
+        </div>
+
+        <div class="theory-section">
+          <h2>2.5 <code>bool</code> — Boolean</h2>
+<pre><code class="py">ist_ok = True              # Großbuchstabe!
+fertig = False
+
+# bool ist ein Subtyp von int:
+True == 1                  # True
+False == 0                 # True
+True + True                # 2
+isinstance(True, int)      # True</code></pre>
+          <h3>Truthy / Falsy</h3>
+          <p><strong>Falsy</strong> (werden zu <code>False</code>): <code>None</code>, <code>False</code>, <code>0</code>, <code>0.0</code>, <code>""</code>, <code>[]</code>, <code>()</code>, <code>{}</code>, <code>set()</code>.</p>
+          <p>Alles andere ist truthy. <strong>Leere Container sind in Python falsy</strong> — anders als in JavaScript!</p>
+<pre><code class="py">bool([])     # False
+bool([0])    # True  (nicht leer!)
+bool("")     # False
+bool(" ")    # True</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>2.6 <code>str</code> — Strings</h2>
+<pre><code class="py">a = "doppelt"
+b = 'einfach'
+c = """dreifach
+  mehrzeilig"""
+d = '''auch mehrzeilig'''
+
+# f-String (ab Python 3.6):
+name = "Ali"
+print(f"Hallo, {name}!")      # "Hallo, Ali!"
+print(f"Summe: {2 + 3}")       # "Summe: 5"
+
+# Alte Formatierungen:
+print("Hallo, {}!".format(name))
+print("Hallo, %s!" % name)
+
+# Escape-Sequenzen:
+"Zeile1\nZeile2"    # Zeilenumbruch
+"Tab\there"          # Tab
+"Er \"sagte\"."     # doppeltes Anführungszeichen
+"Backslash: \\"     # Backslash
+r"C:\Users"         # raw string — \ nicht escaped</code></pre>
+          <div class="callout"><strong>Strings sind immutable:</strong> <code>s[0] = "X"</code> wirft <code>TypeError</code>.</div>
+          <h3>Wichtige String-Methoden</h3>
+<pre><code class="py">"hallo".upper()         # 'HALLO'
+"HALLO".lower()          # 'hallo'
+"  hi  ".strip()         # 'hi'
+"hallo".replace("l", "L") # 'haLLo'
+"a,b,c".split(",")       # ['a', 'b', 'c']
+",".join(["a","b","c"]) # 'a,b,c'
+"hallo".startswith("ha") # True
+"hallo".endswith("lo")   # True
+"hallo".find("ll")       # 2   (-1 wenn nicht gefunden)
+"hallo".count("l")       # 2
+len("hallo")             # 5</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>2.7 <code>None</code></h2>
+<pre><code class="py">x = None
+print(x)          # None
+type(x)           # &lt;class 'NoneType'&gt;
+
+# Prüfung IMMER mit 'is', nicht '==':
+if x is None:
+    print("leer")</code></pre>
+          <p><code>None</code> repräsentiert „kein Wert". Funktionen ohne <code>return</code> geben implizit <code>None</code> zurück.</p>
+        </div>
+
+        <div class="theory-section">
+          <h2>2.8 <code>type()</code> — Typ einer Variable prüfen</h2>
+<pre><code class="py">type(42)           # &lt;class 'int'&gt;
+type(3.14)         # &lt;class 'float'&gt;
+type("hi")         # &lt;class 'str'&gt;
+type(True)         # &lt;class 'bool'&gt;
+type(None)         # &lt;class 'NoneType'&gt;
+type([])           # &lt;class 'list'&gt;
+
+# Prüfung: isinstance (empfohlen)
+isinstance(42, int)             # True
+isinstance(True, int)           # True !  (bool ist Subtyp)
+isinstance(42, (int, float))    # True — mehrere Typen</code></pre>
+        </div>
+
+        <div class="theory-section">
+          <h2>2.9 Typumwandlung (Casting)</h2>
+<pre><code class="py">int("42")         # 42
+int(3.9)          # 3   — abschneiden, NICHT runden
+int(True)         # 1
+int("0xff", 16)   # 255  — mit Basis
+int("abc")        # ValueError!
+
+float("3.14")     # 3.14
+float(5)          # 5.0
+float("inf")      # inf
+
+str(42)           # '42'
+str(3.14)         # '3.14'
+str(True)         # 'True'
+str([1,2])        # '[1, 2]'
+
+bool(0)           # False
+bool(1)           # True
+bool("")          # False
+bool("False")     # True !  (nicht leer)
+bool([])          # False
+bool(None)        # False</code></pre>
+          <div class="callout danger"><strong>Keine implizite Konvertierung</strong> wie in JS! <code>"5" + 3</code> wirft <code>TypeError</code>. Python zwingt dich, explizit umzuwandeln.</div>
+        </div>
+
+        <div class="theory-section">
+          <h2>2.10 <code>input()</code> — Benutzereingabe</h2>
+<pre><code class="py">name = input("Wie heißt du? ")
+print(f"Hallo, {name}!")</code></pre>
+          <div class="callout warn">
+            <strong>Wichtig:</strong> <code>input()</code> gibt IMMER einen <strong>String</strong> zurück!
+          </div>
+<pre><code class="py">alter = input("Alter: ")         # str!
+alter_zahl = int(alter)           # explizit umwandeln
+# oder kombiniert:
+alter = int(input("Alter: "))</code></pre>
+        </div>
+
+        <div class="btn-row mt-lg">
+          <button class="btn primary" data-mark-theory="2">✓ Theorie als gelesen markieren</button>
+          <a class="btn" href="modul-3.html">Weiter zu Modul 3 →</a>
+        </div>
+      </section>
+
+      <section class="tab-panel" id="panel-karten">
+        <h2>Lernkarteien</h2>
+        <div id="flashcards"></div>
+      </section>
+      <section class="tab-panel" id="panel-playground">
+        <h2>Python-Playground</h2>
+        <div id="playgrounds"></div>
+      </section>
+      <section class="tab-panel" id="panel-quiz">
+        <h2>Quiz — Modul 2</h2>
+        <div id="quiz"></div>
+      </section>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    PCEP.initFlashcards({
+      container: document.getElementById("flashcards"),
+      moduleId: "2",
+      cards: [
+        { front: "Wie deklariert man eine Variable in Python?", back: "Einfach zuweisen: <code>name = wert</code>. Kein <code>var</code>/<code>let</code>." },
+        { front: "Nenne die wichtigsten 5 primitive Typen in Python.", back: "<code>int</code>, <code>float</code>, <code>bool</code>, <code>str</code>, <code>NoneType</code> (wobei str als Sequenz auch „container"-artig ist)." },
+        { front: "Was ist der Wertebereich von Python-<code>int</code>?", back: "<strong>Unbegrenzt!</strong> Python hat keine 32/64-bit-Grenze — nur durch RAM limitiert." },
+        { front: "Sind <code>True</code> und <code>1</code> in Python gleich?", back: "Ja: <code>True == 1</code>. <code>bool</code> ist ein <strong>Subtyp von int</strong>." },
+        { front: "Wie erzeugt man einen f-String?", back: "Mit <code>f</code> vor dem String: <code>f\"Hallo, {name}!\"</code> — Ausdrücke in <code>{...}</code>." },
+        { front: "Welche Funktion gibt den Typ einer Variable zurück?", back: "<code>type(x)</code>" },
+        { front: "Unterschied <code>type()</code> vs <code>isinstance()</code>?", back: "<code>type(x) == int</code> prüft exakt. <code>isinstance(x, int)</code> berücksichtigt Vererbung — empfohlen." },
+        { front: "Was ergibt <code>int(3.9)</code>?", back: "<code>3</code> — Nachkommateil wird <strong>abgeschnitten</strong>, nicht gerundet." },
+        { front: "Was ergibt <code>int(\"3.14\")</code>?", back: "<code>ValueError</code> — <code>int()</code> akzeptiert keine Dezimalstrings. Nutze <code>int(float(\"3.14\"))</code>." },
+        { front: "Was gibt <code>input()</code> zurück?", back: "Immer einen <strong>String</strong>. Für Zahlen explizit <code>int(input())</code> oder <code>float(input())</code>." },
+        { front: "Welche Werte sind in Python falsy?", back: "<code>None</code>, <code>False</code>, <code>0</code>, <code>0.0</code>, <code>\"\"</code>, <code>[]</code>, <code>()</code>, <code>{}</code>, <code>set()</code>." },
+        { front: "Ist <code>[0]</code> truthy oder falsy?", back: "<strong>Truthy</strong> — die Liste ist nicht leer!" },
+        { front: "Ist <code>\" \"</code> (Leerzeichen-String) truthy oder falsy?", back: "<strong>Truthy</strong> — nicht leer. Nur <code>\"\"</code> ist falsy." },
+        { front: "Wie prüft man auf <code>None</code>?", back: "Mit <code>is</code>: <code>if x is None:</code> — NICHT mit <code>==</code>." },
+        { front: "Was gibt eine Funktion ohne <code>return</code> zurück?", back: "<code>None</code> (implizit)." },
+        { front: "Wie schreibt man einen <strong>raw string</strong>?", back: "Mit <code>r</code> vor dem String: <code>r\"C:\\Users\"</code> — Backslashes werden nicht interpretiert." },
+        { front: "Wie verbindet man Strings?", back: "Mit <code>+</code>: <code>\"Hallo \" + name</code>. Oder f-String: <code>f\"Hallo {name}\"</code>." },
+        { front: "Was ergibt <code>\"ab\" * 3</code>?", back: "<code>\"ababab\"</code> — String-Wiederholung mit <code>*</code>." },
+        { front: "Sind Strings mutable oder immutable?", back: "<strong>Immutable</strong>. Methoden geben neue Strings zurück." },
+        { front: "Wie bekommt man die Länge eines Strings?", back: "<code>len(s)</code>" },
+        { front: "Was macht <code>s.strip()</code>?", back: "Entfernt Whitespace (Leerzeichen, Tabs, \\n) am Anfang und Ende des Strings." },
+        { front: "Was macht <code>\"a,b\".split(\",\")</code>?", back: "Gibt eine Liste zurück: <code>['a', 'b']</code>." },
+        { front: "Was macht <code>\",\".join([\"a\",\"b\"])</code>?", back: "Gibt einen String zurück: <code>\"a,b\"</code>." },
+        { front: "Wie schreibt man <code>1 Million</code> mit Unterstrichen?", back: "<code>1_000_000</code> — Unterstriche werden ignoriert, nur für Lesbarkeit." },
+        { front: "Was ergibt <code>0.1 + 0.2</code>?", back: "<code>0.30000000000000004</code> wegen IEEE-754-Gleitkomma." }
+      ]
+    });
+
+    const pgRoot = document.getElementById("playgrounds");
+    PCEP.initPlaygrounds([
+      { container: pgRoot,
+        task: "Deklariere 3 Variablen (<code>name</code>, <code>alter</code>, <code>ist_student</code>) und gib sie mit f-String in einer Zeile aus.",
+        initialCode: 'name = "Ali"\nalter = 25\nist_student = True\n# TODO: f-String ausgeben\n' },
+      { container: pgRoot,
+        task: "Nimm einen String <code>\"   Hallo Welt   \"</code> und gib ihn getrimmt, in Großbuchstaben und umgekehrt aus.",
+        initialCode: 's = "   Hallo Welt   "\n# TODO: strip, upper, replace\n' },
+      { container: pgRoot,
+        task: "Teste das Falsy-Verhalten: gib <code>bool(x)</code> für <code>0, \"\", [], {}, None, \" \", [0]</code> aus.",
+        initialCode: 'for x in [0, "", [], {}, None, " ", [0]]:\n    print(repr(x), "->", bool(x))\n' },
+      { container: pgRoot,
+        task: "Typumwandlung: frag das Alter ab (oder nutze hier einen Hardcode) und berechne das Geburtsjahr (aktuell: 2026).",
+        initialCode: 'alter = "25"   # kommt als String\n# TODO: umwandeln und Geburtsjahr berechnen\n' },
+      { container: pgRoot,
+        task: "Zeige den <strong>strenge Typisierung</strong>: was passiert bei <code>\"5\" + 3</code>? Dann: richtig gemacht.",
+        initialCode: '# print("5" + 3)  # TypeError!\n# TODO: richtig verketten\n' }
+    ]);
+
+    PCEP.initQuiz({
+      container: document.getElementById("quiz"),
+      moduleId: "2",
+      questions: [
+        { q: "Wie deklariert man eine Variable in Python?",
+          options: ["var x = 5", "let x = 5", "x = 5", "int x = 5"],
+          correct: 2,
+          explain: "Einfach zuweisen — Python hat keine Deklarations-Schlüsselwörter." },
+        { q: "Was ergibt dieser Code?",
+          code: 'x = 5\nx = "hi"\nprint(type(x))',
+          options: ["&lt;class 'int'&gt;","&lt;class 'str'&gt;","TypeError","&lt;class 'any'&gt;"],
+          correct: 1,
+          explain: "Dynamische Typisierung: <code>x</code> ist jetzt ein String." },
+        { q: "Was ergibt <code>int(3.9)</code>?",
+          options: ["3","4","3.9","ValueError"],
+          correct: 0,
+          explain: "<code>int()</code> schneidet ab (truncation), rundet nicht." },
+        { q: "Was ergibt <code>\"5\" + 3</code>?",
+          options: ["\"53\"","8","\"8\"","TypeError"],
+          correct: 3,
+          explain: "Python ist strikt typisiert — keine implizite Mischung." },
+        { q: "Was gibt <code>input(\"Zahl: \")</code> zurück?",
+          options: ["int","float","str","bool"],
+          correct: 2,
+          explain: "<code>input()</code> gibt IMMER einen String zurück — unabhängig von der Eingabe." },
+        { q: "Welcher Wert ist <strong>falsy</strong>?",
+          options: ["\"0\"","[0]","[]","{\"a\":1}"],
+          correct: 2,
+          explain: "Leere Liste <code>[]</code> ist falsy. <code>\"0\"</code> ist ein nicht-leerer String → truthy." },
+        { q: "Welche Methode entfernt Whitespace am Anfang/Ende?",
+          options: ["trim()","strip()","clean()","remove_ws()"],
+          correct: 1,
+          explain: "Python nutzt <code>.strip()</code> (und <code>.lstrip()</code>/<code>.rstrip()</code> für eine Seite)." },
+        { q: "Was gibt <code>type(True)</code> zurück?",
+          options: ["bool","int","&lt;class 'bool'&gt;","truthy"],
+          correct: 2,
+          explain: "<code>type()</code> gibt ein Klassen-Objekt zurück. <code>bool</code> ist Subtyp von <code>int</code>." },
+        { q: "Was ergibt <code>isinstance(True, int)</code>?",
+          options: ["True","False","TypeError","None"],
+          correct: 0,
+          explain: "<code>bool</code> ist ein Subtyp von <code>int</code> — deshalb <code>True</code>." },
+        { q: "Wie prüft man am besten auf <code>None</code>?",
+          options: ["x == None","x is None","x === None","type(x) == None"],
+          correct: 1,
+          explain: "<code>is None</code> ist die empfohlene, idiomatische Prüfung (Identitäts-Check)." }
+      ]
+    });
+  </script>
+</body>
+</html>
