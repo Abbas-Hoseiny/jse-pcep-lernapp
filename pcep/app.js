@@ -182,83 +182,131 @@
   }
 
   // ---- Quiz ----------------------------------------------
+  // Eine Frage pro Screen, sofortiges Feedback (grün/rot + Erklärung),
+  // dann "Weiter". Am Ende: Gesamtergebnis + Review.
   function initQuiz({ container, questions, moduleId }) {
     if (!container || !questions || !questions.length) return;
-    let answers = new Array(questions.length).fill(null);
+    let current = 0;
+    const answers = new Array(questions.length).fill(null);
 
     function render() {
       container.innerHTML = "";
+      if (current >= questions.length) { renderSummary(); return; }
+
+      const q = questions[current];
+      const correctCount = answers.filter(a => a && a.correct).length;
+      const wrongCount = answers.filter(a => a && !a.correct).length;
+      const pctBar = Math.round((current / questions.length) * 100);
+
       const wrap = document.createElement("div");
       wrap.className = "quiz-wrap";
-      questions.forEach((q, i) => {
-        const card = document.createElement("div");
-        card.className = "quiz-question";
-        const codeHTML = q.code ? `<pre><code class="py">${escapeHTML(q.code)}</code></pre>` : "";
-        card.innerHTML = `
-          <div class="q-num">Frage ${i + 1} / ${questions.length}</div>
+      const codeHTML = q.code ? `<pre><code class="py">${escapeHTML(q.code)}</code></pre>` : "";
+      wrap.innerHTML = `
+        <div class="quiz-progress">
+          <div class="quiz-progress-header">
+            <span class="quiz-step">Frage ${current + 1} / ${questions.length}</span>
+            <span class="quiz-score"><span class="success-text">✓ ${correctCount}</span> · <span class="danger-text">✗ ${wrongCount}</span></span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:${pctBar}%"></div></div>
+        </div>
+        <div class="quiz-question">
           <div class="q-text">${q.q}</div>
           ${codeHTML}
           <div class="quiz-options"></div>
           <div class="quiz-explain"><strong>Erklärung:</strong> <span class="js-ex"></span></div>
-        `;
-        const optsEl = card.querySelector(".quiz-options");
-        q.options.forEach((opt, oi) => {
-          const btn = document.createElement("button");
-          btn.className = "quiz-option";
-          btn.innerHTML = `<span class="letter">${String.fromCharCode(65 + oi)}</span><span>${opt}</span>`;
-          btn.addEventListener("click", () => selectAnswer(i, oi, card));
-          optsEl.appendChild(btn);
-        });
-        card.querySelector(".js-ex").innerHTML = q.explain || "";
-        wrap.appendChild(card);
+        </div>
+        <div class="quiz-footer hidden">
+          <button class="btn primary js-next">${current + 1 === questions.length ? "Ergebnis ansehen →" : "Weiter →"}</button>
+        </div>
+      `;
+      const optsEl = wrap.querySelector(".quiz-options");
+      q.options.forEach((opt, oi) => {
+        const btn = document.createElement("button");
+        btn.className = "quiz-option";
+        btn.innerHTML = `<span class="letter">${String.fromCharCode(65 + oi)}</span><span>${opt}</span>`;
+        btn.addEventListener("click", () => handleAnswer(oi, wrap));
+        optsEl.appendChild(btn);
       });
-      const footer = document.createElement("div");
-      footer.className = "mt-lg row";
-      footer.innerHTML = `
-        <button class="btn primary js-submit">Quiz auswerten</button>
-        <button class="btn js-reset">Zurücksetzen</button>
-        <span class="pill js-progress">0 / ${questions.length} beantwortet</span>`;
-      wrap.appendChild(footer);
-      const summary = document.createElement("div");
-      summary.className = "quiz-summary hidden";
-      summary.innerHTML = `<div class="label">Dein Ergebnis</div><div class="score js-score">0</div><div class="label js-sub"></div>`;
-      wrap.appendChild(summary);
+      wrap.querySelector(".js-ex").innerHTML = q.explain || "";
       container.appendChild(wrap);
-      footer.querySelector(".js-submit").addEventListener("click", () => evaluate(wrap, summary));
-      footer.querySelector(".js-reset").addEventListener("click", () => { answers.fill(null); render(); });
+
+      wrap.querySelector(".js-next").addEventListener("click", () => { current++; render(); });
       highlightAll();
     }
-    function selectAnswer(qi, oi, cardEl) {
-      if (cardEl.classList.contains("answered")) return;
-      answers[qi] = oi;
-      cardEl.querySelectorAll(".quiz-option").forEach((o, i) => { o.classList.toggle("selected", i === oi); });
-      const done = answers.filter(a => a !== null).length;
-      const el = container.querySelector(".js-progress");
-      if (el) el.textContent = `${done} / ${questions.length} beantwortet`;
-    }
-    function evaluate(wrap, summary) {
-      let correct = 0;
-      wrap.querySelectorAll(".quiz-question").forEach((card, i) => {
-        const q = questions[i];
-        const sel = answers[i];
-        card.classList.add("answered");
-        card.querySelectorAll(".quiz-option").forEach((o, oi) => {
-          o.disabled = true;
-          o.classList.remove("selected");
-          if (oi === q.correct) o.classList.add("correct");
-          else if (oi === sel) o.classList.add("wrong");
-        });
-        if (sel === q.correct) correct++;
-        card.querySelector(".quiz-explain").classList.add("show");
+
+    function handleAnswer(oi, wrap) {
+      const q = questions[current];
+      if (answers[current] !== null) return;
+      const isCorrect = oi === q.correct;
+      answers[current] = { answer: oi, correct: isCorrect };
+      wrap.querySelectorAll(".quiz-option").forEach((o, i) => {
+        o.disabled = true;
+        if (i === q.correct) o.classList.add("correct");
+        else if (i === oi) o.classList.add("wrong");
       });
-      summary.classList.remove("hidden");
-      const pct = Math.round((correct / questions.length) * 100);
-      summary.querySelector(".js-score").textContent = `${correct} / ${questions.length}`;
-      summary.querySelector(".js-sub").textContent = `${pct} % korrekt${pct >= 70 ? " — bestanden 🎉" : " — weiter üben!"}`;
-      summary.classList.toggle("pass", pct >= 70);
-      if (moduleId) updateModule(moduleId, { quizScore: correct, quizMax: questions.length, quizDone: true });
-      summary.scrollIntoView({ behavior: "smooth", block: "center" });
+      const ex = wrap.querySelector(".quiz-explain");
+      ex.classList.add("show", isCorrect ? "correct" : "wrong");
+      const footer = wrap.querySelector(".quiz-footer");
+      footer.classList.remove("hidden");
+      footer.querySelector(".js-next").focus();
     }
+
+    function renderSummary() {
+      const correct = answers.filter(a => a && a.correct).length;
+      const total = questions.length;
+      const pct = Math.round((correct / total) * 100);
+      const passed = pct >= 70;
+      if (moduleId) updateModule(moduleId, { quizScore: correct, quizMax: total, quizDone: true });
+
+      container.innerHTML = "";
+      const wrap = document.createElement("div");
+      wrap.className = "quiz-wrap";
+      const wrongCount = total - correct;
+      wrap.innerHTML = `
+        <div class="quiz-summary ${passed ? "pass" : "fail"}">
+          <div class="verdict">${passed ? "🎉 Bestanden!" : "Noch nicht bestanden"}</div>
+          <div class="score">${correct} / ${total}</div>
+          <div class="label">${pct} % korrekt · Bestehen ab 70 %</div>
+          <div class="btn-row mt-lg" style="justify-content:center">
+            <button class="btn primary js-restart">↻ Quiz wiederholen</button>
+            ${wrongCount > 0 ? `<button class="btn js-wrong-only">Nur die ${wrongCount} falsche${wrongCount === 1 ? "" : "n"} nochmal üben</button>` : ""}
+          </div>
+        </div>
+        <h3 class="mt-lg">Überprüfung aller Fragen</h3>
+        <div class="review-list"></div>
+      `;
+      const reviewList = wrap.querySelector(".review-list");
+      questions.forEach((q, i) => {
+        const a = answers[i];
+        const ok = a && a.correct;
+        const item = document.createElement("div");
+        item.className = "review-item";
+        const codeHTML = q.code ? `<pre><code class="py">${escapeHTML(q.code)}</code></pre>` : "";
+        item.innerHTML = `
+          <div class="q">${i + 1}. ${q.q}</div>
+          ${codeHTML}
+          <div class="a ${ok ? "correct" : "wrong"}">Deine Antwort: ${a ? String.fromCharCode(65 + a.answer) + ") " + q.options[a.answer] : "—"} ${ok ? "✓" : "✗"}</div>
+          ${!ok ? `<div class="a correct">Richtig: ${String.fromCharCode(65 + q.correct)}) ${q.options[q.correct]}</div>` : ""}
+          <div class="ex">${q.explain || ""}</div>
+        `;
+        reviewList.appendChild(item);
+      });
+      container.appendChild(wrap);
+
+      wrap.querySelector(".js-restart").addEventListener("click", () => {
+        current = 0; answers.fill(null); render();
+      });
+      const wrongBtn = wrap.querySelector(".js-wrong-only");
+      if (wrongBtn) {
+        wrongBtn.addEventListener("click", () => {
+          const wrongQs = answers.map((a, i) => a && !a.correct ? questions[i] : null).filter(Boolean);
+          if (!wrongQs.length) return;
+          initQuiz({ container, questions: wrongQs, moduleId: null });
+        });
+      }
+      highlightAll();
+    }
+
     render();
   }
 
